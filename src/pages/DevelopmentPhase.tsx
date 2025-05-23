@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Code, Database, Cloud, Zap, Git, Package, Settings, Bug } from "lucide-react";
+import { Code, Database, Cloud, Zap, GitBranch, Package, Settings, Bug } from "lucide-react";
 import AgentCard from "@/components/AgentCard";
 import AgentWorkspace from "@/components/AgentWorkspace";
 
@@ -51,7 +51,7 @@ const DevelopmentPhase = () => {
     {
       title: "Version Control Manager",
       description: "Manages git workflows, branching strategies, and code collaboration.",
-      icon: Git,
+      icon: GitBranch,
       features: ["Git workflows", "Branch strategies", "Code reviews", "Merge conflicts"],
       complexity: "Intermediate" as const,
       aiModel: "GPT-3.5" as const,
