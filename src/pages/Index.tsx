@@ -1,8 +1,8 @@
-
 import { useState } from "react";
 import { FileText, Palette, Code, CheckCircle } from "lucide-react";
 import Header from "@/components/Header";
 import PhaseCard from "@/components/PhaseCard";
+import ArchitectureDiagram from "@/components/ArchitectureDiagram";
 import RequirementsPhase from "./RequirementsPhase";
 import DesignPhase from "./DesignPhase";
 import DevelopmentPhase from "./DevelopmentPhase";
@@ -11,6 +11,7 @@ import TestingPhase from "./TestingPhase";
 const Index = () => {
   const [currentPhase, setCurrentPhase] = useState<string | null>(null);
   const [completedPhases, setCompletedPhases] = useState<string[]>([]);
+  const [showArchitecture, setShowArchitecture] = useState(false);
 
   const phases = [
     {
@@ -94,6 +95,18 @@ const Index = () => {
             Transform your development process with AI-powered agents that handle every phase of the SDLC. 
             From requirements gathering to testing, get intelligent assistance that speeds up delivery while maintaining quality.
           </p>
+          <button 
+            className="mt-4 text-indigo-600 hover:text-indigo-800 font-medium flex items-center mx-auto"
+            onClick={() => setShowArchitecture(!showArchitecture)}
+          >
+            {showArchitecture ? 'Hide Architecture Diagram' : 'View Architecture Diagram'}
+          </button>
+          
+          {showArchitecture && (
+            <div className="my-8">
+              <ArchitectureDiagram />
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
