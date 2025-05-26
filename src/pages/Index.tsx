@@ -1,6 +1,8 @@
 
 import { useState } from "react";
-import { FileText, Palette, Code, CheckCircle, ArrowRight, Eye } from "lucide-react";
+import { FileText, Palette, Code, CheckCircle, ArrowRight, Eye, LogOut } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useUser } from "@/contexts/UserContext";
 import Header from "@/components/Header";
 import PhaseCard from "@/components/PhaseCard";
 import ArchitectureDiagram from "@/components/ArchitectureDiagram";
@@ -11,12 +13,13 @@ import DevelopmentPhase from "./DevelopmentPhase";
 import TestingPhase from "./TestingPhase";
 
 const Index = () => {
+  const { user, logout } = useUser();
   const [currentPhase, setCurrentPhase] = useState<string | null>(null);
   const [completedPhases, setCompletedPhases] = useState<string[]>([]);
   const [showArchitecture, setShowArchitecture] = useState(false);
   const [showProcessOverview, setShowProcessOverview] = useState(false);
 
-  const phases = [
+  const allPhases = [
     {
       id: "requirements",
       title: "Requirements Analysis",
@@ -51,6 +54,22 @@ const Index = () => {
     }
   ];
 
+  // Filter phases based on user's persona
+  const allowedPhases = allPhases.filter(phase => 
+    user?.allowedPhases.includes(phase.id)
+  );
+
+  const getPersonaTitle = (persona: string): string => {
+    const titles: Record<string, string> = {
+      "business-analyst": "Business Analyst",
+      "designer": "UI/UX Designer",
+      "developer": "Developer", 
+      "qa-engineer": "QA Engineer",
+      "project-manager": "Project Manager"
+    };
+    return titles[persona] || persona;
+  };
+
   const renderPhaseContent = () => {
     switch (currentPhase) {
       case "requirements":
@@ -71,13 +90,22 @@ const Index = () => {
       <div className="min-h-screen bg-gray-50">
         <Header />
         <div className="container mx-auto px-6 py-8">
-          <div className="flex items-center space-x-4 mb-6">
+          <div className="flex items-center justify-between mb-6">
             <button
               onClick={() => setCurrentPhase(null)}
               className="text-indigo-600 hover:text-indigo-800 font-medium"
             >
               ← Back to Overview
             </button>
+            <div className="flex items-center space-x-4">
+              <span className="text-sm text-gray-600">
+                Welcome, {user?.username} ({getPersonaTitle(user?.persona || "")})
+              </span>
+              <Button variant="outline" size="sm" onClick={logout}>
+                <LogOut className="h-4 w-4 mr-2" />
+                Logout
+              </Button>
+            </div>
           </div>
           {renderPhaseContent()}
         </div>
@@ -90,15 +118,31 @@ const Index = () => {
       <Header />
       
       <div className="container mx-auto px-6 py-16">
+        {/* User Info and Logout */}
+        <div className="flex justify-between items-center mb-8">
+          <div className="text-left">
+            <h1 className="text-2xl font-bold text-gray-900">
+              Welcome, {user?.username}
+            </h1>
+            <p className="text-gray-600">
+              Role: {getPersonaTitle(user?.persona || "")}
+            </p>
+          </div>
+          <Button variant="outline" onClick={logout}>
+            <LogOut className="h-4 w-4 mr-2" />
+            Logout
+          </Button>
+        </div>
+
         {/* SDLC Phases Section */}
         <section className="mb-20">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              SDLC Agentic Framework
+              Your SDLC Workspace
             </h2>
             <p className="text-xl text-gray-600 max-w-4xl mx-auto mb-8">
-              Our AI agents handle every phase of the software development lifecycle with precision and expertise. 
-              Click on any phase to explore the specialized agents and capabilities.
+              Access your specialized AI agents for the {getPersonaTitle(user?.persona || "")} role. 
+              Click on any phase to explore the agents and capabilities available to you.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
               <button 
@@ -132,7 +176,7 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {phases.map((phase) => (
+            {allowedPhases.map((phase) => (
               <PhaseCard
                 key={phase.id}
                 title={phase.title}
@@ -146,6 +190,12 @@ const Index = () => {
               />
             ))}
           </div>
+
+          {allowedPhases.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-gray-600">No phases available for your current role.</p>
+            </div>
+          )}
         </section>
       </div>
     </div>
