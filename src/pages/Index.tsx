@@ -1,9 +1,9 @@
-
 import { useState } from "react";
-import { FileText, Palette, Code, CheckCircle, ArrowRight, Users, Clock, Shield, Zap, Star, Play } from "lucide-react";
+import { FileText, Palette, Code, CheckCircle, ArrowRight, Users, Clock, Shield, Zap, Star, Play, Eye } from "lucide-react";
 import Header from "@/components/Header";
 import PhaseCard from "@/components/PhaseCard";
 import ArchitectureDiagram from "@/components/ArchitectureDiagram";
+import ProcessOverview from "@/components/ProcessOverview";
 import RequirementsPhase from "./RequirementsPhase";
 import DesignPhase from "./DesignPhase";
 import DevelopmentPhase from "./DevelopmentPhase";
@@ -16,6 +16,7 @@ const Index = () => {
   const [currentPhase, setCurrentPhase] = useState<string | null>(null);
   const [completedPhases, setCompletedPhases] = useState<string[]>([]);
   const [showArchitecture, setShowArchitecture] = useState(false);
+  const [showProcessOverview, setShowProcessOverview] = useState(false);
 
   const phases = [
     {
@@ -233,13 +234,29 @@ const Index = () => {
               Our AI agents handle every phase of the software development lifecycle with precision and expertise. 
               Click on any phase to explore the specialized agents and capabilities.
             </p>
-            <button 
-              className="text-indigo-600 hover:text-indigo-800 font-medium flex items-center mx-auto group"
-              onClick={() => setShowArchitecture(!showArchitecture)}
-            >
-              {showArchitecture ? 'Hide Architecture Diagram' : 'View Architecture Diagram'}
-              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-            </button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+              <button 
+                className="text-indigo-600 hover:text-indigo-800 font-medium flex items-center mx-auto group"
+                onClick={() => setShowProcessOverview(!showProcessOverview)}
+              >
+                <Eye className="mr-2 h-4 w-4" />
+                {showProcessOverview ? 'Hide Process Overview' : 'View Process Overview'}
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </button>
+              <button 
+                className="text-indigo-600 hover:text-indigo-800 font-medium flex items-center mx-auto group"
+                onClick={() => setShowArchitecture(!showArchitecture)}
+              >
+                {showArchitecture ? 'Hide Architecture Diagram' : 'View Architecture Diagram'}
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
+            
+            {showProcessOverview && (
+              <div className="my-12 p-8 bg-white rounded-2xl shadow-lg">
+                <ProcessOverview />
+              </div>
+            )}
             
             {showArchitecture && (
               <div className="my-12 p-8 bg-white rounded-2xl shadow-lg">
