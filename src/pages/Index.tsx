@@ -3,10 +3,12 @@ import { useState } from "react";
 import { FileText, Palette, Code, CheckCircle, ArrowRight, Eye, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/contexts/UserContext";
+import { useWorkflow } from "@/contexts/WorkflowContext";
 import Header from "@/components/Header";
 import PhaseCard from "@/components/PhaseCard";
 import ArchitectureDiagram from "@/components/ArchitectureDiagram";
 import ProcessOverview from "@/components/ProcessOverview";
+import ProjectSelector from "@/components/ProjectSelector";
 import RequirementsPhase from "./RequirementsPhase";
 import DesignPhase from "./DesignPhase";
 import DevelopmentPhase from "./DevelopmentPhase";
@@ -14,6 +16,7 @@ import TestingPhase from "./TestingPhase";
 
 const Index = () => {
   const { user, logout } = useUser();
+  const { currentProject } = useWorkflow();
   const [currentPhase, setCurrentPhase] = useState<string | null>(null);
   const [completedPhases, setCompletedPhases] = useState<string[]>([]);
   const [showArchitecture, setShowArchitecture] = useState(false);
@@ -109,6 +112,35 @@ const Index = () => {
             </div>
           </div>
           {renderPhaseContent()}
+        </div>
+      </div>
+    );
+  }
+
+  // Show project selector if no project is selected
+  if (!currentProject) {
+    return (
+      <div className="min-h-screen bg-gray-900">
+        <Header />
+        <div className="container mx-auto px-6 py-16">
+          <div className="flex justify-between items-center mb-8">
+            <div className="text-left">
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+                Welcome, {user?.username}
+              </h1>
+              <p className="text-gray-300">
+                Role: {getPersonaTitle(user?.persona || "")}
+              </p>
+            </div>
+            <Button variant="outline" onClick={logout} className="border-gray-600 text-gray-200 hover:bg-gray-800">
+              <LogOut className="h-4 w-4 mr-2" />
+              Logout
+            </Button>
+          </div>
+          
+          <div className="max-w-4xl mx-auto">
+            <ProjectSelector onProjectSelected={() => {}} />
+          </div>
         </div>
       </div>
     );

@@ -6,9 +6,11 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, Play, Download, Copy, RefreshCw, Upload, FileText, X, Github } from "lucide-react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { ArrowLeft, Play, Download, Copy, RefreshCw, Upload, FileText, X, Github, FolderOpen, Calendar } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@/contexts/UserContext";
+import { useWorkflow } from "@/contexts/WorkflowContext";
 
 interface AgentWorkspaceProps {
   agentName: string;
@@ -25,6 +27,7 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
   const [dragActive, setDragActive] = useState(false);
   const { toast } = useToast();
   const { user } = useUser();
+  const { currentProject } = useWorkflow();
 
   const handleProcess = async () => {
     if (!input.trim()) {
@@ -195,6 +198,31 @@ This is a simulated output. In production, this would connect to OpenAI/Anthropi
 
   const filteredTemplates = getFilteredTemplates();
 
+  // Mock history data with project information
+  const mockHistorySessions = [
+    {
+      id: "1",
+      name: "E-commerce Platform Requirements",
+      date: "2 hours ago",
+      project: "E-commerce Platform",
+      agent: "SwiftPlan Requirements Analyst"
+    },
+    {
+      id: "2", 
+      name: "Mobile App Testing Strategy",
+      date: "1 day ago",
+      project: "Mobile Banking App",
+      agent: "SwiftTest Automated Generator"
+    },
+    {
+      id: "3",
+      name: "API Documentation Review", 
+      date: "3 days ago",
+      project: "Task Management System",
+      agent: "Swift Dev Backend Specialist"
+    }
+  ];
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -206,6 +234,12 @@ This is a simulated output. In production, this would connect to OpenAI/Anthropi
           <div>
             <h2 className="text-2xl font-bold">{agentName}</h2>
             <p className="text-gray-600">AI-Powered Development Assistant</p>
+            {currentProject && (
+              <div className="flex items-center space-x-2 mt-1">
+                <FolderOpen className="h-4 w-4 text-blue-500" />
+                <span className="text-sm text-blue-600 font-medium">{currentProject.name}</span>
+              </div>
+            )}
           </div>
         </div>
         <Badge className="bg-green-100 text-green-800">Ready</Badge>
@@ -370,20 +404,47 @@ This is a simulated output. In production, this would connect to OpenAI/Anthropi
           <Card>
             <CardHeader>
               <CardTitle>Recent Sessions</CardTitle>
-              <CardDescription>Your previous AI processing sessions</CardDescription>
+              <CardDescription>Your previous AI processing sessions with project information</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {["E-commerce Platform Requirements", "Mobile App Testing Strategy", "API Documentation Review"].map((session, index) => (
-                  <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
-                    <div>
-                      <h4 className="font-medium">{session}</h4>
-                      <p className="text-sm text-gray-500">2 hours ago</p>
-                    </div>
-                    <Button variant="outline" size="sm">View</Button>
-                  </div>
-                ))}
-              </div>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Session Name</TableHead>
+                    <TableHead>Project</TableHead>
+                    <TableHead>Agent</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {mockHistorySessions.map((session) => (
+                    <TableRow key={session.id}>
+                      <TableCell className="font-medium">{session.name}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center space-x-2">
+                          <FolderOpen className="h-4 w-4 text-blue-500" />
+                          <span>{session.project}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline">{session.agent}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center space-x-1">
+                          <Calendar className="h-4 w-4 text-gray-400" />
+                          <span className="text-sm text-gray-500">{session.date}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Button variant="outline" size="sm">
+                          View
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </CardContent>
           </Card>
         </TabsContent>
