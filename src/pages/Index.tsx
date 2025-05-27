@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { FileText, Palette, Code, CheckCircle, ArrowRight, Eye, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,6 +10,8 @@ import ArchitectureDiagram from "@/components/ArchitectureDiagram";
 import ProcessOverview from "@/components/ProcessOverview";
 import ProjectSelector from "@/components/ProjectSelector";
 import ProjectManagementDashboard from "@/components/ProjectManagementDashboard";
+import UserStoryAssignment from "@/components/UserStoryAssignment";
+import DeveloperTaskView from "@/components/DeveloperTaskView";
 import RequirementsPhase from "./RequirementsPhase";
 import DesignPhase from "./DesignPhase";
 import DevelopmentPhase from "./DevelopmentPhase";
@@ -106,7 +109,10 @@ const Index = () => {
               Logout
             </Button>
           </div>
-          <ProjectManagementDashboard />
+          <div className="space-y-6">
+            <ProjectManagementDashboard />
+            {currentProject && <UserStoryAssignment />}
+          </div>
         </div>
       </div>
     );
@@ -189,6 +195,13 @@ const Index = () => {
             Logout
           </Button>
         </div>
+
+        {/* Developer Task View */}
+        {user?.persona === "developer" && currentProject && (
+          <div className="mb-8">
+            <DeveloperTaskView />
+          </div>
+        )}
 
         {/* SDLC Phases Section */}
         <section className="mb-20">

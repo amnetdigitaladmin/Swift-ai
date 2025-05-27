@@ -19,6 +19,8 @@ interface Artifact {
   createdAt: string;
   phase: string;
   projectId: string;
+  assignedTo?: string;
+  status?: "unassigned" | "assigned" | "in-progress" | "completed";
 }
 
 interface WorkflowContextType {
@@ -35,6 +37,10 @@ interface WorkflowContextType {
   getProjectsByRole: (role: string) => Project[];
   updateProjectStage: (projectId: string, stage: string) => void;
   getAllProjectsWithStatus: () => Project[];
+  assignArtifactToUser: (artifactId: string, assignedTo: string) => void;
+  updateArtifactStatus: (artifactId: string, status: string) => void;
+  getAssignedArtifacts: (assignedTo: string) => Artifact[];
+  getUserStories: () => Artifact[];
 }
 
 const WorkflowContext = createContext<WorkflowContextType | undefined>(undefined);
@@ -93,6 +99,7 @@ export const WorkflowProvider = ({ children }: WorkflowProviderProps) => {
       id: Date.now().toString(),
       createdAt: new Date().toISOString(),
       projectId: currentProject.id,
+      status: artifact.type === "User Story" ? "unassigned" : undefined,
     };
     setArtifacts(prev => [...prev, newArtifact]);
     
@@ -176,6 +183,40 @@ export const WorkflowProvider = ({ children }: WorkflowProviderProps) => {
     });
   };
 
+  const assignArtifactToUser = (artifactId: string, assignedTo: string) => {
+    setArtifacts(prev => 
+      prev.map(artifact => 
+        artifact.id === artifactId 
+          ? { ...artifact, assignedTo, status: "assigned" }
+          : artifact
+      )
+    );
+  };
+
+  const updateArtifactStatus = (artifactId: string, status: string) => {
+    setArtifacts(prev => 
+      prev.map(artifact => 
+        artifact.id === artifactId 
+          ? { ...artifact, status: status as Artifact['status'] }
+          : artifact
+      )
+    );
+  };
+
+  const getAssignedArtifacts = (assignedTo: string) => {
+    if (!currentProject) return [];
+    return artifacts.filter(artifact => 
+      artifact.assignedTo === assignedTo && artifact.projectId === currentProject.id
+    );
+  };
+
+  const getUserStories = () => {
+    if (!currentProject) return [];
+    return artifacts.filter(artifact => 
+      artifact.type === "User Story" && artifact.projectId === currentProject.id
+    );
+  };
+
   return (
     <WorkflowContext.Provider value={{
       artifacts,
@@ -191,6 +232,10 @@ export const WorkflowProvider = ({ children }: WorkflowProviderProps) => {
       getProjectsByRole,
       updateProjectStage,
       getAllProjectsWithStatus,
+      assignArtifactToUser,
+      updateArtifactStatus,
+      getAssignedArtifacts,
+      getUserStories,
     }}>
       {children}
     </WorkflowContext.Provider>

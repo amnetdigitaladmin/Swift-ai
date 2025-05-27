@@ -41,11 +41,12 @@ const validateCredentials = (username: string, password: string, persona: string
   // Define specific credentials for each persona
   const credentials: Record<string, { username: string; password: string }> = {
     "business-analyst": { username: "analyst", password: "password" },
-    "project-manager": { username: "manager", password: "password" }
+    "project-manager": { username: "manager", password: "password" },
+    "developer": { username: "dev1", password: "password" }
   };
 
-  // For business analyst and project manager, validate specific credentials
-  if (persona === "business-analyst" || persona === "project-manager") {
+  // For specific personas, validate exact credentials
+  if (credentials[persona]) {
     const requiredCreds = credentials[persona];
     return username === requiredCreds.username && password === requiredCreds.password;
   }
