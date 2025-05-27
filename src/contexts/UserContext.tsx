@@ -9,7 +9,7 @@ interface User {
 
 interface UserContextType {
   user: User | null;
-  login: (username: string, password: string, persona: string) => void;
+  login: (username: string, password: string, persona: string) => boolean;
   logout: () => void;
   isAuthenticated: boolean;
 }
@@ -37,6 +37,22 @@ const getPersonaPhases = (persona: string): string[] => {
   return personaMapping[persona] || [];
 };
 
+const validateCredentials = (username: string, password: string, persona: string): boolean => {
+  // Define specific credentials for each persona
+  const credentials: Record<string, { username: string; password: string }> = {
+    "business-analyst": { username: "analyst", password: "password" }
+  };
+
+  // For business analyst, validate specific credentials
+  if (persona === "business-analyst") {
+    const requiredCreds = credentials[persona];
+    return username === requiredCreds.username && password === requiredCreds.password;
+  }
+
+  // For other personas, accept any non-empty credentials for now
+  return username.trim() !== "" && password.trim() !== "";
+};
+
 interface UserProviderProps {
   children: ReactNode;
 }
@@ -44,14 +60,17 @@ interface UserProviderProps {
 export const UserProvider = ({ children }: UserProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
 
-  const login = (username: string, password: string, persona: string) => {
-    // In a real app, you would validate credentials here
-    const allowedPhases = getPersonaPhases(persona);
-    setUser({
-      username,
-      persona,
-      allowedPhases
-    });
+  const login = (username: string, password: string, persona: string): boolean => {
+    if (validateCredentials(username, password, persona)) {
+      const allowedPhases = getPersonaPhases(persona);
+      setUser({
+        username,
+        persona,
+        allowedPhases
+      });
+      return true;
+    }
+    return false;
   };
 
   const logout = () => {

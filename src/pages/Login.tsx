@@ -1,20 +1,20 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { User, Lock } from "lucide-react";
+import { User, Lock, AlertCircle } from "lucide-react";
 
 interface LoginProps {
-  onLogin: (username: string, password: string, persona: string) => void;
+  onLogin: (username: string, password: string, persona: string) => boolean;
 }
 
 const Login = ({ onLogin }: LoginProps) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [persona, setPersona] = useState("business-analyst");
+  const [error, setError] = useState("");
 
   const personas = [
     {
@@ -57,8 +57,13 @@ const Login = ({ onLogin }: LoginProps) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+    
     if (username && password && persona) {
-      onLogin(username, password, persona);
+      const success = onLogin(username, password, persona);
+      if (!success) {
+        setError("Invalid credentials. Please check your username and password.");
+      }
     }
   };
 
@@ -83,6 +88,14 @@ const Login = ({ onLogin }: LoginProps) => {
         
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Error Message */}
+            {error && (
+              <div className="flex items-center space-x-2 p-3 bg-red-900/20 border border-red-700 rounded-lg">
+                <AlertCircle className="h-4 w-4 text-red-400" />
+                <span className="text-sm text-red-400">{error}</span>
+              </div>
+            )}
+
             {/* Username Field */}
             <div className="space-y-2">
               <Label htmlFor="username" className="text-sm font-medium text-gray-200">
