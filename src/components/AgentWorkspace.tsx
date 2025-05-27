@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, Play, Download, Copy, RefreshCw, Upload, FileText, X } from "lucide-react";
+import { ArrowLeft, Play, Download, Copy, RefreshCw, Upload, FileText, X, Github } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@/contexts/UserContext";
 
@@ -109,6 +108,25 @@ This is a simulated output. In production, this would connect to OpenAI/Anthropi
     toast({
       title: "Download Started",
       description: "Output file has been downloaded.",
+    });
+  };
+
+  const handleGitHubPush = () => {
+    // Simulate GitHub push functionality
+    toast({
+      title: "GitHub Integration",
+      description: "Artifact pushed to GitHub repository successfully!",
+    });
+    
+    // In a real implementation, this would:
+    // 1. Authenticate with GitHub
+    // 2. Create or update a repository
+    // 3. Commit the generated content
+    // 4. Push to the repository
+    console.log("Pushing to GitHub:", {
+      agentName,
+      content: output,
+      fileName: `${agentName.toLowerCase().replace(/\s+/g, '-')}-output.txt`
     });
   };
 
@@ -334,6 +352,10 @@ This is a simulated output. In production, this would connect to OpenAI/Anthropi
                         <Button variant="outline" size="sm" onClick={handleDownload}>
                           <Download className="h-4 w-4 mr-2" />
                           Download
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={handleGitHubPush}>
+                          <Github className="h-4 w-4 mr-2" />
+                          Push to GitHub
                         </Button>
                       </div>
                     )}
