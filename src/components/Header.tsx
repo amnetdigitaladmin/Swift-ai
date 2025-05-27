@@ -17,22 +17,18 @@ const Header = () => {
               <p className="text-gray-300 text-sm">Expedite, Optimize, Realize</p>
             </div>
           </div>
-          <div className="flex items-start space-x-4">
-            <div className="flex items-center space-x-2">
-              <Button variant="secondary" size="sm" className="bg-gray-800/80 hover:bg-gray-700/80 border border-gray-600 text-gray-200" asChild>
-                <Link to="/settings">
-                  <Settings className="h-4 w-4 mr-2" />
-                  Settings
-                </Link>
-              </Button>
-            </div>
-            <div className="flex justify-end">
-              <img 
-                src="/lovable-uploads/6d2ee624-da66-4058-bda5-573daec3e844.png" 
-                alt="Swift AI Logo" 
-                className="h-24 w-auto"
-              />
-            </div>
+          <div className="flex items-center space-x-4">
+            <Button variant="secondary" size="sm" className="bg-gray-800/80 hover:bg-gray-700/80 border border-gray-600 text-gray-200" asChild>
+              <Link to="/settings">
+                <Settings className="h-4 w-4 mr-2" />
+                Settings
+              </Link>
+            </Button>
+            <img 
+              src="/lovable-uploads/6d2ee624-da66-4058-bda5-573daec3e844.png" 
+              alt="Swift AI Logo" 
+              className="h-24 w-auto"
+            />
           </div>
         </div>
       </div>
