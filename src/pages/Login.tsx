@@ -1,9 +1,10 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { User, Lock, AlertCircle } from "lucide-react";
 
 interface LoginProps {
@@ -66,6 +67,8 @@ const Login = ({ onLogin }: LoginProps) => {
       }
     }
   };
+
+  const selectedPersona = personas.find(p => p.id === persona);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center p-6">
@@ -134,28 +137,32 @@ const Login = ({ onLogin }: LoginProps) => {
               </div>
             </div>
 
-            {/* Persona Selection */}
+            {/* Role Selection Dropdown */}
             <div className="space-y-3">
               <Label className="text-sm font-medium text-gray-200">
                 Select Your Role
               </Label>
-              <RadioGroup
-                value={persona}
-                onValueChange={setPersona}
-                className="space-y-3"
-              >
-                {personas.map((p) => (
-                  <div key={p.id} className="flex items-start space-x-3 p-3 rounded-lg border border-gray-600 bg-gray-700/30 hover:bg-gray-700/50 transition-colors">
-                    <RadioGroupItem value={p.id} id={p.id} className="mt-1 border-gray-500 text-cyan-400" />
-                    <div className="flex-1">
-                      <Label htmlFor={p.id} className="font-medium text-gray-200 cursor-pointer">
-                        {p.title}
-                      </Label>
-                      <p className="text-xs text-gray-400 mt-1">{p.description}</p>
-                    </div>
-                  </div>
-                ))}
-              </RadioGroup>
+              <Select value={persona} onValueChange={setPersona}>
+                <SelectTrigger className="bg-gray-700/50 border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400">
+                  <SelectValue placeholder="Choose your role" />
+                </SelectTrigger>
+                <SelectContent className="bg-gray-800 border-gray-600">
+                  {personas.map((p) => (
+                    <SelectItem 
+                      key={p.id} 
+                      value={p.id}
+                      className="text-gray-200 focus:bg-gray-700 focus:text-white"
+                    >
+                      {p.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {selectedPersona && (
+                <p className="text-xs text-gray-400 mt-2">
+                  {selectedPersona.description}
+                </p>
+              )}
             </div>
 
             <Button 
