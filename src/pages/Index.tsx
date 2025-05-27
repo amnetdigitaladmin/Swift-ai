@@ -65,7 +65,8 @@ const Index = () => {
       "designer": "UI/UX Designer",
       "developer": "Developer", 
       "qa-engineer": "QA Engineer",
-      "project-manager": "Project Manager"
+      "project-manager": "Project Manager",
+      "admin": "Administrator"
     };
     return titles[persona] || persona;
   };

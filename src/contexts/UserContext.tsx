@@ -30,7 +30,8 @@ const getPersonaPhases = (persona: string): string[] => {
     "designer": ["design"],
     "developer": ["development"],
     "qa-engineer": ["testing"],
-    "project-manager": ["requirements", "design", "development", "testing"]
+    "project-manager": ["requirements", "design", "development", "testing"],
+    "admin": ["requirements", "design", "development", "testing"]
   };
   
   return personaMapping[persona] || [];

@@ -46,6 +46,12 @@ const Login = ({ onLogin }: LoginProps) => {
       title: "Project Manager",
       description: "Complete oversight of all development phases",
       phases: ["requirements", "design", "development", "testing"]
+    },
+    {
+      id: "admin",
+      title: "Administrator",
+      description: "Full system access with all agents and administrative capabilities",
+      phases: ["requirements", "design", "development", "testing"]
     }
   ];
 
