@@ -11,6 +11,7 @@ import { ArrowLeft, Play, Download, Copy, RefreshCw, Upload, FileText, X, Github
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@/contexts/UserContext";
 import { useWorkflow } from "@/contexts/WorkflowContext";
+import GitHubAuthModal, { GitHubCredentials } from "./GitHubAuthModal";
 
 interface AgentWorkspaceProps {
   agentName: string;
@@ -25,6 +26,7 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
   const [selectedTemplate, setSelectedTemplate] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);
+  const [isGitHubModalOpen, setIsGitHubModalOpen] = useState(false);
   const { toast } = useToast();
   const { user } = useUser();
   const { currentProject } = useWorkflow();
@@ -115,22 +117,42 @@ This is a simulated output. In production, this would connect to OpenAI/Anthropi
   };
 
   const handleGitHubPush = () => {
-    // Simulate GitHub push functionality
-    toast({
-      title: "GitHub Integration",
-      description: "Artifact pushed to GitHub repository successfully!",
-    });
-    
-    // In a real implementation, this would:
-    // 1. Authenticate with GitHub
-    // 2. Create or update a repository
-    // 3. Commit the generated content
-    // 4. Push to the repository
-    console.log("Pushing to GitHub:", {
-      agentName,
-      content: output,
-      fileName: `${agentName.toLowerCase().replace(/\s+/g, '-')}-output.txt`
-    });
+    setIsGitHubModalOpen(true);
+  };
+
+  const handleGitHubSubmit = async (credentials: GitHubCredentials) => {
+    try {
+      // Simulate GitHub API interaction
+      console.log("GitHub credentials:", {
+        username: credentials.username,
+        repository: credentials.repository,
+        token: credentials.token.substring(0, 8) + "..." // Only log partial token for security
+      });
+
+      // In a real implementation, this would:
+      // 1. Validate the credentials with GitHub API
+      // 2. Create or update the repository
+      // 3. Commit and push the generated content
+      
+      toast({
+        title: "GitHub Integration Successful",
+        description: `Content pushed to ${credentials.username}/${credentials.repository} successfully!`,
+      });
+      
+      // Store credentials securely (in a real app, this would be encrypted/stored securely)
+      localStorage.setItem('github_username', credentials.username);
+      localStorage.setItem('github_repository', credentials.repository);
+      // Note: In production, tokens should NEVER be stored in localStorage
+      
+    } catch (error) {
+      console.error("GitHub integration failed:", error);
+      toast({
+        title: "GitHub Integration Failed",
+        description: "Failed to connect to GitHub. Please check your credentials and try again.",
+        variant: "destructive",
+      });
+      throw error; // Re-throw to prevent modal from closing
+    }
   };
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -449,6 +471,12 @@ This is a simulated output. In production, this would connect to OpenAI/Anthropi
           </Card>
         </TabsContent>
       </Tabs>
+
+      <GitHubAuthModal
+        isOpen={isGitHubModalOpen}
+        onClose={() => setIsGitHubModalOpen(false)}
+        onSubmit={handleGitHubSubmit}
+      />
     </div>
   );
 };
