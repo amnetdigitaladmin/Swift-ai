@@ -19,11 +19,21 @@ const ProjectSelector = ({ onProjectSelected }: ProjectSelectorProps) => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [newProjectName, setNewProjectName] = useState("");
   const [newProjectDescription, setNewProjectDescription] = useState("");
-  const { createProject, selectProject, getProjectsByRole, currentProject } = useWorkflow();
+  const { createProject, selectProject, getProjectsByRole, currentProject, getAllProjectsWithStatus } = useWorkflow();
   const { user } = useUser();
   const { toast } = useToast();
 
+  // Get projects based on user role
   const userProjects = user ? getProjectsByRole(user.persona) : [];
+  
+  // For non-project managers, show all projects they can work on
+  const availableProjects = user?.persona === "project-manager" 
+    ? userProjects 
+    : getAllProjectsWithStatus().filter(project => 
+        user?.allowedPhases.some(phase => 
+          ["requirements", "design", "development", "testing"].includes(phase)
+        )
+      );
 
   const handleCreateProject = () => {
     if (!newProjectName.trim() || !user) return;
@@ -59,7 +69,8 @@ const ProjectSelector = ({ onProjectSelected }: ProjectSelectorProps) => {
       "business-analyst": "bg-blue-100 text-blue-800",
       "designer": "bg-purple-100 text-purple-800",
       "developer": "bg-green-100 text-green-800",
-      "qa-engineer": "bg-red-100 text-red-800"
+      "qa-engineer": "bg-red-100 text-red-800",
+      "project-manager": "bg-orange-100 text-orange-800"
     };
     return colors[role] || "bg-gray-100 text-gray-800";
   };
@@ -96,64 +107,77 @@ const ProjectSelector = ({ onProjectSelected }: ProjectSelectorProps) => {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-2xl font-bold mb-2">Select or Create a Project</h2>
-        <p className="text-gray-600">Choose an existing project or create a new one to get started</p>
+        <h2 className="text-2xl font-bold mb-2">
+          {user?.persona === "project-manager" ? "Select or Create a Project" : "Select a Project"}
+        </h2>
+        <p className="text-gray-600">
+          {user?.persona === "project-manager" 
+            ? "Choose an existing project or create a new one to get started"
+            : "Choose an existing project to start working on"
+          }
+        </p>
       </div>
 
-      <div className="flex justify-center">
-        <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-700 hover:to-purple-700">
-              <Plus className="h-4 w-4 mr-2" />
-              Create New Project
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Create New Project</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div>
-                <label className="text-sm font-medium">Project Name</label>
-                <Input
-                  value={newProjectName}
-                  onChange={(e) => setNewProjectName(e.target.value)}
-                  placeholder="Enter project name..."
-                />
+      {/* Only show create project button for project managers */}
+      {user?.persona === "project-manager" && (
+        <div className="flex justify-center">
+          <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-700 hover:to-purple-700">
+                <Plus className="h-4 w-4 mr-2" />
+                Create New Project
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Create New Project</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium">Project Name</label>
+                  <Input
+                    value={newProjectName}
+                    onChange={(e) => setNewProjectName(e.target.value)}
+                    placeholder="Enter project name..."
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium">Description</label>
+                  <Textarea
+                    value={newProjectDescription}
+                    onChange={(e) => setNewProjectDescription(e.target.value)}
+                    placeholder="Describe your project..."
+                    rows={3}
+                  />
+                </div>
+                <div className="flex justify-end space-x-2">
+                  <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button 
+                    onClick={handleCreateProject}
+                    disabled={!newProjectName.trim()}
+                  >
+                    Create Project
+                  </Button>
+                </div>
               </div>
-              <div>
-                <label className="text-sm font-medium">Description</label>
-                <Textarea
-                  value={newProjectDescription}
-                  onChange={(e) => setNewProjectDescription(e.target.value)}
-                  placeholder="Describe your project..."
-                  rows={3}
-                />
-              </div>
-              <div className="flex justify-end space-x-2">
-                <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
-                  Cancel
-                </Button>
-                <Button 
-                  onClick={handleCreateProject}
-                  disabled={!newProjectName.trim()}
-                >
-                  Create Project
-                </Button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-      </div>
+            </DialogContent>
+          </Dialog>
+        </div>
+      )}
 
-      {userProjects.length > 0 && (
+      {availableProjects.length > 0 && (
         <div>
           <h3 className="text-lg font-semibold mb-4 flex items-center">
             <FolderOpen className="h-5 w-5 mr-2" />
-            Your Projects ({user?.persona.replace('-', ' ')})
+            {user?.persona === "project-manager" 
+              ? `Your Projects (${user?.persona.replace('-', ' ')})`
+              : "Available Projects"
+            }
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {userProjects.map((project) => (
+            {availableProjects.map((project) => (
               <Card 
                 key={project.id} 
                 className="cursor-pointer hover:shadow-md transition-shadow"
@@ -179,6 +203,17 @@ const ProjectSelector = ({ onProjectSelected }: ProjectSelectorProps) => {
               </Card>
             ))}
           </div>
+        </div>
+      )}
+
+      {availableProjects.length === 0 && (
+        <div className="text-center py-12">
+          <p className="text-gray-400">
+            {user?.persona === "project-manager" 
+              ? "No projects found. Create your first project to get started."
+              : "No projects available to work on."
+            }
+          </p>
         </div>
       )}
     </div>
