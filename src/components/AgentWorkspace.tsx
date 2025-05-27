@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -5,10 +6,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, Play, Download, Copy, RefreshCw } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ArrowLeft, Play, Download, Copy, RefreshCw, Upload, FileText, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@/contexts/UserContext";
-import TemplateDocumentDialog from "./TemplateDocumentDialog";
 
 interface AgentWorkspaceProps {
   agentName: string;
@@ -20,8 +21,9 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
   const [output, setOutput] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [dragActive, setDragActive] = useState(false);
   const { toast } = useToast();
   const { user } = useUser();
 
@@ -53,9 +55,20 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
     setTimeout(() => {
       clearInterval(interval);
       setProgress(100);
-      setOutput(`${agentName} Analysis Results:
+      
+      let outputText = `${agentName} Analysis Results:
 
-Based on your input: "${input}"
+Based on your input: "${input}"`;
+
+      if (selectedTemplate) {
+        outputText += `\nUsing template: ${selectedTemplate}`;
+      }
+
+      if (selectedFile) {
+        outputText += `\nDocument processed: ${selectedFile.name}`;
+      }
+
+      outputText += `
 
 Generated output with AI assistance:
 - Comprehensive analysis completed
@@ -64,7 +77,9 @@ Generated output with AI assistance:
 - Risk assessment performed
 - Next steps outlined
 
-This is a simulated output. In production, this would connect to OpenAI/Anthropic APIs for real processing.`);
+This is a simulated output. In production, this would connect to OpenAI/Anthropic APIs for real processing.`;
+
+      setOutput(outputText);
       setIsProcessing(false);
       toast({
         title: "Processing Complete",
@@ -97,13 +112,44 @@ This is a simulated output. In production, this would connect to OpenAI/Anthropi
     });
   };
 
-  const handleTemplateClick = (template: string) => {
-    setSelectedTemplate(template);
-    setDialogOpen(true);
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+    }
   };
 
-  const handleDocumentSelect = (file: File) => {
-    setInput(`Template: ${selectedTemplate}\nDocument: ${file.name}\n\nPlease generate a comprehensive ${selectedTemplate.toLowerCase()} based on the uploaded document "${file.name}"...`);
+  const handleDrag = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+    }
+  };
+
+  const handleRemoveFile = () => {
+    setSelectedFile(null);
+  };
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
   // Filter templates based on user persona
@@ -148,9 +194,8 @@ This is a simulated output. In production, this would connect to OpenAI/Anthropi
       </div>
 
       <Tabs defaultValue="workspace" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="workspace">Workspace</TabsTrigger>
-          <TabsTrigger value="templates">Templates</TabsTrigger>
           <TabsTrigger value="history">History</TabsTrigger>
         </TabsList>
 
@@ -161,14 +206,84 @@ This is a simulated output. In production, this would connect to OpenAI/Anthropi
                 <CardTitle>Input</CardTitle>
                 <CardDescription>Provide your requirements or specifications</CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-4">
                 <Textarea
                   placeholder="Enter your project requirements, user stories, technical specifications, or any other relevant information..."
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  className="min-h-[300px]"
+                  className="min-h-[200px]"
                 />
-                <div className="flex items-center justify-between mt-4">
+                
+                {/* Template Selection */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Template (Optional)</label>
+                  <Select value={selectedTemplate} onValueChange={setSelectedTemplate}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a template" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {filteredTemplates.map((template) => (
+                        <SelectItem key={template} value={template}>
+                          {template}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Document Upload */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Document Upload (Optional)</label>
+                  {!selectedFile ? (
+                    <div
+                      className={`border-2 border-dashed rounded-lg p-4 text-center transition-colors ${
+                        dragActive 
+                          ? 'border-primary bg-primary/10' 
+                          : 'border-gray-300 hover:border-gray-400'
+                      }`}
+                      onDragEnter={handleDrag}
+                      onDragLeave={handleDrag}
+                      onDragOver={handleDrag}
+                      onDrop={handleDrop}
+                    >
+                      <Upload className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                      <div className="space-y-1">
+                        <p className="text-sm">Drag and drop or browse files</p>
+                        <p className="text-xs text-gray-500">PDF, DOC, DOCX, TXT</p>
+                        <label htmlFor="file-upload">
+                          <Button variant="outline" size="sm" asChild>
+                            <span className="cursor-pointer">Browse Files</span>
+                          </Button>
+                        </label>
+                        <input
+                          id="file-upload"
+                          type="file"
+                          accept=".pdf,.doc,.docx,.txt"
+                          onChange={handleFileSelect}
+                          className="hidden"
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-center space-x-3 p-3 border rounded-lg bg-gray-50">
+                      <FileText className="h-6 w-6 text-blue-500" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium truncate">{selectedFile.name}</p>
+                        <p className="text-xs text-gray-500">{formatFileSize(selectedFile.size)}</p>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleRemoveFile}
+                        className="h-6 w-6 p-0"
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex items-center justify-between">
                   <p className="text-sm text-gray-500">{input.length} characters</p>
                   <Button onClick={handleProcess} disabled={isProcessing}>
                     {isProcessing ? (
@@ -229,28 +344,6 @@ This is a simulated output. In production, this would connect to OpenAI/Anthropi
           </div>
         </TabsContent>
 
-        <TabsContent value="templates" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredTemplates.map((template) => (
-              <Card key={template} className="cursor-pointer hover:shadow-md transition-shadow">
-                <CardHeader>
-                  <CardTitle className="text-lg">{template}</CardTitle>
-                  <CardDescription>Pre-built template for {template.toLowerCase()}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button 
-                    variant="outline" 
-                    className="w-full" 
-                    onClick={() => handleTemplateClick(template)}
-                  >
-                    Use Template
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-
         <TabsContent value="history" className="space-y-4">
           <Card>
             <CardHeader>
@@ -273,13 +366,6 @@ This is a simulated output. In production, this would connect to OpenAI/Anthropi
           </Card>
         </TabsContent>
       </Tabs>
-
-      <TemplateDocumentDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        templateName={selectedTemplate}
-        onDocumentSelect={handleDocumentSelect}
-      />
     </div>
   );
 };
