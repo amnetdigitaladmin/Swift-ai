@@ -13,64 +13,48 @@ const DevelopmentPhase = () => {
       description: "Generates complete application code with frontend, backend, and database integration.",
       icon: Code,
       features: ["Frontend scaffolding", "Backend APIs", "Database schemas", "Integration code"],
-      complexity: "Advanced" as const,
-      aiModel: "GPT-4" as const,
     },
     {
       title: "Frontend Development Assistant",
       description: "Specializes in modern frontend frameworks and component development.",
       icon: Package,
       features: ["React/Vue/Angular", "Component libraries", "State management", "Responsive design"],
-      complexity: "Intermediate" as const,
-      aiModel: "Claude-3" as const,
     },
     {
       title: "Backend API Builder",
       description: "Creates robust backend services with RESTful APIs and microservices architecture.",
       icon: Database,
       features: ["REST/GraphQL APIs", "Microservices", "Authentication", "Data validation"],
-      complexity: "Advanced" as const,
-      aiModel: "GPT-4" as const,
     },
     {
       title: "Cloud Infrastructure Architect",
       description: "Designs and implements cloud-native solutions with auto-scaling and monitoring.",
       icon: Cloud,
       features: ["AWS/Azure/GCP", "Docker containers", "Kubernetes", "CI/CD pipelines"],
-      complexity: "Advanced" as const,
-      aiModel: "Claude-3" as const,
     },
     {
       title: "Performance Optimizer",
       description: "Optimizes application performance with caching, bundling, and code splitting.",
       icon: Zap,
       features: ["Code optimization", "Caching strategies", "Bundle analysis", "Load balancing"],
-      complexity: "Advanced" as const,
-      aiModel: "GPT-4" as const,
     },
     {
       title: "Version Control Manager",
       description: "Manages git workflows, branching strategies, and code collaboration.",
       icon: GitBranch,
       features: ["Git workflows", "Branch strategies", "Code reviews", "Merge conflicts"],
-      complexity: "Intermediate" as const,
-      aiModel: "GPT-3.5" as const,
     },
     {
       title: "DevOps Configuration Assistant",
       description: "Sets up development environments, deployment pipelines, and monitoring.",
       icon: Settings,
       features: ["Environment setup", "Deployment automation", "Monitoring", "Logging"],
-      complexity: "Advanced" as const,
-      aiModel: "Claude-3" as const,
     },
     {
       title: "Code Quality Auditor",
       description: "Reviews code quality, identifies technical debt, and suggests improvements.",
       icon: Bug,
       features: ["Code review", "Security analysis", "Best practices", "Refactoring suggestions"],
-      complexity: "Intermediate" as const,
-      aiModel: "Gemini" as const,
     },
   ];
 
@@ -96,8 +80,6 @@ const DevelopmentPhase = () => {
             description={agent.description}
             icon={agent.icon}
             features={agent.features}
-            complexity={agent.complexity}
-            aiModel={agent.aiModel}
             onSelect={() => setSelectedAgent(agent.title)}
           />
         ))}

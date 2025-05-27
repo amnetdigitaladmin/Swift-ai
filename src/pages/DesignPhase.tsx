@@ -13,64 +13,48 @@ const DesignPhase = () => {
       description: "Creates comprehensive user interface designs with optimal user experience flows.",
       icon: Palette,
       features: ["Wireframe generation", "User journey mapping", "Component library", "Style guide creation"],
-      complexity: "Advanced" as const,
-      aiModel: "GPT-4" as const,
     },
     {
       title: "System Architecture Designer",
       description: "Designs scalable system architecture with component relationships and data flow.",
       icon: Layout,
       features: ["Architecture diagrams", "Component design", "Data flow modeling", "Scalability planning"],
-      complexity: "Advanced" as const,
-      aiModel: "Claude-3" as const,
     },
     {
       title: "Mobile Design Specialist",
       description: "Focuses on mobile-first design patterns and responsive layouts.",
       icon: Smartphone,
       features: ["Mobile-first design", "Touch interactions", "Platform conventions", "Responsive layouts"],
-      complexity: "Intermediate" as const,
-      aiModel: "Gemini" as const,
     },
     {
       title: "Web Interface Designer",
       description: "Creates modern web interfaces with accessibility and performance in mind.",
       icon: Monitor,
       features: ["Web components", "Grid systems", "Browser compatibility", "Performance optimization"],
-      complexity: "Intermediate" as const,
-      aiModel: "GPT-4" as const,
     },
     {
       title: "Design System Creator",
       description: "Builds comprehensive design systems with reusable components and guidelines.",
       icon: Layers,
       features: ["Component libraries", "Design tokens", "Style guides", "Documentation"],
-      complexity: "Advanced" as const,
-      aiModel: "Claude-3" as const,
     },
     {
       title: "Prototyping Assistant",
       description: "Generates interactive prototypes and mockups for validation and testing.",
       icon: Figma,
       features: ["Interactive prototypes", "User flow validation", "Mockup generation", "Feedback integration"],
-      complexity: "Intermediate" as const,
-      aiModel: "GPT-3.5" as const,
     },
     {
       title: "API Design Specialist",
       description: "Designs RESTful APIs and GraphQL schemas with best practices.",
       icon: Globe,
       features: ["API specification", "Schema design", "Documentation", "Version management"],
-      complexity: "Advanced" as const,
-      aiModel: "Claude-3" as const,
     },
     {
       title: "Accessibility Design Auditor",
       description: "Ensures designs meet accessibility standards and inclusive design principles.",
       icon: Accessibility,
       features: ["WCAG compliance", "Screen reader support", "Color contrast", "Keyboard navigation"],
-      complexity: "Intermediate" as const,
-      aiModel: "GPT-4" as const,
     },
   ];
 
@@ -96,8 +80,6 @@ const DesignPhase = () => {
             description={agent.description}
             icon={agent.icon}
             features={agent.features}
-            complexity={agent.complexity}
-            aiModel={agent.aiModel}
             onSelect={() => setSelectedAgent(agent.title)}
           />
         ))}

@@ -13,64 +13,48 @@ const RequirementsPhase = () => {
       description: "Transforms business needs into detailed functional requirements with stakeholder analysis.",
       icon: FileText,
       features: ["Stakeholder mapping", "Business process analysis", "Functional requirements", "Success metrics"],
-      complexity: "Intermediate" as const,
-      aiModel: "GPT-4" as const,
     },
     {
       title: "User Story Generator",
       description: "Creates comprehensive user stories with acceptance criteria and personas.",
       icon: Users,
       features: ["User persona creation", "Epic breakdown", "Acceptance criteria", "Story prioritization"],
-      complexity: "Basic" as const,
-      aiModel: "Claude-3" as const,
     },
     {
       title: "Technical Requirements Engineer",
       description: "Defines technical specifications, architecture constraints, and system requirements.",
       icon: Target,
       features: ["Technical constraints", "Performance requirements", "Integration specs", "Scalability analysis"],
-      complexity: "Advanced" as const,
-      aiModel: "GPT-4" as const,
     },
     {
       title: "API Requirements Designer",
       description: "Specifies API endpoints, data models, and integration requirements.",
       icon: GitBranch,
       features: ["Endpoint specification", "Data model design", "Authentication flow", "Rate limiting"],
-      complexity: "Intermediate" as const,
-      aiModel: "Claude-3" as const,
     },
     {
       title: "Compliance Requirements Advisor",
       description: "Ensures regulatory compliance and security requirements are properly defined.",
       icon: Shield,
       features: ["GDPR compliance", "Security requirements", "Audit trails", "Data protection"],
-      complexity: "Advanced" as const,
-      aiModel: "GPT-4" as const,
     },
     {
       title: "Mobile Requirements Specialist",
       description: "Focuses on mobile-specific requirements including platform constraints.",
       icon: Smartphone,
       features: ["Platform guidelines", "Performance specs", "Offline capabilities", "App store requirements"],
-      complexity: "Intermediate" as const,
-      aiModel: "Gemini" as const,
     },
     {
       title: "Database Requirements Analyst",
       description: "Defines data storage, retrieval, and management requirements.",
       icon: Database,
       features: ["Data modeling", "Query optimization", "Backup strategies", "Migration planning"],
-      complexity: "Advanced" as const,
-      aiModel: "Claude-3" as const,
     },
     {
       title: "Communication Requirements Planner",
       description: "Plans stakeholder communication and documentation requirements.",
       icon: MessageSquare,
       features: ["Communication matrix", "Documentation standards", "Review processes", "Sign-off procedures"],
-      complexity: "Basic" as const,
-      aiModel: "GPT-3.5" as const,
     },
   ];
 
@@ -96,8 +80,6 @@ const RequirementsPhase = () => {
             description={agent.description}
             icon={agent.icon}
             features={agent.features}
-            complexity={agent.complexity}
-            aiModel={agent.aiModel}
             onSelect={() => setSelectedAgent(agent.title)}
           />
         ))}

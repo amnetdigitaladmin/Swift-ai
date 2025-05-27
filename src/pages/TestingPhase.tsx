@@ -13,64 +13,48 @@ const TestingPhase = () => {
       description: "Creates comprehensive test suites with unit, integration, and end-to-end tests.",
       icon: CheckCircle,
       features: ["Unit test generation", "Integration tests", "E2E test scripts", "Test coverage analysis"],
-      complexity: "Advanced" as const,
-      aiModel: "GPT-4" as const,
     },
     {
       title: "Security Testing Specialist",
       description: "Performs security audits, vulnerability scanning, and penetration testing.",
       icon: Shield,
       features: ["Vulnerability scanning", "Security audits", "Penetration testing", "Compliance checks"],
-      complexity: "Advanced" as const,
-      aiModel: "Claude-3" as const,
     },
     {
       title: "Mobile Testing Expert",
       description: "Specializes in mobile app testing across different devices and platforms.",
       icon: Smartphone,
       features: ["Device compatibility", "Platform testing", "Performance testing", "User interaction"],
-      complexity: "Intermediate" as const,
-      aiModel: "Gemini" as const,
     },
     {
       title: "Cross-Browser Tester",
       description: "Ensures web applications work consistently across all major browsers.",
       icon: Globe,
       features: ["Browser compatibility", "Responsive testing", "Feature detection", "Polyfill suggestions"],
-      complexity: "Intermediate" as const,
-      aiModel: "GPT-3.5" as const,
     },
     {
       title: "User Acceptance Testing Coordinator",
       description: "Designs UAT processes and manages stakeholder testing workflows.",
       icon: Users,
       features: ["UAT scenarios", "Test case management", "Stakeholder coordination", "Feedback collection"],
-      complexity: "Basic" as const,
-      aiModel: "Claude-3" as const,
     },
     {
       title: "Performance Testing Engineer",
       description: "Conducts load testing, stress testing, and performance optimization.",
       icon: Zap,
       features: ["Load testing", "Stress testing", "Performance profiling", "Bottleneck identification"],
-      complexity: "Advanced" as const,
-      aiModel: "GPT-4" as const,
     },
     {
       title: "API Testing Specialist",
       description: "Tests API endpoints, data validation, and service integrations.",
       icon: Target,
       features: ["API endpoint testing", "Data validation", "Integration testing", "Service mocking"],
-      complexity: "Intermediate" as const,
-      aiModel: "Claude-3" as const,
     },
     {
       title: "Bug Hunter & Analyzer",
       description: "Identifies, categorizes, and prioritizes bugs with detailed analysis.",
       icon: AlertTriangle,
       features: ["Bug identification", "Issue classification", "Priority assessment", "Reproduction steps"],
-      complexity: "Intermediate" as const,
-      aiModel: "Gemini" as const,
     },
   ];
 
@@ -96,8 +80,6 @@ const TestingPhase = () => {
             description={agent.description}
             icon={agent.icon}
             features={agent.features}
-            complexity={agent.complexity}
-            aiModel={agent.aiModel}
             onSelect={() => setSelectedAgent(agent.title)}
           />
         ))}
