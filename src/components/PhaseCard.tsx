@@ -42,7 +42,7 @@ const PhaseCard = ({
               <Icon className={`h-8 w-8 ${
                 isCompleted ? 'text-green-400' : 
                 isActive ? 'text-cyan-400' : 
-                'text-gray-400'
+                'text-gray-300'
               }`} />
             </div>
             <div>
@@ -53,15 +53,15 @@ const PhaseCard = ({
               </div>
             </div>
           </div>
-          <ArrowRight className="h-6 w-6 text-gray-500" />
+          <ArrowRight className="h-6 w-6 text-gray-400" />
         </div>
-        <CardDescription className="text-gray-400 mt-2">{description}</CardDescription>
+        <CardDescription className="text-gray-300 mt-2">{description}</CardDescription>
       </CardHeader>
       <CardContent>
         <Button 
           variant={isActive ? "default" : isCompleted ? "secondary" : "outline"} 
           className={`w-full ${
-            isActive ? 'bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-700 hover:to-purple-700' :
+            isActive ? 'bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-700 hover:to-purple-700 text-white' :
             isCompleted ? 'bg-gray-700 hover:bg-gray-600 text-gray-200' :
             'border-gray-600 text-gray-200 hover:bg-gray-800'
           }`}

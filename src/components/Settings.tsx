@@ -52,16 +52,16 @@ const Settings = () => {
   if (user?.persona !== "admin") {
     return (
       <div className="space-y-6">
-        <Card>
+        <Card className="bg-white">
           <CardHeader>
-            <CardTitle>Settings</CardTitle>
-            <CardDescription>User preferences and configuration</CardDescription>
+            <CardTitle className="text-gray-900">Settings</CardTitle>
+            <CardDescription className="text-gray-600">User preferences and configuration</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <Label className="text-base font-medium">Current Role</Label>
+                  <Label className="text-base font-medium text-gray-800">Current Role</Label>
                   <p className="text-sm text-gray-600 mt-1">Your assigned role and permissions</p>
                 </div>
                 <Badge variant="secondary">{user?.persona}</Badge>
@@ -78,10 +78,10 @@ const Settings = () => {
 
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="bg-white">
         <CardHeader>
-          <CardTitle>Administrator Settings</CardTitle>
-          <CardDescription>Manage system configuration and LLM assignments</CardDescription>
+          <CardTitle className="text-gray-900">Administrator Settings</CardTitle>
+          <CardDescription className="text-gray-600">Manage system configuration and LLM assignments</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div>
@@ -118,7 +118,7 @@ const Settings = () => {
           </div>
           
           <div className="flex justify-end pt-4 border-t">
-            <Button onClick={handleSaveSettings}>
+            <Button onClick={handleSaveSettings} className="bg-blue-600 hover:bg-blue-700 text-white">
               Save Settings
             </Button>
           </div>

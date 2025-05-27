@@ -52,7 +52,7 @@ const ProcessOverview = () => {
 
   return (
     <Card className="w-full overflow-hidden">
-      <CardContent className="p-8">
+      <CardContent className="p-8 bg-white">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">SDLC Process Overview</h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
@@ -83,7 +83,7 @@ const ProcessOverview = () => {
 
                   {/* Content */}
                   <div className="p-4">
-                    <h3 className="font-bold text-lg mb-2">{step.title}</h3>
+                    <h3 className="font-bold text-lg mb-2 text-gray-900">{step.title}</h3>
                     <p className="text-gray-600 text-sm mb-4">{step.description}</p>
                     
                     {/* Agents */}
@@ -94,7 +94,7 @@ const ProcessOverview = () => {
                       </h4>
                       <div className="space-y-1">
                         {step.agents.slice(0, 3).map((agent, i) => (
-                          <div key={i} className="text-xs bg-gray-100 rounded px-2 py-1 flex items-center">
+                          <div key={i} className="text-xs bg-gray-100 rounded px-2 py-1 flex items-center text-gray-700">
                             <Bot className="h-3 w-3 mr-1 text-gray-500" />
                             {agent}
                           </div>
@@ -175,7 +175,7 @@ const ProcessOverview = () => {
             <Rocket className="h-12 w-12" />
           </div>
           <h3 className="text-2xl font-bold mb-2">Production-Ready Solution</h3>
-          <p className="text-green-100 mb-4">
+          <p className="text-white mb-4">
             Complete software solution delivered with documentation, tests, and deployment-ready code
           </p>
           <div className="flex flex-wrap justify-center gap-3">
