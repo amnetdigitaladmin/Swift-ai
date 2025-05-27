@@ -148,7 +148,7 @@ const Index = () => {
     );
   }
 
-  // Show project selector if no project is selected (for all roles now including developers)
+  // Show project selector if no project is selected (for all roles)
   if (!currentProject) {
     return (
       <div className="min-h-screen bg-gray-900">
@@ -199,7 +199,7 @@ const Index = () => {
         </div>
 
         {/* Developer Task View */}
-        {user?.persona === "developer" && currentProject && (
+        {user?.persona === "developer" && (
           <div className="mb-8">
             <DeveloperTaskView />
           </div>

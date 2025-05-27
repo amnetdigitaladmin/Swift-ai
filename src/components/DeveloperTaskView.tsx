@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Code, Clock, CheckCircle, AlertCircle, User, BookOpen } from "lucide-react";
+import { BookOpen, CheckCircle, AlertCircle, Clock, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -11,12 +11,14 @@ import { useToast } from "@/hooks/use-toast";
 
 const DeveloperTaskView = () => {
   const { user } = useUser();
-  const { getAssignedArtifacts, updateArtifactStatus } = useWorkflow();
+  const { getAssignedArtifacts, updateArtifactStatus, currentProject } = useWorkflow();
   const { toast } = useToast();
   const [selectedStoryId, setSelectedStoryId] = useState<string>("");
 
-  // Get artifacts assigned to current user (using username as identifier)
-  const assignedTasks = getAssignedArtifacts(user?.username || "");
+  // Get artifacts assigned to current user for the current project only
+  const assignedTasks = currentProject 
+    ? getAssignedArtifacts(user?.username || "").filter(task => task.projectId === currentProject.id)
+    : [];
 
   const handleStatusUpdate = (taskId: string, newStatus: string) => {
     updateArtifactStatus(taskId, newStatus);
@@ -69,8 +71,32 @@ const DeveloperTaskView = () => {
 
   const selectedStory = assignedTasks.find(task => task.id === selectedStoryId);
 
+  if (!currentProject) {
+    return (
+      <Card className="w-full">
+        <CardContent className="text-center py-8">
+          <BookOpen className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+          <p className="text-gray-500">Please select a project to view your assigned user stories.</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <div className="space-y-6">
+      {/* Project Info */}
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle className="flex items-center">
+            <BookOpen className="mr-2 h-5 w-5" />
+            Working on: {currentProject.name}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-gray-600">{currentProject.description}</p>
+        </CardContent>
+      </Card>
+
       {/* Story Selector */}
       {assignedTasks.length > 0 && (
         <Card className="w-full">
@@ -138,81 +164,17 @@ const DeveloperTaskView = () => {
         </Card>
       )}
 
-      {/* All Tasks List */}
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle className="flex items-center">
-            <Code className="mr-2 h-5 w-5" />
-            My Assigned Tasks ({assignedTasks.length})
-          </CardTitle>
-        </CardHeader>
-        
-        <CardContent>
-          {assignedTasks.length > 0 ? (
-            <div className="space-y-4">
-              {assignedTasks.map((task) => (
-                <div 
-                  key={task.id} 
-                  className={`p-4 border rounded-lg transition-colors ${
-                    task.id === selectedStoryId ? 'bg-blue-50 border-blue-200' : 'bg-gray-50'
-                  }`}
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2 mb-2">
-                        <h4 className="font-medium">{task.title}</h4>
-                        <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded">
-                          {task.type}
-                        </span>
-                        {task.id === selectedStoryId && (
-                          <Badge className="bg-blue-100 text-blue-800">Currently Working</Badge>
-                        )}
-                      </div>
-                      <p className="text-sm text-gray-600 mb-3">{task.content}</p>
-                      <div className="text-xs text-gray-400">
-                        Created: {new Date(task.createdAt).toLocaleDateString()}
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center space-x-3 ml-4">
-                      <div className="flex items-center space-x-2">
-                        {getStatusIcon(task.status)}
-                        {getStatusBadge(task.status)}
-                      </div>
-                      
-                      <div className="flex items-center space-x-2">
-                        <Select
-                          value={task.status || "assigned"}
-                          onValueChange={(value) => handleStatusUpdate(task.id, value)}
-                        >
-                          <SelectTrigger className="w-32">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {statusOptions.map((option) => (
-                              <SelectItem key={option.value} value={option.value}>
-                                {option.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-8">
-              <Code className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-              <p className="text-gray-500">No tasks assigned to you yet.</p>
-              <p className="text-sm text-gray-400 mt-2">
-                Check back later or contact your project manager.
-              </p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      {assignedTasks.length === 0 && (
+        <Card className="w-full">
+          <CardContent className="text-center py-8">
+            <BookOpen className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+            <p className="text-gray-500">No user stories assigned to you in this project yet.</p>
+            <p className="text-sm text-gray-400 mt-2">
+              Check back later or contact your project manager.
+            </p>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };

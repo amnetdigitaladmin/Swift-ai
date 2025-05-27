@@ -210,10 +210,7 @@ export const WorkflowProvider = ({ children }: WorkflowProviderProps) => {
   };
 
   const getAssignedArtifacts = (assignedTo: string) => {
-    if (!currentProject) return [];
-    return artifacts.filter(artifact => 
-      artifact.assignedTo === assignedTo && artifact.projectId === currentProject.id
-    );
+    return artifacts.filter(artifact => artifact.assignedTo === assignedTo);
   };
 
   const getUserStories = () => {
