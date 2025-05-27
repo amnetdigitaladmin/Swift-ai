@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { User, Lock, Users } from "lucide-react";
+import { User, Lock } from "lucide-react";
 
 interface LoginProps {
   onLogin: (username: string, password: string, persona: string) => void;
@@ -61,15 +61,17 @@ const Login = ({ onLogin }: LoginProps) => {
       <Card className="w-full max-w-md shadow-2xl border-0 bg-white/80 backdrop-blur-sm">
         <CardHeader className="text-center space-y-4">
           <div className="flex justify-center">
-            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-3 rounded-full">
-              <Users className="h-8 w-8 text-white" />
-            </div>
+            <img 
+              src="/lovable-uploads/6d2ee624-da66-4058-bda5-573daec3e844.png" 
+              alt="Swift AI Logo" 
+              className="h-16 w-auto"
+            />
           </div>
           <CardTitle className="text-2xl font-bold text-gray-900">
-            SDLC Agentic Login
+            Swift AI Login
           </CardTitle>
           <CardDescription className="text-gray-600">
-            Sign in to access your personalized AI agent workspace
+            Expedite, Optimize, Realize - Sign in to access your AI-powered development workspace
           </CardDescription>
         </CardHeader>
         
