@@ -5,11 +5,9 @@ import AgentCard from "@/components/AgentCard";
 import AgentWorkspace from "@/components/AgentWorkspace";
 import ArtifactManager from "@/components/ArtifactManager";
 import WorkflowButton from "@/components/WorkflowButton";
-import { useUser } from "@/contexts/UserContext";
 
 const RequirementsPhase = () => {
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
-  const { user } = useUser();
 
   const agents = [
     {
@@ -62,20 +60,6 @@ const RequirementsPhase = () => {
     },
   ];
 
-  // Filter agents based on user persona
-  const getFilteredAgents = () => {
-    if (user?.persona === "business-analyst") {
-      return agents.filter(agent => 
-        agent.title === "SwiftPlan Business Analyst" || 
-        agent.title === "SwiftPlan Story Generator"
-      );
-    }
-    return agents;
-  };
-
-  const filteredAgents = getFilteredAgents();
-  const isBusinessAnalyst = user?.persona === "business-analyst";
-
   if (selectedAgent) {
     return <AgentWorkspace agentName={selectedAgent} onBack={() => setSelectedAgent(null)} />;
   }
@@ -106,8 +90,8 @@ const RequirementsPhase = () => {
         </div>
       </div>
 
-      <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 ${isBusinessAnalyst ? 'justify-items-center' : ''}`}>
-        {filteredAgents.map((agent, index) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {agents.map((agent, index) => (
           <AgentCard
             key={index}
             title={agent.title}
