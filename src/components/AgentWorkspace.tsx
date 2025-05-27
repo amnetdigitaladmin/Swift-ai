@@ -7,11 +7,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ArrowLeft, Play, Download, Copy, RefreshCw, Upload, FileText, X, Github, FolderOpen, Calendar } from "lucide-react";
+import { ArrowLeft, Play, Download, Copy, RefreshCw, Upload, FileText, X, FolderOpen, Calendar, Cloud, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@/contexts/UserContext";
 import { useWorkflow } from "@/contexts/WorkflowContext";
-import GitHubAuthModal, { GitHubCredentials } from "./GitHubAuthModal";
+import AzureDevOpsAuthModal, { AzureDevOpsCredentials } from "./AzureDevOpsAuthModal";
 
 interface AgentWorkspaceProps {
   agentName: string;
@@ -26,10 +26,10 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
   const [selectedTemplate, setSelectedTemplate] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);
-  const [isGitHubModalOpen, setIsGitHubModalOpen] = useState(false);
+  const [isAzureDevOpsModalOpen, setIsAzureDevOpsModalOpen] = useState(false);
   const { toast } = useToast();
   const { user } = useUser();
-  const { currentProject } = useWorkflow();
+  const { currentProject, addArtifact } = useWorkflow();
 
   const handleProcess = async () => {
     if (!input.trim()) {
@@ -116,42 +116,111 @@ This is a simulated output. In production, this would connect to OpenAI/Anthropi
     });
   };
 
-  const handleGitHubPush = () => {
-    setIsGitHubModalOpen(true);
+  const handleAzureDevOpsPush = () => {
+    setIsAzureDevOpsModalOpen(true);
   };
 
-  const handleGitHubSubmit = async (credentials: GitHubCredentials) => {
+  const handleAzureDevOpsSubmit = async (credentials: AzureDevOpsCredentials) => {
     try {
-      // Simulate GitHub API interaction
-      console.log("GitHub credentials:", {
-        username: credentials.username,
-        repository: credentials.repository,
-        token: credentials.token.substring(0, 8) + "..." // Only log partial token for security
+      // Simulate Azure DevOps API interaction
+      console.log("Azure DevOps credentials:", {
+        organization: credentials.organization,
+        project: credentials.project,
+        token: credentials.personalAccessToken.substring(0, 8) + "..." // Only log partial token for security
       });
 
       // In a real implementation, this would:
-      // 1. Validate the credentials with GitHub API
-      // 2. Create or update the repository
-      // 3. Commit and push the generated content
+      // 1. Validate the credentials with Azure DevOps API
+      // 2. Create work items in the specified project
+      // 3. Push the generated content as work items
       
       toast({
-        title: "GitHub Integration Successful",
-        description: `Content pushed to ${credentials.username}/${credentials.repository} successfully!`,
+        title: "Azure DevOps Integration Successful",
+        description: `Content pushed to ${credentials.organization}/${credentials.project} successfully!`,
       });
       
       // Store credentials securely (in a real app, this would be encrypted/stored securely)
-      localStorage.setItem('github_username', credentials.username);
-      localStorage.setItem('github_repository', credentials.repository);
+      localStorage.setItem('azuredevops_organization', credentials.organization);
+      localStorage.setItem('azuredevops_project', credentials.project);
       // Note: In production, tokens should NEVER be stored in localStorage
       
     } catch (error) {
-      console.error("GitHub integration failed:", error);
+      console.error("Azure DevOps integration failed:", error);
       toast({
-        title: "GitHub Integration Failed",
-        description: "Failed to connect to GitHub. Please check your credentials and try again.",
+        title: "Azure DevOps Integration Failed",
+        description: "Failed to connect to Azure DevOps. Please check your credentials and try again.",
         variant: "destructive",
       });
       throw error; // Re-throw to prevent modal from closing
+    }
+  };
+
+  const handlePushToProjectManager = () => {
+    if (!output.trim() || !currentProject) {
+      toast({
+        title: "Cannot Push to Project Manager",
+        description: "No output generated or no project selected.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Check if this is a story generator agent
+    const isStoryGenerator = agentName.toLowerCase().includes("story generator");
+    
+    if (isStoryGenerator) {
+      // Parse the output to extract user stories (in a real implementation, this would be more sophisticated)
+      const storyLines = output.split('\n').filter(line => 
+        line.trim().startsWith('-') || 
+        line.trim().startsWith('*') || 
+        line.toLowerCase().includes('user story') ||
+        line.toLowerCase().includes('as a')
+      );
+
+      if (storyLines.length > 0) {
+        // Create user stories as artifacts
+        storyLines.forEach((story, index) => {
+          if (story.trim()) {
+            addArtifact({
+              title: `User Story ${index + 1}: ${story.substring(0, 50)}...`,
+              type: "User Story",
+              content: story.trim(),
+              phase: "requirements"
+            });
+          }
+        });
+
+        toast({
+          title: "Stories Pushed to Project Manager",
+          description: `${storyLines.length} user stories have been created and are now available for assignment.`,
+        });
+      } else {
+        // Create a general artifact
+        addArtifact({
+          title: `${agentName} Output`,
+          type: "Analysis Document",
+          content: output,
+          phase: "requirements"
+        });
+
+        toast({
+          title: "Content Pushed to Project Manager",
+          description: "Generated content has been added to the project for review and assignment.",
+        });
+      }
+    } else {
+      // For non-story generators, create a general artifact
+      addArtifact({
+        title: `${agentName} Output`,
+        type: "Analysis Document", 
+        content: output,
+        phase: "requirements"
+      });
+
+      toast({
+        title: "Content Pushed to Project Manager",
+        description: "Generated content has been added to the project for review.",
+      });
     }
   };
 
@@ -400,7 +469,7 @@ This is a simulated output. In production, this would connect to OpenAI/Anthropi
                       placeholder="AI-generated output will appear here..."
                     />
                     {output && (
-                      <div className="flex items-center space-x-2 mt-4">
+                      <div className="flex items-center space-x-2 mt-4 flex-wrap gap-2">
                         <Button variant="outline" size="sm" onClick={handleCopy}>
                           <Copy className="h-4 w-4 mr-2" />
                           Copy
@@ -409,9 +478,13 @@ This is a simulated output. In production, this would connect to OpenAI/Anthropi
                           <Download className="h-4 w-4 mr-2" />
                           Download
                         </Button>
-                        <Button variant="outline" size="sm" onClick={handleGitHubPush}>
-                          <Github className="h-4 w-4 mr-2" />
-                          Push to GitHub
+                        <Button variant="outline" size="sm" onClick={handleAzureDevOpsPush}>
+                          <Cloud className="h-4 w-4 mr-2" />
+                          Push to Azure DevOps
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={handlePushToProjectManager}>
+                          <Users className="h-4 w-4 mr-2" />
+                          Push to Project Manager
                         </Button>
                       </div>
                     )}
@@ -472,10 +545,10 @@ This is a simulated output. In production, this would connect to OpenAI/Anthropi
         </TabsContent>
       </Tabs>
 
-      <GitHubAuthModal
-        isOpen={isGitHubModalOpen}
-        onClose={() => setIsGitHubModalOpen(false)}
-        onSubmit={handleGitHubSubmit}
+      <AzureDevOpsAuthModal
+        isOpen={isAzureDevOpsModalOpen}
+        onClose={() => setIsAzureDevOpsModalOpen(false)}
+        onSubmit={handleAzureDevOpsSubmit}
       />
     </div>
   );
