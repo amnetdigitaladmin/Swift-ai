@@ -7,17 +7,10 @@ const Header = () => {
     <header className="bg-gradient-to-r from-gray-900 via-gray-800 to-black text-white shadow-2xl border-b border-gray-700">
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-3">
-              <img 
-                src="/lovable-uploads/6d2ee624-da66-4058-bda5-573daec3e844.png" 
-                alt="Swift AI Logo" 
-                className="h-12 w-auto"
-              />
-              <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">Swift AI</h1>
-                <p className="text-gray-300 text-sm">Expedite, Optimize, Realize</p>
-              </div>
+          <div className="flex items-center space-x-3">
+            <div>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">Swift AI</h1>
+              <p className="text-gray-300 text-sm">Expedite, Optimize, Realize</p>
             </div>
           </div>
           <div className="flex items-center space-x-4">
@@ -29,6 +22,13 @@ const Header = () => {
               <Code className="h-4 w-4 mr-2" />
               API Keys
             </Button>
+            <div className="flex items-center space-x-3">
+              <img 
+                src="/lovable-uploads/6d2ee624-da66-4058-bda5-573daec3e844.png" 
+                alt="Swift AI Logo" 
+                className="h-16 w-auto"
+              />
+            </div>
           </div>
         </div>
       </div>
