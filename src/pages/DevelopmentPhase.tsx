@@ -3,6 +3,8 @@ import { useState } from "react";
 import { Code, Database, Cloud, Zap, GitBranch, Package, Settings, Bug } from "lucide-react";
 import AgentCard from "@/components/AgentCard";
 import AgentWorkspace from "@/components/AgentWorkspace";
+import ArtifactManager from "@/components/ArtifactManager";
+import WorkflowButton from "@/components/WorkflowButton";
 
 const DevelopmentPhase = () => {
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
@@ -70,6 +72,22 @@ const DevelopmentPhase = () => {
           Accelerate development with AI-powered coding agents. From frontend to backend, 
           infrastructure to optimization - get intelligent assistance for every aspect of development.
         </p>
+      </div>
+
+      {/* Workflow Management Section */}
+      <div className="bg-white rounded-lg p-6 border border-gray-200">
+        <div className="flex flex-col lg:flex-row gap-6">
+          <div className="flex-1">
+            <ArtifactManager currentPhase="development" />
+          </div>
+          <div className="lg:w-auto flex flex-col justify-center">
+            <WorkflowButton 
+              currentPhase="development" 
+              nextPhase="testing" 
+              nextPhaseTitle="Testing & Quality Assurance" 
+            />
+          </div>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

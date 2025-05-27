@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { UserProvider, useUser } from "./contexts/UserContext";
+import { WorkflowProvider } from "./contexts/WorkflowContext";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import SettingsPage from "./pages/Settings";
@@ -34,9 +35,11 @@ const App = () => (
       <Toaster />
       <Sonner />
       <UserProvider>
-        <BrowserRouter>
-          <AppContent />
-        </BrowserRouter>
+        <WorkflowProvider>
+          <BrowserRouter>
+            <AppContent />
+          </BrowserRouter>
+        </WorkflowProvider>
       </UserProvider>
     </TooltipProvider>
   </QueryClientProvider>
