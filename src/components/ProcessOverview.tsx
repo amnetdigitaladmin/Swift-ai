@@ -1,4 +1,3 @@
-
 import { ArrowRight, FileText, Palette, Code, CheckCircle, Users, Zap, Bot, Target, Lightbulb, Shield, Rocket } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -7,7 +6,7 @@ const ProcessOverview = () => {
   const processSteps = [
     {
       id: 1,
-      title: "Requirements Analysis",
+      title: "SwiftPlan",
       icon: FileText,
       color: "bg-blue-500",
       agents: ["Business Analyst", "Stakeholder Liaison", "Requirements Engineer"],
@@ -16,7 +15,7 @@ const ProcessOverview = () => {
     },
     {
       id: 2,
-      title: "Design & Architecture",
+      title: "SwiftDesign",
       icon: Palette,
       color: "bg-purple-500",
       agents: ["UI/UX Designer", "System Architect", "Database Designer"],
@@ -25,7 +24,7 @@ const ProcessOverview = () => {
     },
     {
       id: 3,
-      title: "Development",
+      title: "Swift Dev",
       icon: Code,
       color: "bg-green-500",
       agents: ["Frontend Developer", "Backend Developer", "DevOps Engineer"],
@@ -34,7 +33,7 @@ const ProcessOverview = () => {
     },
     {
       id: 4,
-      title: "Testing & QA",
+      title: "SwiftTest",
       icon: CheckCircle,
       color: "bg-orange-500",
       agents: ["QA Engineer", "Test Automation", "Security Tester"],
