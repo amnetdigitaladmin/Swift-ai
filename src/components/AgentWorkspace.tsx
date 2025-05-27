@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, Play, Download, Copy, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useUser } from "@/contexts/UserContext";
 
 interface AgentWorkspaceProps {
   agentName: string;
@@ -20,6 +21,7 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
   const { toast } = useToast();
+  const { user } = useUser();
 
   const handleProcess = async () => {
     if (!input.trim()) {
@@ -92,6 +94,31 @@ This is a simulated output. In production, this would connect to OpenAI/Anthropi
       description: "Output file has been downloaded.",
     });
   };
+
+  // Filter templates based on user persona
+  const getFilteredTemplates = () => {
+    const allTemplates = [
+      "User Story Template", 
+      "API Specification", 
+      "Test Cases", 
+      "Code Review", 
+      "Architecture Design", 
+      "Risk Assessment",
+      "Business requirement document (BRD) template",
+      "Skills and resources template"
+    ];
+
+    if (user?.persona === "business-analyst") {
+      return [
+        "Business requirement document (BRD) template",
+        "Skills and resources template"
+      ];
+    }
+
+    return allTemplates;
+  };
+
+  const filteredTemplates = getFilteredTemplates();
 
   return (
     <div className="space-y-6">
@@ -193,7 +220,7 @@ This is a simulated output. In production, this would connect to OpenAI/Anthropi
 
         <TabsContent value="templates" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {["User Story Template", "API Specification", "Test Cases", "Code Review", "Architecture Design", "Risk Assessment"].map((template) => (
+            {filteredTemplates.map((template) => (
               <Card key={template} className="cursor-pointer hover:shadow-md transition-shadow">
                 <CardHeader>
                   <CardTitle className="text-lg">{template}</CardTitle>
