@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,6 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, Play, Download, Copy, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@/contexts/UserContext";
+import TemplateDocumentDialog from "./TemplateDocumentDialog";
 
 interface AgentWorkspaceProps {
   agentName: string;
@@ -20,6 +20,8 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
   const [output, setOutput] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState("");
   const { toast } = useToast();
   const { user } = useUser();
 
@@ -93,6 +95,15 @@ This is a simulated output. In production, this would connect to OpenAI/Anthropi
       title: "Download Started",
       description: "Output file has been downloaded.",
     });
+  };
+
+  const handleTemplateClick = (template: string) => {
+    setSelectedTemplate(template);
+    setDialogOpen(true);
+  };
+
+  const handleDocumentSelect = (file: File) => {
+    setInput(`Template: ${selectedTemplate}\nDocument: ${file.name}\n\nPlease generate a comprehensive ${selectedTemplate.toLowerCase()} based on the uploaded document "${file.name}"...`);
   };
 
   // Filter templates based on user persona
@@ -227,7 +238,11 @@ This is a simulated output. In production, this would connect to OpenAI/Anthropi
                   <CardDescription>Pre-built template for {template.toLowerCase()}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button variant="outline" className="w-full" onClick={() => setInput(`Template: ${template}\n\nPlease generate a comprehensive ${template.toLowerCase()} for my project...`)}>
+                  <Button 
+                    variant="outline" 
+                    className="w-full" 
+                    onClick={() => handleTemplateClick(template)}
+                  >
                     Use Template
                   </Button>
                 </CardContent>
@@ -258,6 +273,13 @@ This is a simulated output. In production, this would connect to OpenAI/Anthropi
           </Card>
         </TabsContent>
       </Tabs>
+
+      <TemplateDocumentDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        templateName={selectedTemplate}
+        onDocumentSelect={handleDocumentSelect}
+      />
     </div>
   );
 };
