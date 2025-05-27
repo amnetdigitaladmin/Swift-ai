@@ -1,21 +1,44 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useWorkflow } from "@/contexts/WorkflowContext";
-import { Calendar, Clock, Filter, Search, User, TrendingUp } from "lucide-react";
+import { useUser } from "@/contexts/UserContext";
+import { useToast } from "@/hooks/use-toast";
+import { Calendar, Clock, Filter, Search, User, TrendingUp, Plus } from "lucide-react";
 
 const ProjectManagementDashboard = () => {
-  const { getAllProjectsWithStatus } = useWorkflow();
+  const { getAllProjectsWithStatus, createProject, selectProject } = useWorkflow();
+  const { user } = useUser();
+  const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [roleFilter, setRoleFilter] = useState("all");
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [newProjectName, setNewProjectName] = useState("");
+  const [newProjectDescription, setNewProjectDescription] = useState("");
 
   const allProjects = getAllProjectsWithStatus();
+
+  const handleCreateProject = () => {
+    if (!newProjectName.trim() || !user) return;
+
+    const project = createProject(newProjectName, newProjectDescription, user.persona);
+    selectProject(project);
+    setIsCreateDialogOpen(false);
+    setNewProjectName("");
+    setNewProjectDescription("");
+    
+    toast({
+      title: "Project Created",
+      description: `${newProjectName} has been created successfully.`,
+    });
+  };
 
   const filteredProjects = allProjects.filter(project => {
     const matchesSearch = project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -81,9 +104,57 @@ const ProjectManagementDashboard = () => {
             Overview of all projects and their current stages
           </p>
         </div>
-        <div className="flex items-center space-x-4 text-gray-300">
-          <TrendingUp className="h-5 w-5" />
-          <span className="text-sm">Total Projects: {allProjects.length}</span>
+        <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 text-gray-300">
+            <TrendingUp className="h-5 w-5" />
+            <span className="text-sm">Total Projects: {allProjects.length}</span>
+          </div>
+          <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-700 hover:to-purple-700">
+                <Plus className="h-4 w-4 mr-2" />
+                Create New Project
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="bg-gray-800 border-gray-700">
+              <DialogHeader>
+                <DialogTitle className="text-gray-200">Create New Project</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium text-gray-200">Project Name</label>
+                  <Input
+                    value={newProjectName}
+                    onChange={(e) => setNewProjectName(e.target.value)}
+                    placeholder="Enter project name..."
+                    className="bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-200">Description</label>
+                  <Textarea
+                    value={newProjectDescription}
+                    onChange={(e) => setNewProjectDescription(e.target.value)}
+                    placeholder="Describe your project..."
+                    rows={3}
+                    className="bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400"
+                  />
+                </div>
+                <div className="flex justify-end space-x-2">
+                  <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)} className="border-gray-600 text-gray-200 hover:bg-gray-700">
+                    Cancel
+                  </Button>
+                  <Button 
+                    onClick={handleCreateProject}
+                    disabled={!newProjectName.trim()}
+                    className="bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-700 hover:to-purple-700"
+                  >
+                    Create Project
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
