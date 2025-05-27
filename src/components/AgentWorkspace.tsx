@@ -396,7 +396,7 @@ This is a simulated output. In production, this would connect to OpenAI/Anthropi
                     <Textarea
                       value={output}
                       readOnly
-                      className="min-h-[300px] bg-gray-50"
+                      className="min-h-[300px] bg-gray-800 text-gray-100 border-gray-600"
                       placeholder="AI-generated output will appear here..."
                     />
                     {output && (
