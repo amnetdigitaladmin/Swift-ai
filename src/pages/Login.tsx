@@ -78,7 +78,7 @@ const Login = ({ onLogin }: LoginProps) => {
             <img 
               src="/lovable-uploads/6d2ee624-da66-4058-bda5-573daec3e844.png" 
               alt="Swift AI Logo" 
-              className="h-16 w-auto"
+              className="h-24 w-auto"
             />
           </div>
           <CardTitle className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
