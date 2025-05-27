@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { FileText, Palette, Code, CheckCircle, ArrowRight, Eye, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -147,7 +148,7 @@ const Index = () => {
     );
   }
 
-  // Show project selector if no project is selected
+  // Show project selector if no project is selected (for all roles now including developers)
   if (!currentProject) {
     return (
       <div className="min-h-screen bg-gray-900">
