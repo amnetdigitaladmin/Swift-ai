@@ -5,11 +5,13 @@ import AgentCard from "@/components/AgentCard";
 import AgentWorkspace from "@/components/AgentWorkspace";
 import ArtifactManager from "@/components/ArtifactManager";
 import WorkflowButton from "@/components/WorkflowButton";
+import { useUser } from "@/contexts/UserContext";
 
 const DevelopmentPhase = () => {
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
+  const { user } = useUser();
 
-  const agents = [
+  const allAgents = [
     {
       title: "Swift Dev Full-Stack Generator",
       description: "Generates complete application code with frontend, backend, and database integration.",
@@ -59,6 +61,22 @@ const DevelopmentPhase = () => {
       features: ["Code review", "Security analysis", "Best practices", "Refactoring suggestions"],
     },
   ];
+
+  // Filter agents based on developer type
+  const getFilteredAgents = () => {
+    if (user?.username === "dev1") {
+      // Frontend developer - only show Frontend Assistant
+      return allAgents.filter(agent => agent.title === "Swift Dev Frontend Assistant");
+    } else if (user?.username === "dev2") {
+      // Backend developer - only show Backend Builder
+      return allAgents.filter(agent => agent.title === "Swift Dev Backend Builder");
+    }
+    
+    // For other developers, show all agents (fallback)
+    return allAgents;
+  };
+
+  const agents = getFilteredAgents();
 
   if (selectedAgent) {
     return <AgentWorkspace agentName={selectedAgent} onBack={() => setSelectedAgent(null)} />;
