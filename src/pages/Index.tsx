@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { FileText, Palette, Code, CheckCircle, ArrowRight, Eye, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -12,6 +11,7 @@ import ProjectSelector from "@/components/ProjectSelector";
 import ProjectManagementDashboard from "@/components/ProjectManagementDashboard";
 import UserStoryAssignment from "@/components/UserStoryAssignment";
 import DeveloperTaskView from "@/components/DeveloperTaskView";
+import ProjectTeamAssignment from "@/components/ProjectTeamAssignment";
 import RequirementsPhase from "./RequirementsPhase";
 import DesignPhase from "./DesignPhase";
 import DevelopmentPhase from "./DevelopmentPhase";
@@ -111,6 +111,7 @@ const Index = () => {
           </div>
           <div className="space-y-6">
             <ProjectManagementDashboard />
+            <ProjectTeamAssignment />
             {currentProject && <UserStoryAssignment />}
           </div>
         </div>
