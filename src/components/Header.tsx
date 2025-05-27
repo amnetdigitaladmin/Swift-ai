@@ -1,8 +1,12 @@
 
 import { Code, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useUser } from "@/contexts/UserContext";
+import { Link } from "react-router-dom";
 
 const Header = () => {
+  const { user } = useUser();
+
   return (
     <header className="bg-gradient-to-r from-gray-900 via-gray-800 to-black text-white shadow-2xl border-b border-gray-700">
       <div className="container mx-auto px-6 py-4">
@@ -15,13 +19,11 @@ const Header = () => {
           </div>
           <div className="flex items-start space-x-4">
             <div className="flex items-center space-x-2">
-              <Button variant="secondary" size="sm" className="bg-gray-800/80 hover:bg-gray-700/80 border border-gray-600 text-gray-200">
-                <Settings className="h-4 w-4 mr-2" />
-                Settings
-              </Button>
-              <Button variant="secondary" size="sm" className="bg-gray-800/80 hover:bg-gray-700/80 border border-gray-600 text-gray-200">
-                <Code className="h-4 w-4 mr-2" />
-                API Keys
+              <Button variant="secondary" size="sm" className="bg-gray-800/80 hover:bg-gray-700/80 border border-gray-600 text-gray-200" asChild>
+                <Link to="/settings">
+                  <Settings className="h-4 w-4 mr-2" />
+                  Settings
+                </Link>
               </Button>
             </div>
             <div className="flex justify-end">
@@ -34,7 +36,7 @@ const Header = () => {
           </div>
         </div>
       </div>
-    </header>
+    </div>
   );
 };
 
