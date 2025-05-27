@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 const Header = () => {
   return (
-    <header className="bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 text-white shadow-lg">
+    <header className="bg-gradient-to-r from-gray-900 via-gray-800 to-black text-white shadow-2xl border-b border-gray-700">
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
@@ -15,17 +15,17 @@ const Header = () => {
                 className="h-12 w-auto"
               />
               <div>
-                <h1 className="text-2xl font-bold">Swift AI</h1>
-                <p className="text-indigo-100 text-sm">Expedite, Optimize, Realize</p>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">Swift AI</h1>
+                <p className="text-gray-300 text-sm">Expedite, Optimize, Realize</p>
               </div>
             </div>
           </div>
           <div className="flex items-center space-x-4">
-            <Button variant="secondary" size="sm" className="bg-white/20 hover:bg-white/30 border-0">
+            <Button variant="secondary" size="sm" className="bg-gray-800/80 hover:bg-gray-700/80 border border-gray-600 text-gray-200">
               <Settings className="h-4 w-4 mr-2" />
               Settings
             </Button>
-            <Button variant="secondary" size="sm" className="bg-white/20 hover:bg-white/30 border-0">
+            <Button variant="secondary" size="sm" className="bg-gray-800/80 hover:bg-gray-700/80 border border-gray-600 text-gray-200">
               <Code className="h-4 w-4 mr-2" />
               API Keys
             </Button>

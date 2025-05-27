@@ -57,8 +57,8 @@ const Login = ({ onLogin }: LoginProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center p-6">
-      <Card className="w-full max-w-md shadow-2xl border-0 bg-white/80 backdrop-blur-sm">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center p-6">
+      <Card className="w-full max-w-md shadow-2xl border border-gray-700 bg-gray-800/90 backdrop-blur-sm">
         <CardHeader className="text-center space-y-4">
           <div className="flex justify-center">
             <img 
@@ -67,10 +67,10 @@ const Login = ({ onLogin }: LoginProps) => {
               className="h-16 w-auto"
             />
           </div>
-          <CardTitle className="text-2xl font-bold text-gray-900">
+          <CardTitle className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
             Swift AI Login
           </CardTitle>
-          <CardDescription className="text-gray-600">
+          <CardDescription className="text-gray-300">
             Expedite, Optimize, Realize - Sign in to access your AI-powered development workspace
           </CardDescription>
         </CardHeader>
@@ -79,7 +79,7 @@ const Login = ({ onLogin }: LoginProps) => {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Username Field */}
             <div className="space-y-2">
-              <Label htmlFor="username" className="text-sm font-medium text-gray-700">
+              <Label htmlFor="username" className="text-sm font-medium text-gray-200">
                 Username
               </Label>
               <div className="relative">
@@ -90,7 +90,7 @@ const Login = ({ onLogin }: LoginProps) => {
                   placeholder="Enter your username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400"
                   required
                 />
               </div>
@@ -98,7 +98,7 @@ const Login = ({ onLogin }: LoginProps) => {
 
             {/* Password Field */}
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+              <Label htmlFor="password" className="text-sm font-medium text-gray-200">
                 Password
               </Label>
               <div className="relative">
@@ -109,7 +109,7 @@ const Login = ({ onLogin }: LoginProps) => {
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400"
                   required
                 />
               </div>
@@ -117,7 +117,7 @@ const Login = ({ onLogin }: LoginProps) => {
 
             {/* Persona Selection */}
             <div className="space-y-3">
-              <Label className="text-sm font-medium text-gray-700">
+              <Label className="text-sm font-medium text-gray-200">
                 Select Your Role
               </Label>
               <RadioGroup
@@ -126,13 +126,13 @@ const Login = ({ onLogin }: LoginProps) => {
                 className="space-y-3"
               >
                 {personas.map((p) => (
-                  <div key={p.id} className="flex items-start space-x-3 p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
-                    <RadioGroupItem value={p.id} id={p.id} className="mt-1" />
+                  <div key={p.id} className="flex items-start space-x-3 p-3 rounded-lg border border-gray-600 bg-gray-700/30 hover:bg-gray-700/50 transition-colors">
+                    <RadioGroupItem value={p.id} id={p.id} className="mt-1 border-gray-500 text-cyan-400" />
                     <div className="flex-1">
-                      <Label htmlFor={p.id} className="font-medium text-gray-900 cursor-pointer">
+                      <Label htmlFor={p.id} className="font-medium text-gray-200 cursor-pointer">
                         {p.title}
                       </Label>
-                      <p className="text-xs text-gray-600 mt-1">{p.description}</p>
+                      <p className="text-xs text-gray-400 mt-1">{p.description}</p>
                     </div>
                   </div>
                 ))}
@@ -141,7 +141,7 @@ const Login = ({ onLogin }: LoginProps) => {
 
             <Button 
               type="submit" 
-              className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 transition-all duration-300"
+              className="w-full bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-700 hover:to-purple-700 transition-all duration-300 text-white"
               disabled={!username || !password}
             >
               Sign In
