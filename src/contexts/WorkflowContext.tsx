@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useState, ReactNode } from "react";
 
 interface Project {
@@ -24,7 +23,7 @@ interface WorkflowContextType {
   projects: Project[];
   currentPhase: string | null;
   currentProject: Project | null;
-  addArtifact: (artifact: Omit<Artifact, 'id' | 'createdAt'>) => void;
+  addArtifact: (artifact: Omit<Artifact, 'id' | 'createdAt' | 'projectId'>) => void;
   moveArtifactToNextPhase: (artifactId: string, nextPhase: string) => void;
   getArtifactsByPhase: (phase: string) => Artifact[];
   setCurrentPhase: (phase: string | null) => void;
@@ -75,7 +74,7 @@ export const WorkflowProvider = ({ children }: WorkflowProviderProps) => {
   const [currentPhase, setCurrentPhase] = useState<string | null>(null);
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
 
-  const addArtifact = (artifact: Omit<Artifact, 'id' | 'createdAt'>) => {
+  const addArtifact = (artifact: Omit<Artifact, 'id' | 'createdAt' | 'projectId'>) => {
     if (!currentProject) return;
     
     const newArtifact: Artifact = {
