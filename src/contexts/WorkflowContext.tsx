@@ -8,7 +8,7 @@ interface Project {
   role: string;
   currentStage?: string;
   lastActivity?: string;
-  assignedTeam?: string;
+  assignedTeams?: string[];
 }
 
 interface Artifact {
@@ -41,7 +41,7 @@ interface WorkflowContextType {
   updateArtifactStatus: (artifactId: string, status: string) => void;
   getAssignedArtifacts: (assignedTo: string) => Artifact[];
   getUserStories: () => Artifact[];
-  assignProjectToTeam: (projectId: string, teamRole: string) => void;
+  assignProjectToTeams: (projectId: string, teamRoles: string[]) => void;
   getProjectsAssignedToTeam: (teamRole: string) => Project[];
 }
 
@@ -70,7 +70,7 @@ export const WorkflowProvider = ({ children }: WorkflowProviderProps) => {
       role: "business-analyst",
       currentStage: "requirements",
       lastActivity: new Date(Date.now() - 3600000).toISOString(),
-      assignedTeam: "business-analyst"
+      assignedTeams: ["business-analyst", "developer"]
     },
     {
       id: "2",
@@ -80,7 +80,7 @@ export const WorkflowProvider = ({ children }: WorkflowProviderProps) => {
       role: "designer",
       currentStage: "design",
       lastActivity: new Date(Date.now() - 7200000).toISOString(),
-      assignedTeam: "designer"
+      assignedTeams: ["designer", "qa-engineer"]
     },
     {
       id: "3",
@@ -90,7 +90,7 @@ export const WorkflowProvider = ({ children }: WorkflowProviderProps) => {
       role: "developer",
       currentStage: "development",
       lastActivity: new Date(Date.now() - 1800000).toISOString(),
-      assignedTeam: "developer"
+      assignedTeams: ["developer"]
     }
   ]);
   const [currentPhase, setCurrentPhase] = useState<string | null>(null);
@@ -143,7 +143,8 @@ export const WorkflowProvider = ({ children }: WorkflowProviderProps) => {
       createdAt: new Date().toISOString(),
       role,
       currentStage: "requirements",
-      lastActivity: new Date().toISOString()
+      lastActivity: new Date().toISOString(),
+      assignedTeams: []
     };
     setProjects(prev => [...prev, newProject]);
     return newProject;
@@ -222,18 +223,18 @@ export const WorkflowProvider = ({ children }: WorkflowProviderProps) => {
     );
   };
 
-  const assignProjectToTeam = (projectId: string, teamRole: string) => {
+  const assignProjectToTeams = (projectId: string, teamRoles: string[]) => {
     setProjects(prev => 
       prev.map(project => 
         project.id === projectId 
-          ? { ...project, assignedTeam: teamRole, lastActivity: new Date().toISOString() }
+          ? { ...project, assignedTeams: teamRoles, lastActivity: new Date().toISOString() }
           : project
       )
     );
   };
 
   const getProjectsAssignedToTeam = (teamRole: string) => {
-    return projects.filter(project => project.assignedTeam === teamRole);
+    return projects.filter(project => project.assignedTeams?.includes(teamRole));
   };
 
   return (
@@ -255,7 +256,7 @@ export const WorkflowProvider = ({ children }: WorkflowProviderProps) => {
       updateArtifactStatus,
       getAssignedArtifacts,
       getUserStories,
-      assignProjectToTeam,
+      assignProjectToTeams,
       getProjectsAssignedToTeam,
     }}>
       {children}

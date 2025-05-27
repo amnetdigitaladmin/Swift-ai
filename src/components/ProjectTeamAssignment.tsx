@@ -4,23 +4,33 @@ import { Users, UserCheck, Clock, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useWorkflow } from "@/contexts/WorkflowContext";
 import { useToast } from "@/hooks/use-toast";
 
 const ProjectTeamAssignment = () => {
-  const { getAllProjectsWithStatus, assignProjectToTeam } = useWorkflow();
+  const { getAllProjectsWithStatus, assignProjectToTeams } = useWorkflow();
   const { toast } = useToast();
 
   const allProjects = getAllProjectsWithStatus();
 
-  const handleTeamAssignment = (projectId: string, teamRole: string) => {
-    assignProjectToTeam(projectId, teamRole);
-    
+  const handleTeamAssignment = (projectId: string, teamRole: string, isChecked: boolean) => {
     const project = allProjects.find(p => p.id === projectId);
+    const currentTeams = project?.assignedTeams || [];
+    
+    let newTeams: string[];
+    if (isChecked) {
+      newTeams = [...currentTeams, teamRole];
+    } else {
+      newTeams = currentTeams.filter(team => team !== teamRole);
+    }
+    
+    assignProjectToTeams(projectId, newTeams);
+    
     toast({
-      title: "Project Assigned",
-      description: `${project?.name} has been assigned to ${getTeamLabel(teamRole)} team`,
+      title: "Project Assignment Updated",
+      description: `${project?.name} team assignments have been updated`,
     });
   };
 
@@ -34,18 +44,18 @@ const ProjectTeamAssignment = () => {
     return labels[teamRole] || teamRole;
   };
 
-  const getTeamColor = (teamRole: string | undefined) => {
+  const getTeamColor = (teamRole: string) => {
     const colors: Record<string, string> = {
       "business-analyst": "bg-blue-100 text-blue-800 border-blue-200",
       "designer": "bg-purple-100 text-purple-800 border-purple-200",
       "developer": "bg-green-100 text-green-800 border-green-200",
       "qa-engineer": "bg-red-100 text-red-800 border-red-200"
     };
-    return colors[teamRole || ""] || "bg-gray-100 text-gray-800 border-gray-200";
+    return colors[teamRole] || "bg-gray-100 text-gray-800 border-gray-200";
   };
 
-  const getAssignmentIcon = (assignedTeam: string | undefined) => {
-    if (assignedTeam) {
+  const getAssignmentIcon = (assignedTeams: string[] | undefined) => {
+    if (assignedTeams && assignedTeams.length > 0) {
       return <UserCheck className="h-4 w-4 text-green-600" />;
     }
     return <Clock className="h-4 w-4 text-yellow-600" />;
@@ -88,11 +98,15 @@ const ProjectTeamAssignment = () => {
                   
                   <div className="flex items-center space-x-3 ml-4">
                     <div className="flex items-center space-x-2">
-                      {getAssignmentIcon(project.assignedTeam)}
-                      {project.assignedTeam ? (
-                        <Badge className={getTeamColor(project.assignedTeam)}>
-                          {getTeamLabel(project.assignedTeam)}
-                        </Badge>
+                      {getAssignmentIcon(project.assignedTeams)}
+                      {project.assignedTeams && project.assignedTeams.length > 0 ? (
+                        <div className="flex flex-wrap gap-1">
+                          {project.assignedTeams.map((team) => (
+                            <Badge key={team} className={getTeamColor(team)}>
+                              {getTeamLabel(team)}
+                            </Badge>
+                          ))}
+                        </div>
                       ) : (
                         <Badge variant="outline" className="text-gray-400 border-gray-500">
                           Unassigned
@@ -101,25 +115,42 @@ const ProjectTeamAssignment = () => {
                     </div>
                     
                     <div className="flex items-center space-x-2">
-                      <Select
-                        value={project.assignedTeam || ""}
-                        onValueChange={(value) => handleTeamAssignment(project.id, value)}
-                      >
-                        <SelectTrigger className="w-48 bg-gray-700/50 border-gray-600 text-white">
-                          <SelectValue placeholder="Assign to team..." />
-                        </SelectTrigger>
-                        <SelectContent className="bg-gray-800 border-gray-600">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button 
+                            variant="outline" 
+                            className="bg-gray-700/50 border-gray-600 text-white hover:bg-gray-600"
+                          >
+                            Assign Teams
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="bg-gray-800 border-gray-600 w-64">
                           {teamOptions.map((option) => (
-                            <SelectItem 
+                            <DropdownMenuItem 
                               key={option.value} 
-                              value={option.value}
                               className="text-gray-200 focus:bg-gray-700"
+                              onSelect={(e) => e.preventDefault()}
                             >
-                              {option.label}
-                            </SelectItem>
+                              <div className="flex items-center space-x-2 w-full">
+                                <Checkbox
+                                  id={`${project.id}-${option.value}`}
+                                  checked={project.assignedTeams?.includes(option.value) || false}
+                                  onCheckedChange={(checked) => 
+                                    handleTeamAssignment(project.id, option.value, checked as boolean)
+                                  }
+                                  className="border-gray-400"
+                                />
+                                <label 
+                                  htmlFor={`${project.id}-${option.value}`}
+                                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer flex-1"
+                                >
+                                  {option.label}
+                                </label>
+                              </div>
+                            </DropdownMenuItem>
                           ))}
-                        </SelectContent>
-                      </Select>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                   </div>
                 </div>
