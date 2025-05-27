@@ -9,49 +9,49 @@ const DesignPhase = () => {
 
   const agents = [
     {
-      title: "UI/UX Design Architect",
+      title: "SwiftDesign UI/UX Architect",
       description: "Creates comprehensive user interface designs with optimal user experience flows.",
       icon: Palette,
       features: ["Wireframe generation", "User journey mapping", "Component library", "Style guide creation"],
     },
     {
-      title: "System Architecture Designer",
+      title: "SwiftDesign System Architect",
       description: "Designs scalable system architecture with component relationships and data flow.",
       icon: Layout,
       features: ["Architecture diagrams", "Component design", "Data flow modeling", "Scalability planning"],
     },
     {
-      title: "Mobile Design Specialist",
+      title: "SwiftDesign Mobile Specialist",
       description: "Focuses on mobile-first design patterns and responsive layouts.",
       icon: Smartphone,
       features: ["Mobile-first design", "Touch interactions", "Platform conventions", "Responsive layouts"],
     },
     {
-      title: "Web Interface Designer",
+      title: "SwiftDesign Web Interface Designer",
       description: "Creates modern web interfaces with accessibility and performance in mind.",
       icon: Monitor,
       features: ["Web components", "Grid systems", "Browser compatibility", "Performance optimization"],
     },
     {
-      title: "Design System Creator",
+      title: "SwiftDesign System Creator",
       description: "Builds comprehensive design systems with reusable components and guidelines.",
       icon: Layers,
       features: ["Component libraries", "Design tokens", "Style guides", "Documentation"],
     },
     {
-      title: "Prototyping Assistant",
+      title: "SwiftDesign Prototyping Assistant",
       description: "Generates interactive prototypes and mockups for validation and testing.",
       icon: Figma,
       features: ["Interactive prototypes", "User flow validation", "Mockup generation", "Feedback integration"],
     },
     {
-      title: "API Design Specialist",
+      title: "SwiftDesign API Specialist",
       description: "Designs RESTful APIs and GraphQL schemas with best practices.",
       icon: Globe,
       features: ["API specification", "Schema design", "Documentation", "Version management"],
     },
     {
-      title: "Accessibility Design Auditor",
+      title: "SwiftDesign Accessibility Auditor",
       description: "Ensures designs meet accessibility standards and inclusive design principles.",
       icon: Accessibility,
       features: ["WCAG compliance", "Screen reader support", "Color contrast", "Keyboard navigation"],
@@ -65,7 +65,7 @@ const DesignPhase = () => {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">Design & Architecture Phase</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-4">SwiftDesign - Design & Architecture Phase</h1>
         <p className="text-lg text-gray-600 max-w-3xl mx-auto">
           Transform requirements into beautiful, functional designs with AI-powered design agents. 
           Create everything from user interfaces to system architecture with intelligent assistance.
@@ -86,7 +86,7 @@ const DesignPhase = () => {
       </div>
 
       <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-6">
-        <h3 className="text-xl font-semibold mb-3">Design Phase Benefits</h3>
+        <h3 className="text-xl font-semibold mb-3">SwiftDesign Phase Benefits</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="text-center">
             <div className="text-2xl font-bold text-purple-600">70%</div>
