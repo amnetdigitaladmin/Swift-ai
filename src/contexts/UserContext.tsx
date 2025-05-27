@@ -40,11 +40,12 @@ const getPersonaPhases = (persona: string): string[] => {
 const validateCredentials = (username: string, password: string, persona: string): boolean => {
   // Define specific credentials for each persona
   const credentials: Record<string, { username: string; password: string }> = {
-    "business-analyst": { username: "analyst", password: "password" }
+    "business-analyst": { username: "analyst", password: "password" },
+    "project-manager": { username: "manager", password: "password" }
   };
 
-  // For business analyst, validate specific credentials
-  if (persona === "business-analyst") {
+  // For business analyst and project manager, validate specific credentials
+  if (persona === "business-analyst" || persona === "project-manager") {
     const requiredCreds = credentials[persona];
     return username === requiredCreds.username && password === requiredCreds.password;
   }

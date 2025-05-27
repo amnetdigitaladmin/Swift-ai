@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { FileText, Palette, Code, CheckCircle, ArrowRight, Eye, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,6 +8,7 @@ import PhaseCard from "@/components/PhaseCard";
 import ArchitectureDiagram from "@/components/ArchitectureDiagram";
 import ProcessOverview from "@/components/ProcessOverview";
 import ProjectSelector from "@/components/ProjectSelector";
+import ProjectManagementDashboard from "@/components/ProjectManagementDashboard";
 import RequirementsPhase from "./RequirementsPhase";
 import DesignPhase from "./DesignPhase";
 import DevelopmentPhase from "./DevelopmentPhase";
@@ -88,6 +88,29 @@ const Index = () => {
         return null;
     }
   };
+
+  // Show project management dashboard for project managers
+  if (user?.persona === "project-manager") {
+    return (
+      <div className="min-h-screen bg-gray-900">
+        <Header />
+        <div className="container mx-auto px-6 py-8">
+          <div className="flex items-center justify-between mb-6">
+            <div className="text-left">
+              <span className="text-sm text-gray-300">
+                Welcome, {user?.username} ({getPersonaTitle(user?.persona || "")})
+              </span>
+            </div>
+            <Button variant="outline" size="sm" onClick={logout} className="border-gray-600 text-gray-200 hover:bg-gray-800">
+              <LogOut className="h-4 w-4 mr-2" />
+              Logout
+            </Button>
+          </div>
+          <ProjectManagementDashboard />
+        </div>
+      </div>
+    );
+  }
 
   if (currentPhase) {
     return (

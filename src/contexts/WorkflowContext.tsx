@@ -1,3 +1,4 @@
+
 import { createContext, useContext, useState, ReactNode } from "react";
 
 interface Project {
@@ -6,6 +7,8 @@ interface Project {
   description: string;
   createdAt: string;
   role: string;
+  currentStage?: string;
+  lastActivity?: string;
 }
 
 interface Artifact {
@@ -30,6 +33,8 @@ interface WorkflowContextType {
   createProject: (name: string, description: string, role: string) => Project;
   selectProject: (project: Project) => void;
   getProjectsByRole: (role: string) => Project[];
+  updateProjectStage: (projectId: string, stage: string) => void;
+  getAllProjectsWithStatus: () => Project[];
 }
 
 const WorkflowContext = createContext<WorkflowContextType | undefined>(undefined);
@@ -54,21 +59,27 @@ export const WorkflowProvider = ({ children }: WorkflowProviderProps) => {
       name: "E-commerce Platform",
       description: "Building a modern e-commerce platform with React and Node.js",
       createdAt: new Date(Date.now() - 86400000).toISOString(),
-      role: "business-analyst"
+      role: "business-analyst",
+      currentStage: "requirements",
+      lastActivity: new Date(Date.now() - 3600000).toISOString()
     },
     {
       id: "2",
       name: "Mobile Banking App",
       description: "Designing user interfaces for a secure mobile banking application",
       createdAt: new Date(Date.now() - 172800000).toISOString(),
-      role: "designer"
+      role: "designer",
+      currentStage: "design",
+      lastActivity: new Date(Date.now() - 7200000).toISOString()
     },
     {
       id: "3",
       name: "Task Management System",
       description: "Developing a collaborative task management system",
       createdAt: new Date(Date.now() - 259200000).toISOString(),
-      role: "developer"
+      role: "developer",
+      currentStage: "development",
+      lastActivity: new Date(Date.now() - 1800000).toISOString()
     }
   ]);
   const [currentPhase, setCurrentPhase] = useState<string | null>(null);
@@ -84,6 +95,9 @@ export const WorkflowProvider = ({ children }: WorkflowProviderProps) => {
       projectId: currentProject.id,
     };
     setArtifacts(prev => [...prev, newArtifact]);
+    
+    // Update project's last activity and stage
+    updateProjectStage(currentProject.id, artifact.phase);
   };
 
   const moveArtifactToNextPhase = (artifactId: string, nextPhase: string) => {
@@ -94,6 +108,12 @@ export const WorkflowProvider = ({ children }: WorkflowProviderProps) => {
           : artifact
       )
     );
+    
+    // Update project stage when artifact moves
+    const artifact = artifacts.find(a => a.id === artifactId);
+    if (artifact) {
+      updateProjectStage(artifact.projectId, nextPhase);
+    }
   };
 
   const getArtifactsByPhase = (phase: string) => {
@@ -110,6 +130,8 @@ export const WorkflowProvider = ({ children }: WorkflowProviderProps) => {
       description,
       createdAt: new Date().toISOString(),
       role,
+      currentStage: "requirements",
+      lastActivity: new Date().toISOString()
     };
     setProjects(prev => [...prev, newProject]);
     return newProject;
@@ -121,6 +143,37 @@ export const WorkflowProvider = ({ children }: WorkflowProviderProps) => {
 
   const getProjectsByRole = (role: string) => {
     return projects.filter(project => project.role === role);
+  };
+
+  const updateProjectStage = (projectId: string, stage: string) => {
+    setProjects(prev => 
+      prev.map(project => 
+        project.id === projectId 
+          ? { 
+              ...project, 
+              currentStage: stage,
+              lastActivity: new Date().toISOString()
+            }
+          : project
+      )
+    );
+  };
+
+  const getAllProjectsWithStatus = () => {
+    return projects.map(project => {
+      const projectArtifacts = artifacts.filter(a => a.projectId === project.id);
+      const latestPhase = projectArtifacts.reduce((latest, artifact) => {
+        const phases = ["requirements", "design", "development", "testing"];
+        const currentPhaseIndex = phases.indexOf(artifact.phase);
+        const latestPhaseIndex = phases.indexOf(latest);
+        return currentPhaseIndex > latestPhaseIndex ? artifact.phase : latest;
+      }, project.currentStage || "requirements");
+
+      return {
+        ...project,
+        currentStage: latestPhase
+      };
+    });
   };
 
   return (
@@ -136,6 +189,8 @@ export const WorkflowProvider = ({ children }: WorkflowProviderProps) => {
       createProject,
       selectProject,
       getProjectsByRole,
+      updateProjectStage,
+      getAllProjectsWithStatus,
     }}>
       {children}
     </WorkflowContext.Provider>
