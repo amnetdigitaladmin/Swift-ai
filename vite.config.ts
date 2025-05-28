@@ -9,6 +9,7 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
+  base: '/Swift-ai/',
   plugins: [
     react(),
     mode === 'development' &&
