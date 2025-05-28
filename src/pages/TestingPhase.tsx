@@ -3,7 +3,6 @@ import { useState } from "react";
 import { CheckCircle, Shield, Smartphone, Globe, Users, Zap, Target, AlertTriangle } from "lucide-react";
 import AgentCard from "@/components/AgentCard";
 import AgentWorkspace from "@/components/AgentWorkspace";
-import ArtifactManager from "@/components/ArtifactManager";
 
 const TestingPhase = () => {
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
@@ -71,13 +70,6 @@ const TestingPhase = () => {
           Ensure application quality with comprehensive AI-powered testing agents. 
           From automated testing to security audits, guarantee your software meets the highest standards.
         </p>
-      </div>
-
-      {/* Workflow Management Section */}
-      <div className="bg-white rounded-lg p-6 border border-gray-200">
-        <div className="flex-1">
-          <ArtifactManager currentPhase="testing" />
-        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
