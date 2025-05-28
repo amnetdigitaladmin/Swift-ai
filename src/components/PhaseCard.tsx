@@ -49,7 +49,6 @@ const PhaseCard = ({
               <CardTitle className="text-xl text-gray-100">{title}</CardTitle>
               <div className="flex items-center space-x-2 mt-1">
                 <Badge variant="secondary" className="bg-gray-700 text-gray-200">{agentCount} Agents</Badge>
-                <Badge variant="outline" className="border-gray-600 text-gray-300">{estimatedTime}</Badge>
               </div>
             </div>
           </div>

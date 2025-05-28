@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useState, ReactNode } from "react";
 
 interface Project {
@@ -9,6 +8,7 @@ interface Project {
   role: string;
   currentStage?: string;
   lastActivity?: string;
+  assignedTeams?: string[];
 }
 
 interface Artifact {
@@ -19,6 +19,8 @@ interface Artifact {
   createdAt: string;
   phase: string;
   projectId: string;
+  assignedTo?: string;
+  status?: "unassigned" | "assigned" | "in-progress" | "completed";
 }
 
 interface WorkflowContextType {
@@ -35,6 +37,12 @@ interface WorkflowContextType {
   getProjectsByRole: (role: string) => Project[];
   updateProjectStage: (projectId: string, stage: string) => void;
   getAllProjectsWithStatus: () => Project[];
+  assignArtifactToUser: (artifactId: string, assignedTo: string) => void;
+  updateArtifactStatus: (artifactId: string, status: string) => void;
+  getAssignedArtifacts: (assignedTo: string) => Artifact[];
+  getUserStories: () => Artifact[];
+  assignProjectToTeams: (projectId: string, teamRoles: string[]) => void;
+  getProjectsAssignedToTeam: (teamRole: string) => Project[];
 }
 
 const WorkflowContext = createContext<WorkflowContextType | undefined>(undefined);
@@ -61,7 +69,8 @@ export const WorkflowProvider = ({ children }: WorkflowProviderProps) => {
       createdAt: new Date(Date.now() - 86400000).toISOString(),
       role: "business-analyst",
       currentStage: "requirements",
-      lastActivity: new Date(Date.now() - 3600000).toISOString()
+      lastActivity: new Date(Date.now() - 3600000).toISOString(),
+      assignedTeams: ["business-analyst", "developer"]
     },
     {
       id: "2",
@@ -70,7 +79,8 @@ export const WorkflowProvider = ({ children }: WorkflowProviderProps) => {
       createdAt: new Date(Date.now() - 172800000).toISOString(),
       role: "designer",
       currentStage: "design",
-      lastActivity: new Date(Date.now() - 7200000).toISOString()
+      lastActivity: new Date(Date.now() - 7200000).toISOString(),
+      assignedTeams: ["designer", "qa-engineer"]
     },
     {
       id: "3",
@@ -79,7 +89,8 @@ export const WorkflowProvider = ({ children }: WorkflowProviderProps) => {
       createdAt: new Date(Date.now() - 259200000).toISOString(),
       role: "developer",
       currentStage: "development",
-      lastActivity: new Date(Date.now() - 1800000).toISOString()
+      lastActivity: new Date(Date.now() - 1800000).toISOString(),
+      assignedTeams: ["developer"]
     }
   ]);
   const [currentPhase, setCurrentPhase] = useState<string | null>(null);
@@ -93,6 +104,7 @@ export const WorkflowProvider = ({ children }: WorkflowProviderProps) => {
       id: Date.now().toString(),
       createdAt: new Date().toISOString(),
       projectId: currentProject.id,
+      status: artifact.type === "User Story" ? "unassigned" : undefined,
     };
     setArtifacts(prev => [...prev, newArtifact]);
     
@@ -131,7 +143,8 @@ export const WorkflowProvider = ({ children }: WorkflowProviderProps) => {
       createdAt: new Date().toISOString(),
       role,
       currentStage: "requirements",
-      lastActivity: new Date().toISOString()
+      lastActivity: new Date().toISOString(),
+      assignedTeams: []
     };
     setProjects(prev => [...prev, newProject]);
     return newProject;
@@ -176,6 +189,51 @@ export const WorkflowProvider = ({ children }: WorkflowProviderProps) => {
     });
   };
 
+  const assignArtifactToUser = (artifactId: string, assignedTo: string) => {
+    setArtifacts(prev => 
+      prev.map(artifact => 
+        artifact.id === artifactId 
+          ? { ...artifact, assignedTo, status: "assigned" }
+          : artifact
+      )
+    );
+  };
+
+  const updateArtifactStatus = (artifactId: string, status: string) => {
+    setArtifacts(prev => 
+      prev.map(artifact => 
+        artifact.id === artifactId 
+          ? { ...artifact, status: status as Artifact['status'] }
+          : artifact
+      )
+    );
+  };
+
+  const getAssignedArtifacts = (assignedTo: string) => {
+    return artifacts.filter(artifact => artifact.assignedTo === assignedTo);
+  };
+
+  const getUserStories = () => {
+    if (!currentProject) return [];
+    return artifacts.filter(artifact => 
+      artifact.type === "User Story" && artifact.projectId === currentProject.id
+    );
+  };
+
+  const assignProjectToTeams = (projectId: string, teamRoles: string[]) => {
+    setProjects(prev => 
+      prev.map(project => 
+        project.id === projectId 
+          ? { ...project, assignedTeams: teamRoles, lastActivity: new Date().toISOString() }
+          : project
+      )
+    );
+  };
+
+  const getProjectsAssignedToTeam = (teamRole: string) => {
+    return projects.filter(project => project.assignedTeams?.includes(teamRole));
+  };
+
   return (
     <WorkflowContext.Provider value={{
       artifacts,
@@ -191,6 +249,12 @@ export const WorkflowProvider = ({ children }: WorkflowProviderProps) => {
       getProjectsByRole,
       updateProjectStage,
       getAllProjectsWithStatus,
+      assignArtifactToUser,
+      updateArtifactStatus,
+      getAssignedArtifacts,
+      getUserStories,
+      assignProjectToTeams,
+      getProjectsAssignedToTeam,
     }}>
       {children}
     </WorkflowContext.Provider>

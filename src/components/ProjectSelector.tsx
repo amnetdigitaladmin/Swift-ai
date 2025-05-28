@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Plus, FolderOpen, Calendar, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -19,21 +18,17 @@ const ProjectSelector = ({ onProjectSelected }: ProjectSelectorProps) => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [newProjectName, setNewProjectName] = useState("");
   const [newProjectDescription, setNewProjectDescription] = useState("");
-  const { createProject, selectProject, getProjectsByRole, currentProject, getAllProjectsWithStatus } = useWorkflow();
+  const { createProject, selectProject, getProjectsByRole, currentProject, getAllProjectsWithStatus, getProjectsAssignedToTeam } = useWorkflow();
   const { user } = useUser();
   const { toast } = useToast();
 
   // Get projects based on user role
   const userProjects = user ? getProjectsByRole(user.persona) : [];
   
-  // For non-project managers, show all projects they can work on
+  // For non-project managers, show projects assigned to their team
   const availableProjects = user?.persona === "project-manager" 
-    ? userProjects 
-    : getAllProjectsWithStatus().filter(project => 
-        user?.allowedPhases.some(phase => 
-          ["requirements", "design", "development", "testing"].includes(phase)
-        )
-      );
+    ? getAllProjectsWithStatus() // Project managers see all projects
+    : getProjectsAssignedToTeam(user?.persona || ""); // Team members see assigned projects
 
   const handleCreateProject = () => {
     if (!newProjectName.trim() || !user) return;
@@ -75,6 +70,23 @@ const ProjectSelector = ({ onProjectSelected }: ProjectSelectorProps) => {
     return colors[role] || "bg-gray-100 text-gray-800";
   };
 
+  const getAssignmentBadge = (project: any) => {
+    if (project.assignedTeam) {
+      const teamColors: Record<string, string> = {
+        "business-analyst": "bg-blue-50 text-blue-700 border-blue-200",
+        "designer": "bg-purple-50 text-purple-700 border-purple-200",
+        "developer": "bg-green-50 text-green-700 border-green-200",
+        "qa-engineer": "bg-red-50 text-red-700 border-red-200"
+      };
+      return (
+        <Badge className={teamColors[project.assignedTeam] || "bg-gray-50 text-gray-700"} variant="outline">
+          Assigned to {project.assignedTeam.replace('-', ' ')}
+        </Badge>
+      );
+    }
+    return null;
+  };
+
   if (currentProject) {
     return (
       <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border">
@@ -86,6 +98,7 @@ const ProjectSelector = ({ onProjectSelected }: ProjectSelectorProps) => {
               <Badge className={getRoleColor(currentProject.role)}>
                 {currentProject.role.replace('-', ' ')}
               </Badge>
+              {getAssignmentBadge(currentProject)}
               <span className="text-xs text-gray-500 flex items-center">
                 <Calendar className="h-3 w-3 mr-1" />
                 Created {formatDate(currentProject.createdAt)}
@@ -113,7 +126,7 @@ const ProjectSelector = ({ onProjectSelected }: ProjectSelectorProps) => {
         <p className="text-gray-600">
           {user?.persona === "project-manager" 
             ? "Choose an existing project or create a new one to get started"
-            : "Choose an existing project to start working on"
+            : `Choose from projects assigned to the ${user?.persona?.replace('-', ' ')} team`
           }
         </p>
       </div>
@@ -172,9 +185,9 @@ const ProjectSelector = ({ onProjectSelected }: ProjectSelectorProps) => {
           <h3 className="text-lg font-semibold mb-4 flex items-center">
             <FolderOpen className="h-5 w-5 mr-2" />
             {user?.persona === "project-manager" 
-              ? `Your Projects (${user?.persona.replace('-', ' ')})`
-              : "Available Projects"
-            }
+              ? "All Projects"
+              : `Projects for ${user?.persona?.replace('-', ' ')} Team`
+            } ({availableProjects.length})
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {availableProjects.map((project) => (
@@ -190,14 +203,17 @@ const ProjectSelector = ({ onProjectSelected }: ProjectSelectorProps) => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex items-center justify-between">
-                    <Badge className={getRoleColor(project.role)}>
-                      <User className="h-3 w-3 mr-1" />
-                      {project.role.replace('-', ' ')}
-                    </Badge>
-                    <span className="text-xs text-gray-500">
-                      {formatDate(project.createdAt)}
-                    </span>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <Badge className={getRoleColor(project.role)}>
+                        <User className="h-3 w-3 mr-1" />
+                        {project.role.replace('-', ' ')}
+                      </Badge>
+                      <span className="text-xs text-gray-500">
+                        {formatDate(project.createdAt)}
+                      </span>
+                    </div>
+                    {getAssignmentBadge(project)}
                   </div>
                 </CardContent>
               </Card>
@@ -211,7 +227,7 @@ const ProjectSelector = ({ onProjectSelected }: ProjectSelectorProps) => {
           <p className="text-gray-400">
             {user?.persona === "project-manager" 
               ? "No projects found. Create your first project to get started."
-              : "No projects available to work on."
+              : `No projects assigned to the ${user?.persona?.replace('-', ' ')} team yet.`
             }
           </p>
         </div>
