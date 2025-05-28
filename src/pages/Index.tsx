@@ -215,31 +215,35 @@ const Index = () => {
               Access your specialized AI agents for the {getPersonaTitle(user?.persona || "")} role. 
               Click on any phase to explore the agents and capabilities available to you.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-              <button 
-                className="text-cyan-400 hover:text-cyan-300 font-medium flex items-center mx-auto group transition-colors"
-                onClick={() => setShowProcessOverview(!showProcessOverview)}
-              >
-                <Eye className="mr-2 h-4 w-4" />
-                {showProcessOverview ? 'Hide Process Overview' : 'View Process Overview'}
-                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </button>
-              <button 
-                className="text-cyan-400 hover:text-cyan-300 font-medium flex items-center mx-auto group transition-colors"
-                onClick={() => setShowArchitecture(!showArchitecture)}
-              >
-                {showArchitecture ? 'Hide Architecture Diagram' : 'View Architecture Diagram'}
-                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </button>
-            </div>
             
-            {showProcessOverview && (
+            {/* Only show Process Overview and Architecture Diagram for architect role */}
+            {user?.persona === "architect" && (
+              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+                <button 
+                  className="text-cyan-400 hover:text-cyan-300 font-medium flex items-center mx-auto group transition-colors"
+                  onClick={() => setShowProcessOverview(!showProcessOverview)}
+                >
+                  <Eye className="mr-2 h-4 w-4" />
+                  {showProcessOverview ? 'Hide Process Overview' : 'View Process Overview'}
+                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </button>
+                <button 
+                  className="text-cyan-400 hover:text-cyan-300 font-medium flex items-center mx-auto group transition-colors"
+                  onClick={() => setShowArchitecture(!showArchitecture)}
+                >
+                  {showArchitecture ? 'Hide Architecture Diagram' : 'View Architecture Diagram'}
+                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </button>
+              </div>
+            )}
+            
+            {user?.persona === "architect" && showProcessOverview && (
               <div className="my-12 p-8 bg-gray-800/50 rounded-2xl shadow-2xl border border-gray-700">
                 <ProcessOverview />
               </div>
             )}
             
-            {showArchitecture && (
+            {user?.persona === "architect" && showArchitecture && (
               <div className="my-12 p-8 bg-gray-800/50 rounded-2xl shadow-2xl border border-gray-700">
                 <ArchitectureDiagram />
               </div>
