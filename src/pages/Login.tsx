@@ -82,7 +82,7 @@ const Login = ({ onLogin }: LoginProps) => {
             />
           </div>
           <CardTitle className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
-            Swift AI Login!!!!!!!!!!!!!!!!
+            Swift AI Login
           </CardTitle>
           <CardDescription className="text-gray-300">
             Expedite, Optimize, Realize - Sign in to access your AI-powered development workspace
