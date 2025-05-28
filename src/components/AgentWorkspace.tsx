@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ArrowLeft, Play, Download, Copy, RefreshCw, Upload, FileText, X, FolderOpen, Calendar, Cloud, Users, BookOpen, CheckCircle, Clock, AlertCircle, User } from "lucide-react";
+import { ArrowLeft, Play, Download, Copy, RefreshCw, Upload, FileText, X, FolderOpen, Calendar, Cloud, Users, BookOpen, CheckCircle, Clock, AlertCircle, User, FileInput } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@/contexts/UserContext";
 import { useWorkflow } from "@/contexts/WorkflowContext";
@@ -28,9 +28,13 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
   const [dragActive, setDragActive] = useState(false);
   const [isAzureDevOpsModalOpen, setIsAzureDevOpsModalOpen] = useState(false);
   const [selectedStoryId, setSelectedStoryId] = useState<string>("");
+  const [inputMode, setInputMode] = useState<"type" | "upload">("type");
   const { toast } = useToast();
   const { user } = useUser();
   const { currentProject, addArtifact, getAssignedArtifacts, updateArtifactStatus } = useWorkflow();
+
+  // Check if current user is a business analyst
+  const isBusinessAnalyst = user?.persona === "business-analyst";
 
   // Get user stories assigned to current user for the current project
   const assignedStories = currentProject 
@@ -89,7 +93,17 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
   };
 
   const handleProcess = async () => {
-    if (!input.trim()) {
+    // For upload mode, check if file is selected instead of text input
+    if (isBusinessAnalyst && inputMode === "upload") {
+      if (!selectedFile) {
+        toast({
+          title: "Document Required",
+          description: "Please upload a requirements document to process.",
+          variant: "destructive",
+        });
+        return;
+      }
+    } else if (!input.trim()) {
       toast({
         title: "Input Required",
         description: "Please provide input for the agent to process.",
@@ -124,20 +138,27 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
       
       let outputText = `${agentName} Generated Code:
 
-Based on your input: "${input.substring(0, 100)}..."`;
+Based on your ${inputMode === "upload" ? `uploaded document: "${selectedFile?.name}"` : `input: "${input.substring(0, 100)}..."`}`;
 
       if (selectedTemplate) {
         outputText += `\nUsing template: ${selectedTemplate}`;
       }
 
-      if (selectedFile) {
-        outputText += `\nDocument processed: ${selectedFile.name}`;
+      if (inputMode === "upload" && selectedFile) {
+        outputText += `\n\nDocument Analysis:
+- File: ${selectedFile.name}
+- Size: ${formatFileSize(selectedFile.size)}
+- Processed requirements from uploaded document`;
       }
 
       if (selectedStory) {
         outputText += `\n\nUser Story Context:
 Title: ${selectedStory.title}
 Description: ${selectedStory.content}`;
+      }
+
+      if (selectedFile) {
+        outputText += `\n\nDocument processed: ${selectedFile.name}`;
       }
 
       outputText += `
@@ -566,15 +587,103 @@ Next steps:
             <Card>
               <CardHeader>
                 <CardTitle>Input</CardTitle>
-                <CardDescription>Provide your requirements or specifications</CardDescription>
+                <CardDescription>
+                  {isBusinessAnalyst 
+                    ? "Provide your requirements by typing or uploading a document" 
+                    : "Provide your requirements or specifications"
+                  }
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Textarea
-                  placeholder="Enter your project requirements, user stories, technical specifications, or any other relevant information..."
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  className="min-h-[200px]"
-                />
+                {/* Input Mode Toggle for Business Analyst */}
+                {isBusinessAnalyst && (
+                  <div className="flex items-center space-x-4 p-3 bg-blue-50 rounded-lg border">
+                    <span className="text-sm font-medium text-blue-900">Input Method:</span>
+                    <div className="flex space-x-2">
+                      <Button
+                        variant={inputMode === "type" ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setInputMode("type")}
+                      >
+                        <FileText className="h-4 w-4 mr-2" />
+                        Type Input
+                      </Button>
+                      <Button
+                        variant={inputMode === "upload" ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setInputMode("upload")}
+                      >
+                        <FileInput className="h-4 w-4 mr-2" />
+                        Upload Document
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Conditional Input Based on Mode */}
+                {(!isBusinessAnalyst || inputMode === "type") && (
+                  <Textarea
+                    placeholder="Enter your project requirements, user stories, technical specifications, or any other relevant information..."
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    className="min-h-[200px]"
+                  />
+                )}
+
+                {/* Document Upload Section for Business Analyst */}
+                {isBusinessAnalyst && inputMode === "upload" && (
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Requirements Document</label>
+                    {!selectedFile ? (
+                      <div
+                        className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
+                          dragActive 
+                            ? 'border-primary bg-primary/10' 
+                            : 'border-gray-300 hover:border-gray-400'
+                        }`}
+                        onDragEnter={handleDrag}
+                        onDragLeave={handleDrag}
+                        onDragOver={handleDrag}
+                        onDrop={handleDrop}
+                      >
+                        <Upload className="h-10 w-10 mx-auto mb-3 text-gray-400" />
+                        <div className="space-y-2">
+                          <p className="text-sm font-medium">Upload your requirements document</p>
+                          <p className="text-xs text-gray-500">Drag and drop or browse files</p>
+                          <p className="text-xs text-gray-500">Supported: PDF, DOC, DOCX, TXT</p>
+                          <label htmlFor="file-upload">
+                            <Button variant="outline" size="sm" asChild>
+                              <span className="cursor-pointer">Browse Files</span>
+                            </Button>
+                          </label>
+                          <input
+                            id="file-upload"
+                            type="file"
+                            accept=".pdf,.doc,.docx,.txt"
+                            onChange={handleFileSelect}
+                            className="hidden"
+                          />
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex items-center space-x-3 p-4 border rounded-lg bg-green-50 border-green-200">
+                        <FileText className="h-8 w-8 text-green-600" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-green-900 truncate">{selectedFile.name}</p>
+                          <p className="text-xs text-green-700">{formatFileSize(selectedFile.size)}</p>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={handleRemoveFile}
+                          className="h-8 w-8 p-0 text-green-600 hover:text-green-800"
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                )}
                 
                 {/* Template Selection */}
                 <div className="space-y-2">
@@ -593,60 +702,67 @@ Next steps:
                   </Select>
                 </div>
 
-                {/* Document Upload */}
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Document Upload (Optional)</label>
-                  {!selectedFile ? (
-                    <div
-                      className={`border-2 border-dashed rounded-lg p-4 text-center transition-colors ${
-                        dragActive 
-                          ? 'border-primary bg-primary/10' 
-                          : 'border-gray-300 hover:border-gray-400'
-                      }`}
-                      onDragEnter={handleDrag}
-                      onDragLeave={handleDrag}
-                      onDragOver={handleDrag}
-                      onDrop={handleDrop}
-                    >
-                      <Upload className="h-8 w-8 mx-auto mb-2 text-gray-400" />
-                      <div className="space-y-1">
-                        <p className="text-sm">Drag and drop or browse files</p>
-                        <p className="text-xs text-gray-500">PDF, DOC, DOCX, TXT</p>
-                        <label htmlFor="file-upload">
-                          <Button variant="outline" size="sm" asChild>
-                            <span className="cursor-pointer">Browse Files</span>
-                          </Button>
-                        </label>
-                        <input
-                          id="file-upload"
-                          type="file"
-                          accept=".pdf,.doc,.docx,.txt"
-                          onChange={handleFileSelect}
-                          className="hidden"
-                        />
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="flex items-center space-x-3 p-3 border rounded-lg bg-gray-50">
-                      <FileText className="h-6 w-6 text-blue-500" />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium truncate">{selectedFile.name}</p>
-                        <p className="text-xs text-gray-500">{formatFileSize(selectedFile.size)}</p>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={handleRemoveFile}
-                        className="h-6 w-6 p-0"
+                {/* Document Upload for Non-Business Analyst */}
+                {!isBusinessAnalyst && (
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Document Upload (Optional)</label>
+                    {!selectedFile ? (
+                      <div
+                        className={`border-2 border-dashed rounded-lg p-4 text-center transition-colors ${
+                          dragActive 
+                            ? 'border-primary bg-primary/10' 
+                            : 'border-gray-300 hover:border-gray-400'
+                        }`}
+                        onDragEnter={handleDrag}
+                        onDragLeave={handleDrag}
+                        onDragOver={handleDrag}
+                        onDrop={handleDrop}
                       >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  )}
-                </div>
+                        <Upload className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                        <div className="space-y-1">
+                          <p className="text-sm">Drag and drop or browse files</p>
+                          <p className="text-xs text-gray-500">PDF, DOC, DOCX, TXT</p>
+                          <label htmlFor="file-upload">
+                            <Button variant="outline" size="sm" asChild>
+                              <span className="cursor-pointer">Browse Files</span>
+                            </Button>
+                          </label>
+                          <input
+                            id="file-upload"
+                            type="file"
+                            accept=".pdf,.doc,.docx,.txt"
+                            onChange={handleFileSelect}
+                            className="hidden"
+                          />
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex items-center space-x-3 p-3 border rounded-lg bg-gray-50">
+                        <FileText className="h-6 w-6 text-blue-500" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium truncate">{selectedFile.name}</p>
+                          <p className="text-xs text-gray-500">{formatFileSize(selectedFile.size)}</p>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={handleRemoveFile}
+                          className="h-6 w-6 p-0"
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 <div className="flex items-center justify-between">
-                  <p className="text-sm text-gray-500">{input.length} characters</p>
+                  <p className="text-sm text-gray-500">
+                    {isBusinessAnalyst && inputMode === "upload" 
+                      ? (selectedFile ? `Document: ${selectedFile.name}` : "No document selected")
+                      : `${input.length} characters`
+                    }
+                  </p>
                   <Button onClick={handleProcess} disabled={isProcessing}>
                     {isProcessing ? (
                       <>
