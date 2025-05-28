@@ -44,7 +44,7 @@ const OutputSection = ({
   onPushToProjectManager,
   onMarkStoryComplete
 }: OutputSectionProps) => {
-  const s3Url = getS3UrlFromOutput(output);
+  let s3Url = getS3UrlFromOutput(output);
 
      return (
       <Card className="shadow-md">

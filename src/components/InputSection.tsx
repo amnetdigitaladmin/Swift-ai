@@ -15,6 +15,7 @@ interface InputSectionProps {
   setSelectedFile: (file: File | null) => void;
   dragActive: boolean;
   setDragActive: (active: boolean) => void;
+  // handleProcessing:(active:boolean) => void;
   inputMode: "type" | "upload";
   setInputMode: (mode: "type" | "upload") => void;
   isProcessing: boolean;
@@ -23,6 +24,7 @@ interface InputSectionProps {
   onDrag: (e: React.DragEvent) => void;
   onDrop: (e: React.DragEvent) => void;
   formatFileSize: (bytes: number) => string;
+  handleIsProcessing:(processing:boolean) => void;
 }
 
 const InputSection = ({
@@ -36,17 +38,20 @@ const InputSection = ({
   inputMode,
   setInputMode,
   isProcessing,
+  // handleProcessing,
   onProcess,
   onFileSelect,
   onDrag,
   onDrop,
-  formatFileSize
+  formatFileSize,
+  handleIsProcessing
 }: InputSectionProps) => {
   const { user } = useUser();
   const isBusinessAnalyst = user?.persona === "business-analyst";
 
   const handleRemoveFile = () => {
     setSelectedFile(null);
+    handleIsProcessing(false)
   };
 
   const getFilteredTemplates = () => {

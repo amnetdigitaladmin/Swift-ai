@@ -223,7 +223,7 @@ export const useAgentWorkspace = (agentName: string) => {
     description: "Your file is being downloaded.",
     duration: 5000
   });
-};
+  };
 
 
   const handlePushToProjectManager = () => {
@@ -290,6 +290,10 @@ export const useAgentWorkspace = (agentName: string) => {
     }
   };
 
+  const handleIsProcessing=(processing:boolean)=>{
+   setOutput("");
+  }
+
   return {
     // State
     input,
@@ -322,6 +326,7 @@ export const useAgentWorkspace = (agentName: string) => {
     handleDownload,
     handle3Download,
     handlePushToProjectManager,
-    formatFileSize
+    formatFileSize,
+    handleIsProcessing
   };
 };

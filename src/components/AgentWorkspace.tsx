@@ -49,7 +49,8 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
     handleDownload,
     handle3Download,
     handlePushToProjectManager,
-    formatFileSize
+    formatFileSize,
+    handleIsProcessing
   } = useAgentWorkspace(agentName);
 
   const handleAzureDevOpsPush = () => {
@@ -142,6 +143,8 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
               onDrag={handleDrag}
               onDrop={handleDrop}
               formatFileSize={formatFileSize}
+              handleIsProcessing={handleIsProcessing}
+
             />
 
             <OutputSection
