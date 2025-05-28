@@ -47,6 +47,7 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
     handleDrop,
     handleCopy,
     handleDownload,
+    handle3Download,
     handlePushToProjectManager,
     formatFileSize
   } = useAgentWorkspace(agentName);
@@ -150,6 +151,7 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
               selectedStory={selectedStory}
               onCopy={handleCopy}
               onDownload={handleDownload}
+              onS3Download={handle3Download}
               onAzureDevOpsPush={handleAzureDevOpsPush}
               onPushToProjectManager={handlePushToProjectManager}
               onMarkStoryComplete={handleMarkStoryComplete}

@@ -15,6 +15,8 @@ export const useAgentWorkspace = (agentName: string) => {
   const [selectedStoryId, setSelectedStoryId] = useState<string>("");
   const [inputMode, setInputMode] = useState<"type" | "upload">("type");
   
+
+  
   const { toast } = useToast();
   const { user } = useUser();
   const { currentProject, addArtifact, getAssignedArtifacts, updateArtifactStatus } = useWorkflow();
@@ -49,6 +51,74 @@ export const useAgentWorkspace = (agentName: string) => {
     });
   };
 
+
+  const uploadFileToBackend = async () => {
+    if (!selectedFile) return;
+
+    setIsProcessing(true);
+
+    const reader = new FileReader();
+    reader.readAsDataURL(selectedFile);
+
+    reader.onload = async () => {
+      const result = reader.result as string;
+
+      // Extract base64 content (removes the data:...;base64, prefix)
+      const base64Content = result.split(',')[1];
+
+      const payload = {
+        file: {
+          filename: selectedFile.name.replace(/\.[^/.]+$/, ""), // Remove extension from filename
+          content: base64Content,
+          extension: selectedFile.name.split('.').pop()
+        }
+      };
+
+      try {
+        const response = await fetch("https://sewlzvr57rnjulvehobu2ienvu0ritqy.lambda-url.ap-south-1.on.aws/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+        console.log("Backend response:", data);
+
+        setOutput(data); // can be a URL or full text
+        setIsProcessing(false);
+
+        // if (data.url) {
+        //   setDownloadUrl(data.url);
+        // }
+
+        toast({
+          title: "Upload Successful",
+          description: "Your file has been uploaded and processed by the backend.",
+        });
+
+        return data;
+      } catch (error) {
+        console.error("Upload failed:", error);
+        toast({
+          title: "Upload Failed",
+          description: "There was an error uploading the file.",
+          variant: "destructive",
+        });
+      }
+    };
+
+    reader.onerror = () => {
+      toast({
+        title: "File Read Error",
+        description: "Could not read the file. Please try again.",
+        variant: "destructive",
+      });
+    };
+  };
+
+
   const handleProcess = async () => {
     if (isBusinessAnalyst && inputMode === "upload") {
       if (!selectedFile) {
@@ -68,169 +138,7 @@ export const useAgentWorkspace = (agentName: string) => {
       return;
     }
 
-    if (selectedStoryId && selectedStory?.status === "assigned") {
-      handleStatusUpdate(selectedStoryId, "in-progress");
-    }
-
-    setIsProcessing(true);
-    setProgress(0);
-
-    const interval = setInterval(() => {
-      setProgress(prev => {
-        if (prev >= 90) {
-          clearInterval(interval);
-          return 90;
-        }
-        return prev + Math.random() * 15;
-      });
-    }, 500);
-
-    setTimeout(() => {
-      clearInterval(interval);
-      setProgress(100);
-      
-      let outputText = `${agentName} Generated Code:
-
-Based on your ${inputMode === "upload" ? `uploaded document: "${selectedFile?.name}"` : `input: "${input.substring(0, 100)}..."`}`;
-
-      if (selectedTemplate) {
-        outputText += `\nUsing template: ${selectedTemplate}`;
-      }
-
-      if (inputMode === "upload" && selectedFile) {
-        outputText += `\n\nDocument Analysis:
-- File: ${selectedFile.name}
-- Size: ${formatFileSize(selectedFile.size)}
-- Processed requirements from uploaded document`;
-      }
-
-      if (selectedStory) {
-        outputText += `\n\nUser Story Context:
-Title: ${selectedStory.title}
-Description: ${selectedStory.content}`;
-      }
-
-      if (selectedFile) {
-        outputText += `\n\nDocument processed: ${selectedFile.name}`;
-      }
-
-      outputText += `
-
-Generated Code Implementation:
-
-// Frontend Component (React)
-import React, { useState, useEffect } from 'react';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-const GeneratedComponent = () => {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    // Initialize component
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      // API call implementation
-      const response = await fetch('/api/data');
-      const result = await response.json();
-      setData(result);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Generated Feature</CardTitle>
-      </CardHeader>
-      <CardContent>
-        {loading ? (
-          <p>Loading...</p>
-        ) : (
-          <div>
-            <p>Implementation based on user story requirements</p>
-            <Button onClick={fetchData}>Refresh Data</Button>
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  );
-};
-
-export default GeneratedComponent;
-
-// API Endpoint (Backend)
-export async function GET(request: Request) {
-  try {
-    // Implementation logic based on user story
-    const data = await processUserStoryRequirements();
-    
-    return Response.json({
-      success: true,
-      data: data
-    });
-  } catch (error) {
-    return Response.json(
-      { success: false, error: 'Internal server error' },
-      { status: 500 }
-    );
-  }
-}
-
-// Database Schema (if needed)
-CREATE TABLE user_story_data (
-  id SERIAL PRIMARY KEY,
-  title VARCHAR(255) NOT NULL,
-  content TEXT,
-  status VARCHAR(50) DEFAULT 'pending',
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-// Test Cases
-describe('Generated Component', () => {
-  test('should render without crashing', () => {
-    render(<GeneratedComponent />);
-    expect(screen.getByText('Generated Feature')).toBeInTheDocument();
-  });
-
-  test('should fetch data on mount', async () => {
-    render(<GeneratedComponent />);
-    await waitFor(() => {
-      expect(screen.getByText('Implementation based on user story requirements')).toBeInTheDocument();
-    });
-  });
-});
-
-This is AI-generated code based on your user story requirements. The implementation includes:
-- Responsive React component with proper TypeScript typing
-- Backend API endpoint structure
-- Database schema considerations
-- Basic test cases
-- Error handling and loading states
-- Integration with your existing UI components
-
-Next steps:
-1. Review the generated code
-2. Adapt it to your specific requirements
-3. Test the implementation
-4. Deploy to your development environment`;
-
-      setOutput(outputText);
-      setIsProcessing(false);
-      toast({
-        title: "Code Generation Complete",
-        description: `${agentName} has successfully generated code for your user story.`,
-      });
-    }, 3000);
+    await uploadFileToBackend();
   };
 
   const formatFileSize = (bytes: number) => {
@@ -292,6 +200,31 @@ Next steps:
       description: "Output file has been downloaded.",
     });
   };
+
+  const handle3Download = (url: string) => {
+  if (!url) return;
+
+  // Extract filename from URL (strip query parameters)
+  const urlParts = url.split('/');
+  const lastPart = urlParts[urlParts.length - 1];
+  const [filename] = lastPart.split('?');
+
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', filename || 'downloaded-file');
+  link.setAttribute('target', '_blank');
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  toast({
+    title: "Download Started",
+    description: "Your file is being downloaded.",
+    duration: 5000
+  });
+};
+
 
   const handlePushToProjectManager = () => {
     if (!output.trim() || !currentProject) {
@@ -387,6 +320,7 @@ Next steps:
     handleDrop,
     handleCopy,
     handleDownload,
+    handle3Download,
     handlePushToProjectManager,
     formatFileSize
   };
