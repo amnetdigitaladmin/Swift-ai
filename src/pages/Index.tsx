@@ -93,8 +93,8 @@ const Index = () => {
     }
   };
 
-  // Show project management dashboard for project managers
-  if (user?.persona === "project-manager") {
+  // Show project management dashboard for project managers (only after project is selected)
+  if (user?.persona === "project-manager" && currentProject) {
     return (
       <div className="min-h-screen bg-gray-900">
         <Header />
@@ -113,7 +113,7 @@ const Index = () => {
           <div className="space-y-6">
             <ProjectManagementDashboard />
             <ProjectTeamAssignment />
-            {currentProject && <UserStoryAssignment />}
+            <UserStoryAssignment />
           </div>
         </div>
       </div>
