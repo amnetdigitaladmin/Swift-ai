@@ -76,7 +76,7 @@ const Login = ({ onLogin }: LoginProps) => {
         <CardHeader className="text-center space-y-4">
           <div className="flex justify-center">
             <img 
-              src="/lovable-uploads/6d2ee624-da66-4058-bda5-573daec3e844.png" 
+              src={`https://amnetdigitaladmin.github.io/Swift-ai/lovable-uploads/6d2ee624-da66-4058-bda5-573daec3e844.png`}
               alt="Swift AI Logo" 
               className="h-24 w-auto"
             />

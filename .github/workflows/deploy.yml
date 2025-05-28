@@ -8,6 +8,8 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    env:
+      PUBLIC_URL: /Swift-ai/
 
     steps:
       - name: Checkout repo
