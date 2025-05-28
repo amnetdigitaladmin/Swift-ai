@@ -13,6 +13,7 @@ import ProjectManagementDashboard from "@/components/ProjectManagementDashboard"
 import UserStoryAssignment from "@/components/UserStoryAssignment";
 import DeveloperTaskView from "@/components/DeveloperTaskView";
 import ProjectTeamAssignment from "@/components/ProjectTeamAssignment";
+import RequirementsPhase from "./RequirementsPhase";
 import DesignPhase from "./DesignPhase";
 import DevelopmentPhase from "./DevelopmentPhase";
 import TestingPhase from "./TestingPhase";
@@ -60,13 +61,10 @@ const Index = () => {
     }
   ];
 
-  // Filter phases based on user's persona - exclude requirements for business analysts
-  const allowedPhases = allPhases.filter(phase => {
-    if (user?.persona === "business-analyst" && phase.id === "requirements") {
-      return false; // Skip requirements phase for business analysts
-    }
-    return user?.allowedPhases.includes(phase.id);
-  });
+  // Filter phases based on user's persona
+  const allowedPhases = allPhases.filter(phase => 
+    user?.allowedPhases.includes(phase.id)
+  );
 
   const getPersonaTitle = (persona: string): string => {
     const titles: Record<string, string> = {
@@ -82,6 +80,8 @@ const Index = () => {
 
   const renderPhaseContent = () => {
     switch (currentPhase) {
+      case "requirements":
+        return <RequirementsPhase />;
       case "design":
         return <DesignPhase />;
       case "development":
@@ -172,64 +172,6 @@ const Index = () => {
           <div className="max-w-4xl mx-auto">
             <ProjectSelector onProjectSelected={() => {}} />
           </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Special handling for business analysts - show a simplified dashboard instead of phase selection
-  if (user?.persona === "business-analyst") {
-    return (
-      <div className="min-h-screen bg-gray-900">
-        <Header />
-        
-        <div className="container mx-auto px-6 py-16">
-          {/* User Info and Logout */}
-          <div className="flex justify-between items-center mb-8">
-            <div className="text-left">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
-                Welcome, {user?.username}
-              </h1>
-              <p className="text-gray-300">
-                Role: {getPersonaTitle(user?.persona || "")}
-              </p>
-            </div>
-            <Button variant="outline" onClick={logout} className="border-gray-600 text-gray-200 hover:bg-gray-800">
-              <LogOut className="h-4 w-4 mr-2" />
-              Logout
-            </Button>
-          </div>
-
-          {/* Business Analyst Dashboard */}
-          <section className="mb-20">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-4">
-                Business Analyst Dashboard
-              </h2>
-              <p className="text-xl text-gray-300 max-w-4xl mx-auto mb-8">
-                Project: {currentProject?.name}
-              </p>
-            </div>
-
-            <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-6">
-              <h3 className="text-xl font-semibold mb-3">Project Overview</h3>
-              <p className="text-gray-600 mb-4">{currentProject?.description}</p>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-indigo-600">Active</div>
-                  <div className="text-sm text-gray-600">Project Status</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-purple-600">{currentProject?.currentStage || 'Requirements'}</div>
-                  <div className="text-sm text-gray-600">Current Phase</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-600">In Progress</div>
-                  <div className="text-sm text-gray-600">Overall Progress</div>
-                </div>
-              </div>
-            </div>
-          </section>
         </div>
       </div>
     );
