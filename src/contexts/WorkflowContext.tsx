@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
 interface Project {
   id: string;
@@ -95,6 +95,26 @@ export const WorkflowProvider = ({ children }: WorkflowProviderProps) => {
   ]);
   const [currentPhase, setCurrentPhase] = useState<string | null>(null);
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
+
+  // Load current project from localStorage on mount
+  useEffect(() => {
+    const savedProjectId = localStorage.getItem('swift-ai-current-project-id');
+    if (savedProjectId) {
+      const savedProject = projects.find(project => project.id === savedProjectId);
+      if (savedProject) {
+        setCurrentProject(savedProject);
+      }
+    }
+  }, [projects]);
+
+  // Save current project to localStorage whenever it changes
+  useEffect(() => {
+    if (currentProject) {
+      localStorage.setItem('swift-ai-current-project-id', currentProject.id);
+    } else {
+      localStorage.removeItem('swift-ai-current-project-id');
+    }
+  }, [currentProject]);
 
   const addArtifact = (artifact: Omit<Artifact, 'id' | 'createdAt' | 'projectId'>) => {
     if (!currentProject) return;
