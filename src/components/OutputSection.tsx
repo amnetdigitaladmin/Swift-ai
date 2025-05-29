@@ -83,8 +83,8 @@ const OutputSection = ({
           </div>
         ) : (
           <>
-            <CardHeader >
-              <CardTitle >{outputTitle}</CardTitle>
+            <CardHeader className="py-6 px-2">
+              <CardTitle>{outputTitle}</CardTitle>
               <CardDescription>{outputDescription}</CardDescription>
             </CardHeader>
             <Textarea
@@ -113,7 +113,7 @@ const OutputSection = ({
                   Push to Azure DevOps
                 </Button>
                   <Button variant="outline" size="sm" onClick={onPushToProjectManager}>
-    {selectedStory && selectedStory.status !== "completed" && (
+                    {selectedStory && selectedStory.status !== "completed" && (
                   <Button
                     size="sm"
                     onClick={onMarkStoryComplete}
