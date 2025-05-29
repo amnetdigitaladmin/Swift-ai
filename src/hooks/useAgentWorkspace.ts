@@ -1,10 +1,35 @@
 
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@/contexts/UserContext";
 import { useWorkflow } from "@/contexts/WorkflowContext";
 
 export const useAgentWorkspace = (agentName: string) => {
+
+   // Add this useEffect to handle document-level drag and drop
+  useEffect(() => {
+    // Prevent default drag behaviors at document level
+    const preventDefaultDragBehavior = (e: DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+
+    // Add listeners to document
+    document.addEventListener('dragenter', preventDefaultDragBehavior);
+    document.addEventListener('dragover', preventDefaultDragBehavior);
+    document.addEventListener('dragleave', preventDefaultDragBehavior);
+    document.addEventListener('drop', preventDefaultDragBehavior);
+
+    // Cleanup listeners when component unmounts
+    return () => {
+      document.removeEventListener('dragenter', preventDefaultDragBehavior);
+      document.removeEventListener('dragover', preventDefaultDragBehavior);
+      document.removeEventListener('dragleave', preventDefaultDragBehavior);
+      document.removeEventListener('drop', preventDefaultDragBehavior);
+    };
+  }, []); // Empty dependency array since this effect should only run once
+
+  
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);

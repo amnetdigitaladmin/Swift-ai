@@ -35,6 +35,7 @@ const InputSection = ({
   selectedFile,
   setSelectedFile,
   dragActive,
+  setDragActive,
   inputMode,
   setInputMode,
   isProcessing,
@@ -136,10 +137,30 @@ const InputSection = ({
                     ? 'border-primary bg-primary/10' 
                     : 'border-gray-300 hover:border-gray-400'
                 }`}
-                onDragEnter={onDrag}
-                onDragLeave={onDrag}
-                onDragOver={onDrag}
-                onDrop={onDrop}
+               onDragEnter={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(true);
+  }}
+  onDragLeave={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+  }}
+  onDragOver={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(true);
+  }}
+  onDrop={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+    }
+  }}
               >
                 <Upload className="h-10 w-10 mx-auto mb-3 text-gray-400" />
                 <div className="space-y-2">
@@ -208,10 +229,30 @@ const InputSection = ({
                     ? 'border-primary bg-primary/10' 
                     : 'border-gray-300 hover:border-gray-400'
                 }`}
-                onDragEnter={onDrag}
-                onDragLeave={onDrag}
-                onDragOver={onDrag}
-                onDrop={onDrop}
+            onDragEnter={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setDragActive(true);
+          }}
+            onDragLeave={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setDragActive(false);
+            }}
+            onDragOver={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setDragActive(true);
+            }}
+            onDrop={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setDragActive(false);
+              const file = e.dataTransfer.files?.[0];
+              if (file) {
+                setSelectedFile(file);
+              }
+            }}
               >
                 <Upload className="h-8 w-8 mx-auto mb-2 text-gray-400" />
                 <div className="space-y-1">
