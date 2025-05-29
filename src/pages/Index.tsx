@@ -1,8 +1,12 @@
 import { useState } from "react";
-import { FileText, Palette, Code, CheckCircle, ArrowRight, Eye, LogOut } from "lucide-react";
+import { FileText, Palette, Code, CheckCircle, ArrowRight, Eye, LogOut, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { useUser } from "@/contexts/UserContext";
 import { useWorkflow } from "@/contexts/WorkflowContext";
+import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 import PhaseCard from "@/components/PhaseCard";
 import ArchitectureDiagram from "@/components/ArchitectureDiagram";
@@ -20,11 +24,15 @@ import TestingPhase from "./TestingPhase";
 
 const Index = () => {
   const { user, logout } = useUser();
-  const { currentProject } = useWorkflow();
+  const { currentProject, createProject, selectProject } = useWorkflow();
+  const { toast } = useToast();
   const [currentPhase, setCurrentPhase] = useState<string | null>(null);
   const [completedPhases, setCompletedPhases] = useState<string[]>([]);
   const [showArchitecture, setShowArchitecture] = useState(false);
   const [showProcessOverview, setShowProcessOverview] = useState(false);
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [newProjectName, setNewProjectName] = useState("");
+  const [newProjectDescription, setNewProjectDescription] = useState("");
 
   const allPhases = [
     {
@@ -92,6 +100,21 @@ const Index = () => {
       default:
         return null;
     }
+  };
+
+  const handleCreateProject = () => {
+    if (!newProjectName.trim() || !user) return;
+
+    const project = createProject(newProjectName, newProjectDescription, user.persona);
+    selectProject(project);
+    setIsCreateDialogOpen(false);
+    setNewProjectName("");
+    setNewProjectDescription("");
+    
+    toast({
+      title: "Project Created",
+      description: `${newProjectName} has been created successfully.`,
+    });
   };
 
   // Show architect workspace for architects (only after project is selected)
@@ -172,8 +195,8 @@ const Index = () => {
     );
   }
 
-  // Show project selector if no project is selected (for all roles)
-  if (!currentProject) {
+  // Show project selector if no project is selected (for all roles except architect)
+  if (!currentProject && user?.persona !== "architect") {
     return (
       <div className="min-h-screen bg-gray-900">
         <Header />
@@ -195,6 +218,111 @@ const Index = () => {
           
           <div className="max-w-4xl mx-auto">
             <ProjectSelector onProjectSelected={() => {}} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Special project creation interface for architects
+  if (!currentProject && user?.persona === "architect") {
+    return (
+      <div className="min-h-screen bg-gray-900">
+        <Header />
+        <div className="container mx-auto px-6 py-16">
+          <div className="flex justify-between items-center mb-8">
+            <div className="text-left">
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+                Welcome, {user?.username}
+              </h1>
+              <p className="text-gray-300">
+                Role: {getPersonaTitle(user?.persona || "")}
+              </p>
+            </div>
+            <Button variant="outline" onClick={logout} className="border-gray-600 text-gray-200 hover:bg-gray-800">
+              <LogOut className="h-4 w-4 mr-2" />
+              Logout
+            </Button>
+          </div>
+          
+          <div className="max-w-2xl mx-auto text-center space-y-8">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-200 mb-4">
+                Create Your Architecture Project
+              </h2>
+              <p className="text-lg text-gray-400 mb-8">
+                As an architect, you have access to all AI agents across requirements, development, and QA phases. 
+                Create a project to start working with your comprehensive toolkit.
+              </p>
+            </div>
+
+            <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+              <DialogTrigger asChild>
+                <Button 
+                  size="lg"
+                  className="bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-700 hover:to-purple-700 text-lg px-8 py-4"
+                >
+                  <Plus className="h-5 w-5 mr-2" />
+                  Create New Project
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="bg-gray-800 border-gray-700">
+                <DialogHeader>
+                  <DialogTitle className="text-gray-200">Create Architecture Project</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium text-gray-200">Project Name</label>
+                    <Input
+                      value={newProjectName}
+                      onChange={(e) => setNewProjectName(e.target.value)}
+                      placeholder="Enter project name..."
+                      className="bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-200">Description</label>
+                    <Textarea
+                      value={newProjectDescription}
+                      onChange={(e) => setNewProjectDescription(e.target.value)}
+                      placeholder="Describe your architecture project..."
+                      rows={3}
+                      className="bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400"
+                    />
+                  </div>
+                  <div className="flex justify-end space-x-2">
+                    <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)} className="border-gray-600 text-gray-200 hover:bg-gray-700">
+                      Cancel
+                    </Button>
+                    <Button 
+                      onClick={handleCreateProject}
+                      disabled={!newProjectName.trim()}
+                      className="bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-700 hover:to-purple-700"
+                    >
+                      Create Project
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+              <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-6">
+                <FileText className="h-8 w-8 text-blue-400 mb-3" />
+                <h3 className="text-lg font-semibold text-gray-200 mb-2">Requirements</h3>
+                <p className="text-gray-400 text-sm">8 specialized agents for business analysis, stakeholder mapping, and requirement gathering</p>
+              </div>
+              <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-6">
+                <Code className="h-8 w-8 text-green-400 mb-3" />
+                <h3 className="text-lg font-semibold text-gray-200 mb-2">Development</h3>
+                <p className="text-gray-400 text-sm">8 development agents covering frontend, backend, DevOps, and security implementation</p>
+              </div>
+              <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-6">
+                <CheckCircle className="h-8 w-8 text-red-400 mb-3" />
+                <h3 className="text-lg font-semibold text-gray-200 mb-2">QA</h3>
+                <p className="text-gray-400 text-sm">8 testing agents for automated testing, security audits, and quality assurance</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
