@@ -4,7 +4,6 @@ import { FileText, Users, Target, GitBranch, MessageSquare, Database, Shield, Sm
 import AgentCard from "@/components/AgentCard";
 import AgentWorkspace from "@/components/AgentWorkspace";
 import ArtifactManager from "@/components/ArtifactManager";
-import WorkflowButton from "@/components/WorkflowButton";
 
 const RequirementsPhase = () => {
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
@@ -74,33 +73,25 @@ const RequirementsPhase = () => {
         </p>
       </div>
 
-      {/* Workflow Management Section */}
-      <div className="bg-white rounded-lg p-6 border border-gray-200">
-        <div className="flex flex-col lg:flex-row gap-6">
-          <div className="flex-1">
-            <ArtifactManager currentPhase="requirements" />
-          </div>
-          <div className="lg:w-auto flex flex-col justify-center">
-            <WorkflowButton 
-              currentPhase="requirements" 
-              nextPhase="design" 
-              nextPhaseTitle="Design & Architecture" 
-            />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <div className="lg:col-span-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {agents.map((agent, index) => (
+              <AgentCard
+                key={index}
+                title={agent.title}
+                description={agent.description}
+                icon={agent.icon}
+                features={agent.features}
+                onSelect={() => setSelectedAgent(agent.title)}
+              />
+            ))}
           </div>
         </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {agents.map((agent, index) => (
-          <AgentCard
-            key={index}
-            title={agent.title}
-            description={agent.description}
-            icon={agent.icon}
-            features={agent.features}
-            onSelect={() => setSelectedAgent(agent.title)}
-          />
-        ))}
+        
+        <div className="lg:col-span-1">
+          <ArtifactManager currentPhase="requirements" />
+        </div>
       </div>
 
       <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-6">
