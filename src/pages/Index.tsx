@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { FileText, Palette, Code, CheckCircle, ArrowRight, Eye, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,6 +12,7 @@ import ProjectManagementDashboard from "@/components/ProjectManagementDashboard"
 import UserStoryAssignment from "@/components/UserStoryAssignment";
 import DeveloperTaskView from "@/components/DeveloperTaskView";
 import ProjectTeamAssignment from "@/components/ProjectTeamAssignment";
+import ArchitectWorkspace from "@/components/ArchitectWorkspace";
 import RequirementsPhase from "./RequirementsPhase";
 import DesignPhase from "./DesignPhase";
 import DevelopmentPhase from "./DevelopmentPhase";
@@ -73,6 +73,7 @@ const Index = () => {
       "developer": "Developer", 
       "qa-engineer": "QA Engineer",
       "project-manager": "Project Manager",
+      "architect": "Architect",
       "admin": "Administrator"
     };
     return titles[persona] || persona;
@@ -92,6 +93,29 @@ const Index = () => {
         return null;
     }
   };
+
+  // Show architect workspace for architects (only after project is selected)
+  if (user?.persona === "architect" && currentProject) {
+    return (
+      <div className="min-h-screen bg-gray-900">
+        <Header />
+        <div className="container mx-auto px-6 py-8">
+          <div className="flex items-center justify-between mb-6">
+            <div className="text-left">
+              <span className="text-sm text-gray-300">
+                Welcome, {user?.username} ({getPersonaTitle(user?.persona || "")})
+              </span>
+            </div>
+            <Button variant="outline" size="sm" onClick={logout} className="border-gray-600 text-gray-200 hover:bg-gray-800">
+              <LogOut className="h-4 w-4 mr-2" />
+              Logout
+            </Button>
+          </div>
+          <ArchitectWorkspace />
+        </div>
+      </div>
+    );
+  }
 
   // Show project management dashboard for project managers (only after project is selected)
   if (user?.persona === "project-manager" && currentProject) {
