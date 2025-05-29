@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Plus, FileText, Code, Palette, TestTube } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -83,12 +82,12 @@ const ArtifactManager = ({ currentPhase }: ArtifactManagerProps) => {
                 Add Artifact
               </Button>
             </DialogTrigger>
-            
+
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Create New Artifact</DialogTitle>
               </DialogHeader>
-              
+
               <div className="space-y-4">
                 <div>
                   <Label htmlFor="title">Title</Label>
@@ -99,7 +98,7 @@ const ArtifactManager = ({ currentPhase }: ArtifactManagerProps) => {
                     placeholder="Enter artifact title"
                   />
                 </div>
-                
+
                 <div>
                   <Label htmlFor="type">Type</Label>
                   <Select value={type} onValueChange={setType}>
@@ -115,7 +114,7 @@ const ArtifactManager = ({ currentPhase }: ArtifactManagerProps) => {
                     </SelectContent>
                   </Select>
                 </div>
-                
+
                 <div>
                   <Label htmlFor="content">Content</Label>
                   <Textarea
@@ -126,7 +125,7 @@ const ArtifactManager = ({ currentPhase }: ArtifactManagerProps) => {
                     rows={6}
                   />
                 </div>
-                
+
                 <div className="flex justify-end space-x-2">
                   <Button variant="outline" onClick={() => setIsOpen(false)}>
                     Cancel
@@ -140,7 +139,7 @@ const ArtifactManager = ({ currentPhase }: ArtifactManagerProps) => {
           </Dialog>
         </div>
       </CardHeader>
-      
+
       <CardContent>
         {artifacts.length > 0 ? (
           <div className="space-y-3">

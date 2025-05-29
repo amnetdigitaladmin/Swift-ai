@@ -67,14 +67,14 @@ const RequirementsPhase = () => {
     <div className="space-y-6">
       <div className="text-center">
         <h1 className="text-3xl font-bold text-gray-900 mb-4">SwiftPlan - Requirements Analysis Phase</h1>
-        <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+        <p className="text-lg text-gray-200 max-w-3xl mx-auto">
           Leverage AI-powered agents to transform business needs into comprehensive, actionable requirements. 
           Each agent specializes in different aspects of requirements gathering and analysis.
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-3">
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {agents.map((agent, index) => (
               <AgentCard
@@ -89,7 +89,7 @@ const RequirementsPhase = () => {
           </div>
         </div>
         
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-3 max-h-[200px]">
           <ArtifactManager currentPhase="requirements" />
         </div>
       </div>
