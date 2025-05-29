@@ -13,19 +13,17 @@ const Settings = () => {
   const { toast } = useToast();
   
   const [llmAssignments, setLlmAssignments] = useState({
-    "business-analyst": "gpt-4",
-    "designer": "gpt-4",
-    "developer": "claude",
-    "qa-engineer": "gemini",
-    "project-manager": "gpt-4"
+    "requirements": "gpt-4",
+    "design": "gpt-4",
+    "development": "claude",
+    "testing": "gemini"
   });
 
-  const roles = [
-    { id: "business-analyst", name: "Business Analyst" },
-    { id: "designer", name: "UI/UX Designer" },
-    { id: "developer", name: "Developer" },
-    { id: "qa-engineer", name: "QA Engineer" },
-    { id: "project-manager", name: "Project Manager" }
+  const phases = [
+    { id: "requirements", name: "Requirements Analysis" },
+    { id: "design", name: "Design & Architecture" },
+    { id: "development", name: "Development & Implementation" },
+    { id: "testing", name: "Testing & Quality Assurance" }
   ];
 
   const llmOptions = [
@@ -34,10 +32,10 @@ const Settings = () => {
     { value: "claude", label: "Claude" }
   ];
 
-  const handleLlmChange = (roleId: string, llm: string) => {
+  const handleLlmChange = (phaseId: string, llm: string) => {
     setLlmAssignments(prev => ({
       ...prev,
-      [roleId]: llm
+      [phaseId]: llm
     }));
   };
 
@@ -49,7 +47,7 @@ const Settings = () => {
     });
   };
 
-  if (user?.persona !== "admin") {
+  if (user?.persona !== "architect") {
     return (
       <div className="space-y-6">
         <Card className="bg-white">
@@ -67,7 +65,7 @@ const Settings = () => {
                 <Badge variant="secondary">{user?.persona}</Badge>
               </div>
               <div className="text-sm text-gray-500">
-                Additional settings are available to administrators only.
+                Advanced settings are available to architects only.
               </div>
             </div>
           </CardContent>
@@ -80,25 +78,31 @@ const Settings = () => {
     <div className="space-y-6">
       <Card className="bg-white">
         <CardHeader>
-          <CardTitle className="text-gray-900">Administrator Settings</CardTitle>
-          <CardDescription className="text-gray-600">Manage system configuration and LLM assignments</CardDescription>
+          <CardTitle className="text-gray-900">Architect Settings</CardTitle>
+          <CardDescription className="text-gray-600">Configure LLM assignments for different SDLC phases</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div>
-            <Label className="text-base font-medium mb-4 block text-gray-900">LLM Assignments by Role</Label>
+            <Label className="text-base font-medium mb-4 block text-gray-900">LLM Assignments by Phase</Label>
             <p className="text-sm text-gray-600 mb-4">
-              Assign specific Large Language Models to each role for optimized performance.
+              Assign specific Large Language Models to each SDLC phase for optimized performance across your architecture workflow.
             </p>
             <div className="space-y-4">
-              {roles.map((role) => (
-                <div key={role.id} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg bg-white shadow-sm">
+              {phases.map((phase) => (
+                <div key={phase.id} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg bg-white shadow-sm">
                   <div>
-                    <Label className="font-medium text-gray-900">{role.name}</Label>
+                    <Label className="font-medium text-gray-900">{phase.name}</Label>
+                    <p className="text-sm text-gray-500 mt-1">
+                      {phase.id === "requirements" && "Business analysis, stakeholder mapping, and requirement gathering"}
+                      {phase.id === "design" && "System architecture, UI/UX design, and technical specifications"}
+                      {phase.id === "development" && "Code generation, implementation, and development best practices"}
+                      {phase.id === "testing" && "Quality assurance, testing strategies, and validation"}
+                    </p>
                   </div>
                   <div className="w-48">
                     <Select
-                      value={llmAssignments[role.id as keyof typeof llmAssignments]}
-                      onValueChange={(value) => handleLlmChange(role.id, value)}
+                      value={llmAssignments[phase.id as keyof typeof llmAssignments]}
+                      onValueChange={(value) => handleLlmChange(phase.id, value)}
                     >
                       <SelectTrigger className="bg-white border-gray-300 text-gray-900">
                         <SelectValue />
@@ -115,6 +119,15 @@ const Settings = () => {
                 </div>
               ))}
             </div>
+          </div>
+          
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <h4 className="text-sm font-medium text-blue-900 mb-2">Model Recommendations</h4>
+            <ul className="text-sm text-blue-800 space-y-1">
+              <li>• <strong>GPT-4:</strong> Best for complex reasoning and business analysis</li>
+              <li>• <strong>Claude:</strong> Excellent for code generation and technical documentation</li>
+              <li>• <strong>Gemini:</strong> Strong performance in testing scenarios and quality assurance</li>
+            </ul>
           </div>
           
           <div className="flex justify-end pt-4 border-t">

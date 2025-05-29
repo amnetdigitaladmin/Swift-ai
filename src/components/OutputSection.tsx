@@ -10,6 +10,7 @@ interface OutputSectionProps {
   isProcessing: boolean;
   progress: number;
   selectedStory: any;
+  agentName?: string;
   onCopy: () => void;
   onDownload: () => void;
   onS3Download: (url: string) => void;
@@ -37,6 +38,7 @@ const OutputSection = ({
   isProcessing,
   progress,
   selectedStory,
+  agentName,
   onCopy,
   onDownload,
   onS3Download,
@@ -44,16 +46,26 @@ const OutputSection = ({
   onPushToProjectManager,
   onMarkStoryComplete
 }: OutputSectionProps) => {
-  let s3Url = getS3UrlFromOutput(output);
+   let s3Url = getS3UrlFromOutput(output);
+  const isRequirementsAgent = agentName?.toLowerCase().includes('swiftplan');
+  const outputTitle = isRequirementsAgent ? "Generated Output" : "Generated Code Output";
+  const outputDescription = isRequirementsAgent ? "AI-generated analysis and documentation" : "AI-generated code and implementation";
+  const processingMessage = isRequirementsAgent 
+    ? "AI is generating analysis for your requirements..." 
+    : "AI is generating code for your user story...";
 
   return (
     <Card className="shadow-md">
+      <CardHeader>
+        <CardTitle>{outputTitle}</CardTitle>
+        <CardDescription>{outputDescription}</CardDescription>
+      </CardHeader>
       <CardContent className="space-y-4 h-full">
         {isProcessing ? (
             <div className="h-full flex flex-col items-center justify-center">
             <div className="text-center py-8">
               <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4 text-indigo-600" />
-                <p className="text-gray-600">Generating your detailed requirement document...</p>
+              <p className="text-gray-600">{processingMessage}</p>
             </div>
             {/* <Progress value={progress} className="w-full" />
               <p className="text-sm text-gray-500 text-center">{Math.round(progress)}% complete</p> */}
@@ -72,16 +84,14 @@ const OutputSection = ({
         ) : (
           <>
             <CardHeader>
-                <CardTitle className="text-lg font-semibold text-gray-900">Generated Code Output</CardTitle>
-              <CardDescription className="text-sm text-muted-foreground">
-                AI-generated code and implementation
-              </CardDescription>
+              <CardTitle >{outputTitle}</CardTitle>
+              <CardDescription>{outputDescription}</CardDescription>
             </CardHeader>
             <Textarea
               value={typeof output === "string" ? output : ""}
               readOnly
-              className="min-h-[300px] bg-gray-900 text-gray-100 border border-gray-700 font-mono text-xs rounded-lg"
-              placeholder="AI-generated code will appear here..."
+              className="min-h-[300px] bg-gray-800 text-gray-100 border-gray-600 font-mono text-xs"
+              placeholder={isRequirementsAgent ? "AI-generated analysis will appear here..." : "AI-generated code will appear here..."}
             />
             {output && (
               <div className="flex flex-wrap gap-2 mt-4">
