@@ -27,7 +27,7 @@ const getS3UrlFromOutput = (output: string | object): string | null => {
   if (typeof output === "object" && output !== null && "docx_download_url" in output) {
     const url = (output as any).docx_download_url;
     return typeof url === "string" ? url.replace(/\\\//g, "/") : null;
-}
+  }
 
   return null;
 };
@@ -46,82 +46,82 @@ const OutputSection = ({
 }: OutputSectionProps) => {
   let s3Url = getS3UrlFromOutput(output);
 
-     return (
-      <Card className="shadow-md">
-        <CardContent className="space-y-4">
-          {isProcessing ? (
-            <>
-              <div className="text-center py-8">
-                <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4 text-indigo-600" />
-                <p className="text-gray-600">AI is generating code for your user story...</p>
-              </div>
-              <Progress value={progress} className="w-full" />
-              <p className="text-sm text-gray-500 text-center">{Math.round(progress)}% complete</p>
-            </>
-          ) : s3Url ? (
-         <div className="flex items-center justify-center h-[300px]">
+  return (
+    <Card className="shadow-md">
+      <CardContent className="space-y-4 h-full">
+        {isProcessing ? (
+            <div className="h-full flex flex-col items-center justify-center">
+            <div className="text-center py-8">
+              <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4 text-indigo-600" />
+                <p className="text-gray-600">Generating your detailed requirement document...</p>
+            </div>
+            {/* <Progress value={progress} className="w-full" />
+              <p className="text-sm text-gray-500 text-center">{Math.round(progress)}% complete</p> */}
+          </div>
+        ) : s3Url ? (
+          <div className="flex items-center justify-center h-full">
             <Button
               onClick={()=>onS3Download(s3Url)}
               className="bg-indigo-600 hover:bg-indigo-700 text-white"
               size="lg"
             >
-            <Download className="h-5 w-5 mr-2" />
+              <Download className="h-5 w-5 mr-2" />
               Download Generated File
             </Button>
           </div>
-          ) : (
-            <>
-              <CardHeader>
+        ) : (
+          <>
+            <CardHeader>
                 <CardTitle className="text-lg font-semibold text-gray-900">Generated Code Output</CardTitle>
-                <CardDescription className="text-sm text-muted-foreground">
-                  AI-generated code and implementation
-                </CardDescription>
-              </CardHeader>
-              <Textarea
-                value={typeof output === "string" ? output : ""}
-                readOnly
-                className="min-h-[300px] bg-gray-900 text-gray-100 border border-gray-700 font-mono text-xs rounded-lg"
-                placeholder="AI-generated code will appear here..."
-              />
-              {output && (
-                <div className="flex flex-wrap gap-2 mt-4">
-                  <Button variant="secondary" size="sm" onClick={onCopy}>
-                    <Copy className="h-4 w-4 mr-2" />
-                    Copy
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={onDownload}
-                    className="border-indigo-500 text-indigo-500 hover:bg-indigo-50"
-                  >
-                    <Download className="h-4 w-4 mr-2" />
-                    Download
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={onAzureDevOpsPush}>
-                    <Cloud className="h-4 w-4 mr-2" />
-                    Push to Azure DevOps
-                  </Button>
+              <CardDescription className="text-sm text-muted-foreground">
+                AI-generated code and implementation
+              </CardDescription>
+            </CardHeader>
+            <Textarea
+              value={typeof output === "string" ? output : ""}
+              readOnly
+              className="min-h-[300px] bg-gray-900 text-gray-100 border border-gray-700 font-mono text-xs rounded-lg"
+              placeholder="AI-generated code will appear here..."
+            />
+            {output && (
+              <div className="flex flex-wrap gap-2 mt-4">
+                <Button variant="secondary" size="sm" onClick={onCopy}>
+                  <Copy className="h-4 w-4 mr-2" />
+                  Copy
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={onDownload}
+                  className="border-indigo-500 text-indigo-500 hover:bg-indigo-50"
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Download
+                </Button>
+                <Button variant="outline" size="sm" onClick={onAzureDevOpsPush}>
+                  <Cloud className="h-4 w-4 mr-2" />
+                  Push to Azure DevOps
+                </Button>
                   <Button variant="outline" size="sm" onClick={onPushToProjectManager}>
-                    <Users className="h-4 w-4 mr-2" />
-                    Push to Project Manager
+                  <Users className="h-4 w-4 mr-2" />
+                  Push to Project Manager
+                </Button>
+                {selectedStory && selectedStory.status !== "completed" && (
+                  <Button
+                    size="sm"
+                    onClick={onMarkStoryComplete}
+                    className="bg-green-600 hover:bg-green-700 text-white"
+                  >
+                    <CheckCircle className="h-4 w-4 mr-2" />
+                    Mark Story Complete
                   </Button>
-                  {selectedStory && selectedStory.status !== "completed" && (
-                    <Button
-                      size="sm"
-                      onClick={onMarkStoryComplete}
-                      className="bg-green-600 hover:bg-green-700 text-white"
-                    >
-                      <CheckCircle className="h-4 w-4 mr-2" />
-                      Mark Story Complete
-                    </Button>
-                  )}
-                </div>
-              )}
-            </>
-          )}
-        </CardContent>
-      </Card>
+                )}
+              </div>
+            )}
+          </>
+        )}
+      </CardContent>
+    </Card>
   );
 
   // -----------------old code---------------------------------
@@ -168,9 +168,9 @@ const OutputSection = ({
   //                 Push to Project Manager
   //               </Button>
   //               {selectedStory && selectedStory.status !== "completed" && (
-  //                 <Button 
-  //                   variant="default" 
-  //                   size="sm" 
+  //                 <Button
+  //                   variant="default"
+  //                   size="sm"
   //                   onClick={onMarkStoryComplete}
   //                   className="bg-green-600 hover:bg-green-700"
   //                 >
