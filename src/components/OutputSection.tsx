@@ -56,10 +56,10 @@ const OutputSection = ({
 
   return (
     <Card className="shadow-md">
-      <CardHeader>
+      {/* <CardHeader>
         <CardTitle>{outputTitle}</CardTitle>
         <CardDescription>{outputDescription}</CardDescription>
-      </CardHeader>
+      </CardHeader> */}
       <CardContent className="space-y-4 h-full">
         {isProcessing ? (
             <div className="h-full flex flex-col items-center justify-center">
@@ -83,7 +83,7 @@ const OutputSection = ({
           </div>
         ) : (
           <>
-            <CardHeader>
+            <CardHeader >
               <CardTitle >{outputTitle}</CardTitle>
               <CardDescription>{outputDescription}</CardDescription>
             </CardHeader>
@@ -113,10 +113,7 @@ const OutputSection = ({
                   Push to Azure DevOps
                 </Button>
                   <Button variant="outline" size="sm" onClick={onPushToProjectManager}>
-                  <Users className="h-4 w-4 mr-2" />
-                  Push to Project Manager
-                </Button>
-                {selectedStory && selectedStory.status !== "completed" && (
+    {selectedStory && selectedStory.status !== "completed" && (
                   <Button
                     size="sm"
                     onClick={onMarkStoryComplete}
@@ -126,6 +123,7 @@ const OutputSection = ({
                     Mark Story Complete
                   </Button>
                 )}
+                  </Button>
               </div>
             )}
           </>
@@ -178,6 +176,9 @@ const OutputSection = ({
   //                 Push to Project Manager
   //               </Button>
   //               {selectedStory && selectedStory.status !== "completed" && (
+  //                 <Button
+  //                   variant="default"
+  //                   size="sm"
   //                 <Button
   //                   variant="default"
   //                   size="sm"

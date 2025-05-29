@@ -276,14 +276,14 @@ const InputSection = ({
               <div className="flex items-center space-x-3 p-3 border rounded-lg bg-gray-50">
                 <FileText className="h-6 w-6 text-blue-500" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">{selectedFile.name}</p>
+                  <p className="text-sm font-medium truncate text-black">{selectedFile.name}</p>
                   <p className="text-xs text-gray-500">{formatFileSize(selectedFile.size)}</p>
                 </div>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={handleRemoveFile}
-                  className="h-6 w-6 p-0"
+                  className="h-6 w-6 p-0 text-black "
                 >
                   <X className="h-4 w-4" />
                 </Button>
@@ -308,7 +308,7 @@ const InputSection = ({
             ) : (
               <>
                 <Play className="h-4 w-4 mr-2" />
-                Generate Code with AI
+                Generate  with AI
               </>
             )}
           </Button>

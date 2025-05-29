@@ -313,6 +313,7 @@ export const useAgentWorkspace = (agentName: string) => {
 
   const handleIsProcessing=(processing:boolean)=>{
    setOutput("");
+   setInput("");
   }
 
   return {
