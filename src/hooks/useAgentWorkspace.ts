@@ -29,7 +29,7 @@ export const useAgentWorkspace = (agentName: string) => {
     };
   }, []); // Empty dependency array since this effect should only run once
 
-  
+
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
@@ -114,9 +114,6 @@ export const useAgentWorkspace = (agentName: string) => {
         setOutput(data); // can be a URL or full text
         setIsProcessing(false);
 
-        // if (data.url) {
-        //   setDownloadUrl(data.url);
-        // }
 
         toast({
           title: "Upload Successful",
