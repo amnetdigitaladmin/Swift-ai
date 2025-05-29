@@ -43,6 +43,12 @@ const Login = ({ onLogin }: LoginProps) => {
       phases: ["testing"]
     },
     {
+      id: "architect",
+      title: "Architect",
+      description: "System architecture and cross-team coordination",
+      phases: ["requirements", "development", "testing"]
+    },
+    {
       id: "project-manager",
       title: "Project Manager",
       description: "Complete oversight of all development phases",
