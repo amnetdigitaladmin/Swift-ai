@@ -109,7 +109,6 @@ export const useAgentWorkspace = (agentName: string) => {
         });
 
         const data = await response.json();
-        console.log("Backend response:", data);
 
         setOutput(data); // can be a URL or full text
         setIsProcessing(false);
