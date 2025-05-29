@@ -148,6 +148,7 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
               isProcessing={isProcessing}
               progress={progress}
               selectedStory={selectedStory}
+              agentName={agentName}
               onCopy={handleCopy}
               onDownload={handleDownload}
               onAzureDevOpsPush={handleAzureDevOpsPush}

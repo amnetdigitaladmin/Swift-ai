@@ -10,6 +10,7 @@ interface OutputSectionProps {
   isProcessing: boolean;
   progress: number;
   selectedStory: any;
+  agentName?: string;
   onCopy: () => void;
   onDownload: () => void;
   onAzureDevOpsPush: () => void;
@@ -22,24 +23,32 @@ const OutputSection = ({
   isProcessing,
   progress,
   selectedStory,
+  agentName,
   onCopy,
   onDownload,
   onAzureDevOpsPush,
   onPushToProjectManager,
   onMarkStoryComplete
 }: OutputSectionProps) => {
+  const isRequirementsAgent = agentName?.toLowerCase().includes('swiftplan');
+  const outputTitle = isRequirementsAgent ? "Generated Output" : "Generated Code Output";
+  const outputDescription = isRequirementsAgent ? "AI-generated analysis and documentation" : "AI-generated code and implementation";
+  const processingMessage = isRequirementsAgent 
+    ? "AI is generating analysis for your requirements..." 
+    : "AI is generating code for your user story...";
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Generated Code Output</CardTitle>
-        <CardDescription>AI-generated code and implementation</CardDescription>
+        <CardTitle>{outputTitle}</CardTitle>
+        <CardDescription>{outputDescription}</CardDescription>
       </CardHeader>
       <CardContent>
         {isProcessing ? (
           <div className="space-y-4">
             <div className="text-center py-8">
               <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4 text-indigo-600" />
-              <p className="text-gray-600">AI is generating code for your user story...</p>
+              <p className="text-gray-600">{processingMessage}</p>
             </div>
             <Progress value={progress} className="w-full" />
             <p className="text-sm text-gray-500 text-center">{Math.round(progress)}% complete</p>
@@ -50,7 +59,7 @@ const OutputSection = ({
               value={output}
               readOnly
               className="min-h-[300px] bg-gray-800 text-gray-100 border-gray-600 font-mono text-xs"
-              placeholder="AI-generated code will appear here..."
+              placeholder={isRequirementsAgent ? "AI-generated analysis will appear here..." : "AI-generated code will appear here..."}
             />
             {output && (
               <div className="flex items-center space-x-2 mt-4 flex-wrap gap-2">
