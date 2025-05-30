@@ -260,26 +260,28 @@ export const useAgentWorkspace = (agentName: string) => {
     URL.revokeObjectURL(url);
   };
 
-  const handle3Download = async (url: string) => {
-    try {
-      const response = await fetch(url);
-      const blob = await response.blob();
-      const downloadUrl = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = downloadUrl;
-      a.download = "generated-file.docx";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(downloadUrl);
-    } catch (error) {
-      console.error("Download error:", error);
-      toast({
-        title: "Download Failed",
-        description: "Failed to download the file. Please try again.",
-        variant: "destructive",
-      });
-    }
+  const handle3Download = (url: string) => {
+  if (!url) return;
+
+  // Extract filename from URL (strip query parameters)
+  const urlParts = url.split('/');
+  const lastPart = urlParts[urlParts.length - 1];
+  const [filename] = lastPart.split('?');
+
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', filename || 'downloaded-file');
+  link.setAttribute('target', '_blank');
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  toast({
+    title: "Download Started",
+    description: "Your file is being downloaded.",
+    duration: 5000
+  });
   };
 
   const handlePushToProjectManager = () => {
