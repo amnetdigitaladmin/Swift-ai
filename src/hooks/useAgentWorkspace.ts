@@ -107,64 +107,93 @@ export const useAgentWorkspace = (agentName: string) => {
         if (currentProgress >= 100) {
           clearInterval(progressInterval);
           setIsProcessing(false);
-          // Set output to a non-empty string to trigger the file tree view
           setOutput("processed");
         }
-      }, 1000); // Update every second for 10 seconds total
+      }, 1000);
     } else {
       try {
-        // Normal processing for other agents
-        const response = await fetch("https://sewlzvr57rnjulvehobu2ienvu0ritqy.lambda-url.ap-south-1.on.aws/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            input,
-            file: selectedFile,
-            template: selectedTemplate,
-            agent: agentName,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error("Processing failed");
+        if (!selectedFile) {
+          throw new Error("No file selected");
         }
 
-        const result = await response.json();
+        const reader = new FileReader();
+        reader.readAsDataURL(selectedFile);
 
-        // The API should return either an S3 URL directly or in a specific format
-        // Example response: { output: "https://s3-url..." } or { s3_url: "https://s3-url..." }
-        const s3Url = result.s3_url || result.output;
+        reader.onload = async () => {
+          try {
+            const fileResult = reader.result as string;
+            const base64Content = fileResult.split(",")[1];
 
-        if (
-          s3Url &&
-          typeof s3Url === "string" &&
-          s3Url.includes("s3.amazonaws.com")
-        ) {
-          // If we got a valid S3 URL, use it
-          setOutput(s3Url);
-        } else {
-          // Fallback to regular output if no S3 URL
-          setOutput(result.output || "No output generated");
-        }
+            const payload = {
+              file: {
+                filename: selectedFile.name.replace(/\.[^/.]+$/, ""),
+                content: base64Content,
+                extension: selectedFile.name.split(".").pop(),
+              },
+            };
 
-        toast({
-          title: "Processing Complete",
-          description: "Your request has been processed successfully.",
-        });
+            const response = await fetch(
+              "https://sewlzvr57rnjulvehobu2ienvu0ritqy.lambda-url.ap-south-1.on.aws/",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+              }
+            );
+
+            if (!response.ok) {
+              throw new Error("Processing failed");
+            }
+
+            const apiResult = await response.json();
+
+            // The Lambda function should return a URL in the response
+            if (apiResult && apiResult.docx_download_url) {
+              setOutput(apiResult.docx_download_url);
+              toast({
+                title: "Processing Complete",
+                description: "Your request has been processed successfully.",
+              });
+            } else {
+              throw new Error("Invalid response format");
+            }
+          } catch (error) {
+            console.error("API error:", error);
+            toast({
+              title: "Processing Failed",
+              description: "Failed to process your request. Please try again.",
+              variant: "destructive",
+            });
+            setOutput("Error processing request. Please try again.");
+          } finally {
+            setIsProcessing(false);
+            setProgress(100);
+          }
+        };
+
+        reader.onerror = () => {
+          console.error("File reading error:", reader.error);
+          toast({
+            title: "File Reading Failed",
+            description: "Failed to read the file. Please try again.",
+            variant: "destructive",
+          });
+          setIsProcessing(false);
+          setProgress(0);
+          setOutput("Error reading file. Please try again.");
+        };
       } catch (error) {
-        console.error("Processing error:", error);
+        console.error("Process error:", error);
         toast({
           title: "Processing Failed",
           description: "Failed to process your request. Please try again.",
           variant: "destructive",
         });
-        // Set error output to show in the output section
-        setOutput("Error processing request. Please try again.");
-      } finally {
         setIsProcessing(false);
-        setProgress(100);
+        setProgress(0);
+        setOutput("Error processing request. Please try again.");
       }
     }
   };

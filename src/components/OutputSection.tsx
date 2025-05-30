@@ -32,13 +32,21 @@ interface OutputSectionProps {
 }
 
 const getS3UrlFromOutput = (output: string | object): string | null => {
+  // If output is a string and looks like an S3 URL
   if (
     typeof output === "string" &&
-    /^https:\/\/.*\.s3(?:\.[a-z0-9-]+)?\.amazonaws\.com\/.+/.test(output)
+    (output.includes("s3.amazonaws.com") || output.includes("lambda-url"))
   ) {
     return output;
   }
 
+  // If output is an object with url property (from Lambda)
+  if (typeof output === "object" && output !== null && "url" in output) {
+    const url = (output as any).url;
+    return typeof url === "string" ? url : null;
+  }
+
+  // If output is an object with docx_download_url property
   if (
     typeof output === "object" &&
     output !== null &&
@@ -78,26 +86,31 @@ const OutputSection = ({
 
   return (
     <Card className="shadow-md">
-      <CardContent className="space-y-4 h-full">
+      <CardContent className="p-6 space-y-4">
         {isProcessing ? (
-          <div className="h-full flex flex-col items-center justify-center">
+          <div className="h-[600px] flex flex-col items-center justify-center">
             <div className="text-center py-8">
               <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4 text-indigo-600" />
               <p className="text-gray-600">{processingMessage}</p>
+              {progress > 0 && (
+                <div className="w-64 mt-4">
+                  <Progress value={progress} />
+                </div>
+              )}
             </div>
-            {/* <Progress value={progress} className="w-full" />
-              <p className="text-sm text-gray-500 text-center">{Math.round(progress)}% complete</p> */}
           </div>
         ) : s3Url ? (
-          <div className="flex items-center justify-center h-full">
-            <Button
-              onClick={() => onS3Download(s3Url)}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white"
-              size="lg"
-            >
-              <Download className="h-5 w-5 mr-2" />
-              Download Generated File
-            </Button>
+          <div className="h-[600px] flex flex-col items-center justify-center">
+            <div className="text-center py-8">
+              <Button
+                onClick={() => onS3Download(s3Url!)}
+                className="bg-indigo-600 hover:bg-indigo-700 text-white"
+                size="lg"
+              >
+                <Download className="h-5 w-5 mr-2" />
+                Download Generated File
+              </Button>
+            </div>
           </div>
         ) : (
           <>
@@ -139,17 +152,19 @@ const OutputSection = ({
                   size="sm"
                   onClick={onPushToProjectManager}
                 >
-                  {selectedStory && selectedStory.status !== "completed" && (
-                    <Button
-                      size="sm"
-                      onClick={onMarkStoryComplete}
-                      className="bg-green-600 hover:bg-green-700 text-white"
-                    >
-                      <CheckCircle className="h-4 w-4 mr-2" />
-                      Mark Story Complete
-                    </Button>
-                  )}
+                  <Users className="h-4 w-4 mr-2" />
+                  Push to Project Manager
                 </Button>
+                {selectedStory && selectedStory.status !== "completed" && (
+                  <Button
+                    size="sm"
+                    onClick={onMarkStoryComplete}
+                    className="bg-green-600 hover:bg-green-700 text-white"
+                  >
+                    <CheckCircle className="h-4 w-4 mr-2" />
+                    Mark Story Complete
+                  </Button>
+                )}
               </div>
             )}
           </>
