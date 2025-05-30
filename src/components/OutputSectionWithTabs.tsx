@@ -300,7 +300,7 @@ const OutputSectionWithTabs = ({
                   style={oneLight}
                   customStyle={{
                     margin: 0,
-                    borderRadius: "0.5rem",
+                    borderRadius: "0",
                     fontSize: "0.875rem",
                     backgroundColor: "#f8fafc",
                     border: "1px solid #e2e8f0",
@@ -316,7 +316,7 @@ const OutputSectionWithTabs = ({
                   {flattenedFiles[activeFileIndex]?.content}
                 </SyntaxHighlighter>
 
-                <div className="flex flex-wrap gap-2 mt-4 sticky bottom-0 bg-white py-2">
+                <div className="flex flex-wrap gap-2 mt-4 sticky bottom-0  py-2">
                   <Button
                     variant="outline"
                     size="sm"
