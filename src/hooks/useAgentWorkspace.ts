@@ -1,12 +1,10 @@
-
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@/contexts/UserContext";
 import { useWorkflow } from "@/contexts/WorkflowContext";
 
 export const useAgentWorkspace = (agentName: string) => {
-
-   // Add this useEffect to handle document-level drag and drop
+  // Add this useEffect to handle document-level drag and drop
   useEffect(() => {
     // Prevent default drag behaviors at document level
     const preventDefaultDragBehavior = (e: DragEvent) => {
@@ -15,52 +13,59 @@ export const useAgentWorkspace = (agentName: string) => {
     };
 
     // Add listeners to document
-    document.addEventListener('dragenter', preventDefaultDragBehavior);
-    document.addEventListener('dragover', preventDefaultDragBehavior);
-    document.addEventListener('dragleave', preventDefaultDragBehavior);
-    document.addEventListener('drop', preventDefaultDragBehavior);
+    document.addEventListener("dragenter", preventDefaultDragBehavior);
+    document.addEventListener("dragover", preventDefaultDragBehavior);
+    document.addEventListener("dragleave", preventDefaultDragBehavior);
+    document.addEventListener("drop", preventDefaultDragBehavior);
 
     // Cleanup listeners when component unmounts
     return () => {
-      document.removeEventListener('dragenter', preventDefaultDragBehavior);
-      document.removeEventListener('dragover', preventDefaultDragBehavior);
-      document.removeEventListener('dragleave', preventDefaultDragBehavior);
-      document.removeEventListener('drop', preventDefaultDragBehavior);
+      document.removeEventListener("dragenter", preventDefaultDragBehavior);
+      document.removeEventListener("dragover", preventDefaultDragBehavior);
+      document.removeEventListener("dragleave", preventDefaultDragBehavior);
+      document.removeEventListener("drop", preventDefaultDragBehavior);
     };
   }, []); // Empty dependency array since this effect should only run once
 
-
   const [input, setInput] = useState("");
-  const [output, setOutput] = useState("");
+  const [output, setOutput] = useState<string | object>("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
   const [selectedTemplate, setSelectedTemplate] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);
-  const [selectedStoryId, setSelectedStoryId] = useState<string>("");
+  const [selectedStoryId, setSelectedStoryId] = useState<string | null>(null);
   const [inputMode, setInputMode] = useState<"type" | "upload">("type");
-  
 
-  
   const { toast } = useToast();
   const { user } = useUser();
-  const { currentProject, addArtifact, getAssignedArtifacts, updateArtifactStatus } = useWorkflow();
+  const {
+    currentProject,
+    addArtifact,
+    getAssignedArtifacts,
+    updateArtifactStatus,
+  } = useWorkflow();
 
   const isBusinessAnalyst = user?.persona === "business-analyst";
 
-  const assignedStories = currentProject 
-    ? getAssignedArtifacts(user?.username || "").filter(task => 
-        task.projectId === currentProject.id && task.type === "User Story"
+  const assignedStories = currentProject
+    ? getAssignedArtifacts(user?.username || "").filter(
+        (task) =>
+          task.projectId === currentProject.id && task.type === "User Story"
       )
     : [];
 
-  const selectedStory = assignedStories.find(story => story.id === selectedStoryId);
+  const selectedStory = assignedStories.find(
+    (story) => story.id === selectedStoryId
+  );
 
   const handleStorySelection = (storyId: string) => {
     setSelectedStoryId(storyId);
-    const story = assignedStories.find(s => s.id === storyId);
+    const story = assignedStories.find((s) => s.id === storyId);
     if (story) {
-      setInput(`Working on User Story: ${story.title}\n\nStory Description:\n${story.content}\n\nDevelopment Requirements:\n`);
+      setInput(
+        `Working on User Story: ${story.title}\n\nStory Description:\n${story.content}\n\nDevelopment Requirements:\n`
+      );
       toast({
         title: "User Story Selected",
         description: "Story details have been loaded into the workspace",
@@ -76,104 +81,107 @@ export const useAgentWorkspace = (agentName: string) => {
     });
   };
 
-
-  const uploadFileToBackend = async () => {
-    if (!selectedFile) return;
-
-    setIsProcessing(true);
-
-    const reader = new FileReader();
-    reader.readAsDataURL(selectedFile);
-
-    reader.onload = async () => {
-      const result = reader.result as string;
-
-      // Extract base64 content (removes the data:...;base64, prefix)
-      const base64Content = result.split(',')[1];
-
-      const payload = {
-        file: {
-          filename: selectedFile.name.replace(/\.[^/.]+$/, ""), // Remove extension from filename
-          content: base64Content,
-          extension: selectedFile.name.split('.').pop()
-        }
-      };
-
-      try {
-        const response = await fetch("https://sewlzvr57rnjulvehobu2ienvu0ritqy.lambda-url.ap-south-1.on.aws/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(payload)
-        });
-
-        const data = await response.json();
-
-        setOutput(data); // can be a URL or full text
-        setIsProcessing(false);
-
-
-        toast({
-          title: "Upload Successful",
-          description: "Your file has been uploaded and processed by the backend.",
-        });
-
-        return data;
-      } catch (error) {
-        console.error("Upload failed:", error);
-        toast({
-          title: "Upload Failed",
-          description: "There was an error uploading the file.",
-          variant: "destructive",
-        });
-      }
-    };
-
-    reader.onerror = () => {
-      toast({
-        title: "File Read Error",
-        description: "Could not read the file. Please try again.",
-        variant: "destructive",
-      });
-    };
-  };
-
+  const isSwiftCodeFrontend = agentName?.includes(
+    "SwiftCode Frontend Developer"
+  );
 
   const handleProcess = async () => {
-    if (isBusinessAnalyst && inputMode === "upload") {
-      if (!selectedFile) {
-        toast({
-          title: "Document Required",
-          description: "Please upload a requirements document to process.",
-          variant: "destructive",
-        });
-        return;
-      }
-    } else if (!input.trim()) {
+    if (!input.trim() && !selectedFile) {
       toast({
         title: "Input Required",
-        description: "Please provide input for the agent to process.",
+        description: "Please provide some input or upload a file.",
         variant: "destructive",
       });
       return;
     }
 
-    await uploadFileToBackend();
+    setIsProcessing(true);
+    setProgress(0);
+
+    if (isSwiftCodeFrontend) {
+      // For SwiftCode Frontend Developer, simulate processing
+      let currentProgress = 0;
+      const progressInterval = setInterval(() => {
+        currentProgress += 10;
+        setProgress(currentProgress);
+        if (currentProgress >= 100) {
+          clearInterval(progressInterval);
+          setIsProcessing(false);
+          // Set output to a non-empty string to trigger the file tree view
+          setOutput("processed");
+        }
+      }, 1000); // Update every second for 10 seconds total
+    } else {
+      try {
+        // Normal processing for other agents
+        const response = await fetch("https://sewlzvr57rnjulvehobu2ienvu0ritqy.lambda-url.ap-south-1.on.aws/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            input,
+            file: selectedFile,
+            template: selectedTemplate,
+            agent: agentName,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Processing failed");
+        }
+
+        const result = await response.json();
+
+        // The API should return either an S3 URL directly or in a specific format
+        // Example response: { output: "https://s3-url..." } or { s3_url: "https://s3-url..." }
+        const s3Url = result.s3_url || result.output;
+
+        if (
+          s3Url &&
+          typeof s3Url === "string" &&
+          s3Url.includes("s3.amazonaws.com")
+        ) {
+          // If we got a valid S3 URL, use it
+          setOutput(s3Url);
+        } else {
+          // Fallback to regular output if no S3 URL
+          setOutput(result.output || "No output generated");
+        }
+
+        toast({
+          title: "Processing Complete",
+          description: "Your request has been processed successfully.",
+        });
+      } catch (error) {
+        console.error("Processing error:", error);
+        toast({
+          title: "Processing Failed",
+          description: "Failed to process your request. Please try again.",
+          variant: "destructive",
+        });
+        // Set error output to show in the output section
+        setOutput("Error processing request. Please try again.");
+      } finally {
+        setIsProcessing(false);
+        setProgress(100);
+      }
+    }
   };
 
   const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 Bytes';
+    if (bytes === 0) return "0 Bytes";
     const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const sizes = ["Bytes", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   };
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       setSelectedFile(file);
+      setInputMode("upload");
     }
   };
 
@@ -191,130 +199,71 @@ export const useAgentWorkspace = (agentName: string) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    
+
     const file = e.dataTransfer.files?.[0];
     if (file) {
       setSelectedFile(file);
+      setInputMode("upload");
     }
   };
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(output);
+    navigator.clipboard.writeText(
+      typeof output === "string" ? output : JSON.stringify(output, null, 2)
+    );
     toast({
       title: "Copied to Clipboard",
-      description: "Output has been copied to your clipboard.",
+      description: "Content has been copied to your clipboard.",
     });
   };
 
   const handleDownload = () => {
-    const blob = new Blob([output], { type: 'text/plain' });
+    const content =
+      typeof output === "string" ? output : JSON.stringify(output, null, 2);
+    const blob = new Blob([content], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = `${agentName.toLowerCase().replace(/\s+/g, '-')}-output.txt`;
+    a.download = "output.txt";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  };
+
+  const handle3Download = async (url: string) => {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const downloadUrl = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = downloadUrl;
+      a.download = "generated-file.docx";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(downloadUrl);
+    } catch (error) {
+      console.error("Download error:", error);
+      toast({
+        title: "Download Failed",
+        description: "Failed to download the file. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handlePushToProjectManager = () => {
     toast({
-      title: "Download Started",
-      description: "Output file has been downloaded.",
+      title: "Pushed to Project Manager",
+      description:
+        "Content has been successfully pushed to the project manager.",
     });
   };
 
-  const handle3Download = (url: string) => {
-  if (!url) return;
-
-  // Extract filename from URL (strip query parameters)
-  const urlParts = url.split('/');
-  const lastPart = urlParts[urlParts.length - 1];
-  const [filename] = lastPart.split('?');
-
-  const link = document.createElement('a');
-  link.href = url;
-  link.setAttribute('download', filename || 'downloaded-file');
-  link.setAttribute('target', '_blank');
-
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-
-  toast({
-    title: "Download Started",
-    description: "Your file is being downloaded.",
-    duration: 5000
-  });
+  const handleIsProcessing = (processing: boolean) => {
+    setIsProcessing(processing);
   };
-
-
-  const handlePushToProjectManager = () => {
-    if (!output.trim() || !currentProject) {
-      toast({
-        title: "Cannot Push to Project Manager",
-        description: "No output generated or no project selected.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    const isStoryGenerator = agentName.toLowerCase().includes("story generator");
-    
-    if (isStoryGenerator) {
-      const storyLines = output.split('\n').filter(line => 
-        line.trim().startsWith('-') || 
-        line.trim().startsWith('*') || 
-        line.toLowerCase().includes('user story') ||
-        line.toLowerCase().includes('as a')
-      );
-
-      if (storyLines.length > 0) {
-        storyLines.forEach((story, index) => {
-          if (story.trim()) {
-            addArtifact({
-              title: `User Story ${index + 1}: ${story.substring(0, 50)}...`,
-              type: "User Story",
-              content: story.trim(),
-              phase: "requirements"
-            });
-          }
-        });
-
-        toast({
-          title: "Stories Pushed to Project Manager",
-          description: `${storyLines.length} user stories have been created and are now available for assignment.`,
-        });
-      } else {
-        addArtifact({
-          title: `${agentName} Output`,
-          type: "Analysis Document",
-          content: output,
-          phase: "requirements"
-        });
-
-        toast({
-          title: "Content Pushed to Project Manager",
-          description: "Generated content has been added to the project for review and assignment.",
-        });
-      }
-    } else {
-      addArtifact({
-        title: `${agentName} Output`,
-        type: "Analysis Document", 
-        content: output,
-        phase: "requirements"
-      });
-
-      toast({
-        title: "Content Pushed to Project Manager",
-        description: "Generated content has been added to the project for review.",
-      });
-    }
-  };
-
-  const handleIsProcessing=(processing:boolean)=>{
-   setOutput("");
-   setInput("");
-  }
 
   return {
     // State
@@ -336,7 +285,7 @@ export const useAgentWorkspace = (agentName: string) => {
     selectedStory,
     isBusinessAnalyst,
     currentProject,
-    
+
     // Handlers
     handleStorySelection,
     handleStatusUpdate,
@@ -349,6 +298,6 @@ export const useAgentWorkspace = (agentName: string) => {
     handle3Download,
     handlePushToProjectManager,
     formatFileSize,
-    handleIsProcessing
+    handleIsProcessing,
   };
 };

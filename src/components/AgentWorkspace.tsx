@@ -1,15 +1,22 @@
-
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, FolderOpen } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import AzureDevOpsAuthModal, { AzureDevOpsCredentials } from "./AzureDevOpsAuthModal";
+import AzureDevOpsAuthModal, {
+  AzureDevOpsCredentials,
+} from "./AzureDevOpsAuthModal";
 import UserStorySection from "./UserStorySection";
 import InputSection from "./InputSection";
-import OutputSection from "./OutputSection";
+import ConditionalOutput from "./ConditionalOutput";
 import HistorySection from "./HistorySection";
 import { useAgentWorkspace } from "@/hooks/useAgentWorkspace";
 
@@ -21,7 +28,7 @@ interface AgentWorkspaceProps {
 const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
   const [isAzureDevOpsModalOpen, setIsAzureDevOpsModalOpen] = useState(false);
   const { toast } = useToast();
-  
+
   const {
     input,
     setInput,
@@ -50,34 +57,39 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
     handle3Download,
     handlePushToProjectManager,
     formatFileSize,
-    handleIsProcessing
+    handleIsProcessing,
   } = useAgentWorkspace(agentName);
 
   const handleAzureDevOpsPush = () => {
     setIsAzureDevOpsModalOpen(true);
   };
 
-  const handleAzureDevOpsSubmit = async (credentials: AzureDevOpsCredentials) => {
+  const handleAzureDevOpsSubmit = async (
+    credentials: AzureDevOpsCredentials
+  ) => {
     try {
       console.log("Azure DevOps credentials:", {
         organization: credentials.organization,
         project: credentials.project,
-        token: credentials.personalAccessToken.substring(0, 8) + "..."
+        token: credentials.personalAccessToken.substring(0, 8) + "...",
       });
 
       toast({
         title: "Azure DevOps Integration Successful",
         description: `Content pushed to ${credentials.organization}/${credentials.project} successfully!`,
       });
-      
-      localStorage.setItem('azuredevops_organization', credentials.organization);
-      localStorage.setItem('azuredevops_project', credentials.project);
-      
+
+      localStorage.setItem(
+        "azuredevops_organization",
+        credentials.organization
+      );
+      localStorage.setItem("azuredevops_project", credentials.project);
     } catch (error) {
       console.error("Azure DevOps integration failed:", error);
       toast({
         title: "Azure DevOps Integration Failed",
-        description: "Failed to connect to Azure DevOps. Please check your credentials and try again.",
+        description:
+          "Failed to connect to Azure DevOps. Please check your credentials and try again.",
         variant: "destructive",
       });
       throw error;
@@ -104,7 +116,9 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
             {currentProject && (
               <div className="flex items-center space-x-2 mt-1">
                 <FolderOpen className="h-4 w-4 text-blue-500" />
-                <span className="text-sm text-blue-600 font-medium">{currentProject.name}</span>
+                <span className="text-sm text-blue-600 font-medium">
+                  {currentProject.name}
+                </span>
               </div>
             )}
           </div>
@@ -144,10 +158,9 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
               onDrop={handleDrop}
               formatFileSize={formatFileSize}
               handleIsProcessing={handleIsProcessing}
-
             />
 
-            <OutputSection
+            <ConditionalOutput
               output={output}
               isProcessing={isProcessing}
               progress={progress}
