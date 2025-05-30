@@ -50,34 +50,6 @@ const isFile = (item: FileItem | FolderItem): item is FileItem => {
   return item.type !== "folder";
 };
 
-// Get file icon based on type
-const getFileIcon = (fileName: string): JSX.Element => {
-  const extension = fileName.split(".").pop()?.toLowerCase();
-  const baseClasses = "h-4 w-4"; // Base size classes
-
-  switch (extension) {
-    case "py":
-      return <File className={`${baseClasses} text-blue-500`} />;
-    case "tsx":
-    case "ts":
-      return <File className={`${baseClasses} text-blue-600`} />;
-    case "js":
-    case "jsx":
-      return <File className={`${baseClasses} text-yellow-500`} />;
-    case "json":
-      return <File className={`${baseClasses} text-green-500`} />;
-    case "css":
-    case "scss":
-      return <File className={`${baseClasses} text-pink-500`} />;
-    case "html":
-      return <File className={`${baseClasses} text-orange-500`} />;
-    case "md":
-      return <File className={`${baseClasses} text-gray-500`} />;
-    default:
-      return <File className={`${baseClasses} text-gray-400`} />;
-  }
-};
-
 interface OutputSectionWithTabsProps {
   output: string | { docx_download_url?: string; [key: string]: any };
   isProcessing: boolean;
@@ -236,7 +208,6 @@ const OutputSectionWithTabs = ({
                     : ""
                 }`}
               >
-                {getFileIcon(item.name)}
                 {item.name}
               </button>
             );
@@ -293,7 +264,7 @@ const OutputSectionWithTabs = ({
                   <h3 className="text-lg font-semibold">
                     {flattenedFiles[activeFileIndex]?.name}
                   </h3>
-                  <div className="flex gap-2 px-1">
+                  <div className="flex gap-2 px-2">
                     <Button variant="secondary" size="sm" onClick={handleCopy}>
                       <Copy className="h-4 w-4 mr-2" />
                       Copy
