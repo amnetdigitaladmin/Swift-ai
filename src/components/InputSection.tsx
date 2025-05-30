@@ -9,6 +9,7 @@ import { useUser } from "@/contexts/UserContext";
 interface InputSectionProps {
   input: string;
   setInput: (input: string) => void;
+  setOutput:(output:string)=> void;
   selectedTemplate: string;
   setSelectedTemplate: (template: string) => void;
   selectedFile: File | null;
@@ -30,6 +31,7 @@ interface InputSectionProps {
 const InputSection = ({
   input,
   setInput,
+  setOutput,
   selectedTemplate,
   setSelectedTemplate,
   selectedFile,
@@ -53,6 +55,7 @@ const InputSection = ({
   const handleRemoveFile = () => {
     setSelectedFile(null);
     handleIsProcessing(false)
+    setOutput('')
   };
 
   const getFilteredTemplates = () => {

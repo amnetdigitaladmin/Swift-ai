@@ -301,6 +301,7 @@ export const useAgentWorkspace = (agentName: string) => {
     input,
     setInput,
     output,
+    setOutput,
     isProcessing,
     progress,
     selectedTemplate,

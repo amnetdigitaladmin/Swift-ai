@@ -25,6 +25,7 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
     input,
     setInput,
     output,
+    setOutput,
     isProcessing,
     progress,
     selectedTemplate,
@@ -135,6 +136,7 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
             <InputSection
               input={input}
               setInput={setInput}
+              setOutput={setOutput}
               selectedTemplate={selectedTemplate}
               setSelectedTemplate={setSelectedTemplate}
               selectedFile={selectedFile}
