@@ -261,7 +261,7 @@ const OutputSectionWithTabs = ({
               <CardDescription>{outputDescription}</CardDescription>
             </CardHeader>
 
-            <div className="grid grid-cols-[250px,1fr] gap-4 h-[calc(100vh-200px)]">
+            <div className="grid grid-cols-[200px,1fr] gap-4 h-[calc(100vh-200px)]">
               {/* File Tree */}
               <div className="border-r pr-2 overflow-y-auto">
                 <RenderTree
@@ -276,7 +276,7 @@ const OutputSectionWithTabs = ({
                   <h3 className="text-lg font-semibold">
                     {flattenedFiles[activeFileIndex]?.name}
                   </h3>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 px-1">
                     <Button variant="secondary" size="sm" onClick={handleCopy}>
                       <Copy className="h-4 w-4 mr-2" />
                       Copy
