@@ -265,10 +265,10 @@ const OutputSectionWithTabs = ({
                     {flattenedFiles[activeFileIndex]?.name}
                   </h3>
                   <div className="flex gap-2 px-2">
-                    <Button variant="secondary" size="sm" onClick={handleCopy}>
+                    {/* <Button variant="secondary" size="sm" onClick={handleCopy}>
                       <Copy className="h-4 w-4 mr-2" />
                       Copy
-                    </Button>
+                    </Button> */}
                     <Button
                       variant="outline"
                       size="sm"
