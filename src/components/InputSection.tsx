@@ -54,8 +54,9 @@ const InputSection = ({
 
   const handleRemoveFile = () => {
     setSelectedFile(null);
-    handleIsProcessing(false)
-    setOutput('')
+    handleIsProcessing(false);
+    setInput('');
+    setOutput('');
   };
 
   const getFilteredTemplates = () => {
