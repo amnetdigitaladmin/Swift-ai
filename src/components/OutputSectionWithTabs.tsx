@@ -17,13 +17,16 @@ import {
   ChevronRight,
   Folder,
   File,
+  GitBranch,
 } from "lucide-react";
 // @ts-ignore
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 // @ts-ignore
 import { oneLight } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { useState, useEffect } from "react";
-import { mockFilesAndFolders } from "@/mock/fileData";
+import mockData from "../mock/mockData.json";
+export const mockFilesAndFolders = mockData;
+// import { mockFilesAndFolders } from "@/mock/fileData";
 
 type FileItem = {
   name: string;
@@ -50,14 +53,28 @@ const isFile = (item: FileItem | FolderItem): item is FileItem => {
 // Get file icon based on type
 const getFileIcon = (fileName: string): JSX.Element => {
   const extension = fileName.split(".").pop()?.toLowerCase();
+  const baseClasses = "h-4 w-4"; // Base size classes
+
   switch (extension) {
     case "py":
-      return <File className="h-4 w-4 text-blue-500" />;
+      return <File className={`${baseClasses} text-blue-500`} />;
     case "tsx":
     case "ts":
-      return <File className="h-4 w-4 text-blue-600" />;
+      return <File className={`${baseClasses} text-blue-600`} />;
+    case "js":
+    case "jsx":
+      return <File className={`${baseClasses} text-yellow-500`} />;
+    case "json":
+      return <File className={`${baseClasses} text-green-500`} />;
+    case "css":
+    case "scss":
+      return <File className={`${baseClasses} text-pink-500`} />;
+    case "html":
+      return <File className={`${baseClasses} text-orange-500`} />;
+    case "md":
+      return <File className={`${baseClasses} text-gray-500`} />;
     default:
-      return <File className="h-4 w-4" />;
+      return <File className={`${baseClasses} text-gray-400`} />;
   }
 };
 
@@ -240,7 +257,7 @@ const OutputSectionWithTabs = ({
               <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4 text-indigo-600" />
               <p className="text-gray-600">{processingMessage}</p>
               {progress > 0 && (
-                <div className="w-64 mt-4">
+                <div className="w-64 mt-4 ml-auto mr-auto">
                   <Progress value={progress} />
                 </div>
               )}
@@ -330,8 +347,8 @@ const OutputSectionWithTabs = ({
                     size="sm"
                     onClick={onPushToProjectManager}
                   >
-                    <Users className="h-4 w-4 mr-2" />
-                    Push to Project Manager
+                    <GitBranch className="h-4 w-4 mr-2" />
+                    Push to Git
                   </Button>
                   {selectedStory && selectedStory.status !== "completed" && (
                     <Button
