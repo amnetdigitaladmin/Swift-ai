@@ -34,6 +34,10 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
     setSelectedFile,
     dragActive,
     setDragActive,
+    secondaryFile,
+    setSecondaryFile,
+    secondaryDragActive,
+    setSecondaryDragActive,
     selectedStoryId,
     inputMode,
     setInputMode,
@@ -43,6 +47,7 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
     handleStatusUpdate,
     handleProcess,
     handleFileSelect,
+    handleSecondaryFileSelect,
     handleDrag,
     handleDrop,
     handleCopy,
@@ -134,6 +139,7 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
         <TabsContent value="workspace" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <InputSection
+              agentName={agentName}
               input={input}
               setInput={setInput}
               setOutput={setOutput}
@@ -143,11 +149,16 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
               setSelectedFile={setSelectedFile}
               dragActive={dragActive}
               setDragActive={setDragActive}
+              secondaryFile={secondaryFile}
+              setSecondaryFile={setSecondaryFile}
+              secondaryDragActive={secondaryDragActive}
+              setSecondaryDragActive={setSecondaryDragActive}
               inputMode={inputMode}
               setInputMode={setInputMode}
               isProcessing={isProcessing}
               onProcess={handleProcess}
               onFileSelect={handleFileSelect}
+              onSecondaryFileSelect={handleSecondaryFileSelect}
               onDrag={handleDrag}
               onDrop={handleDrop}
               formatFileSize={formatFileSize}

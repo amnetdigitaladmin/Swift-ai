@@ -7,6 +7,7 @@ import { Upload, FileText, X, Play, RefreshCw, FileInput } from "lucide-react";
 import { useUser } from "@/contexts/UserContext";
 
 interface InputSectionProps {
+  agentName: string;
   input: string;
   setInput: (input: string) => void;
   setOutput:(output:string)=> void;
@@ -16,12 +17,17 @@ interface InputSectionProps {
   setSelectedFile: (file: File | null) => void;
   dragActive: boolean;
   setDragActive: (active: boolean) => void;
+  secondaryFile: File | null;
+  setSecondaryFile:(file:File | null) => void;
+  secondaryDragActive:boolean;
+  setSecondaryDragActive:(active: boolean)=> void;
   // handleProcessing:(active:boolean) => void;
   inputMode: "type" | "upload";
   setInputMode: (mode: "type" | "upload") => void;
   isProcessing: boolean;
   onProcess: () => void;
   onFileSelect: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onSecondaryFileSelect:(event: React.ChangeEvent<HTMLInputElement>) => void;
   onDrag: (e: React.DragEvent) => void;
   onDrop: (e: React.DragEvent) => void;
   formatFileSize: (bytes: number) => string;
@@ -29,6 +35,7 @@ interface InputSectionProps {
 }
 
 const InputSection = ({
+  agentName,
   input,
   setInput,
   setOutput,
@@ -38,12 +45,17 @@ const InputSection = ({
   setSelectedFile,
   dragActive,
   setDragActive,
+  secondaryFile,
+  setSecondaryFile,
+  secondaryDragActive,
+  setSecondaryDragActive,
   inputMode,
   setInputMode,
   isProcessing,
   // handleProcessing,
   onProcess,
   onFileSelect,
+  onSecondaryFileSelect,
   onDrag,
   onDrop,
   formatFileSize,
@@ -58,6 +70,12 @@ const InputSection = ({
     setInput('');
     setOutput('');
   };
+
+  const handleRemoveSecondaryFile = () => {
+    setSecondaryFile(null);
+    setInput('');
+    setOutput('');
+  }
 
   const getFilteredTemplates = () => {
     const allTemplates = [
@@ -236,22 +254,22 @@ const InputSection = ({
             onDragEnter={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            setDragActive(true);
+            setSecondaryDragActive(true);
           }}
             onDragLeave={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              setDragActive(false);
+            setSecondaryDragActive(false);
             }}
             onDragOver={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              setDragActive(true);
+               setSecondaryDragActive(true);
             }}
             onDrop={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              setDragActive(false);
+              setSecondaryDragActive(false);
               const file = e.dataTransfer.files?.[0];
               if (file) {
                 setSelectedFile(file);
@@ -296,6 +314,77 @@ const InputSection = ({
           </div>
         )}
 
+        {/* <div className="space-y-2">
+          <label className="text-sm font-medium">Additional Document Upload</label>
+          {!secondaryFile ? (
+            <div
+              className={`border-2 border-dashed rounded-lg p-4 text-center transition-colors ${
+                dragActive 
+                  ? 'border-primary bg-primary/10' 
+                  : 'border-gray-300 hover:border-gray-400'
+              }`}
+               onDragEnter={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setSecondaryDragActive(true);
+              }}
+              onDragLeave={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setSecondaryDragActive(false);
+              }}
+              onDragOver={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setSecondaryDragActive(true);
+              }}
+              onDrop={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setSecondaryDragActive(false);
+                const file = e.dataTransfer.files?.[0];
+                if (file) {
+                  setSecondaryFile(file);
+                }
+              }}
+            >
+              <Upload className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+              <div className="space-y-1">
+                <p className="text-sm">Drag and drop or browse files</p>
+                <p className="text-xs text-gray-500">PDF, DOC, DOCX, TXT</p>
+                <label htmlFor="additional-file-upload">
+                  <Button variant="outline" size="sm" asChild>
+                    <span className="cursor-pointer">Browse Files</span>
+                  </Button>
+                </label>
+                <input
+                  id="additional-file-upload"
+                  type="file"
+                  accept=".pdf,.doc,.docx,.txt"
+                  onChange={onSecondaryFileSelect}
+                  className="hidden"
+                />
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center space-x-3 p-3 border rounded-lg bg-gray-50">
+              <FileText className="h-6 w-6 text-blue-500" />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium truncate text-black">{secondaryFile.name}</p>
+                <p className="text-xs text-gray-500">{formatFileSize(secondaryFile.size)}</p>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleRemoveSecondaryFile}
+                className="h-6 w-6 p-0 text-black"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
+        </div> */}
+
         <div className="flex items-center justify-between">
           <p className="text-sm text-gray-500">
             {isBusinessAnalyst && inputMode === "upload" 
@@ -307,7 +396,7 @@ const InputSection = ({
             {isProcessing ? (
               <>
                 <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                Generating Code...
+                {agentName == "SwiftPlan Business Analyst" ? 'Generating the File...' : 'Generating Code...'}
               </>
             ) : (
               <>

@@ -32,8 +32,14 @@ export const useAgentWorkspace = (agentName: string) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
   const [selectedTemplate, setSelectedTemplate] = useState("");
+  // primary file upload
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);
+  // secondary file upload
+  const [secondaryFile, setSecondaryFile] = useState<File | null>(null);
+  const [secondaryDragActive, setSecondaryDragActive] = useState(false);
+
+
   const [selectedStoryId, setSelectedStoryId] = useState<string | null>(null);
   const [inputMode, setInputMode] = useState<"type" | "upload">("type");
 
@@ -214,6 +220,13 @@ export const useAgentWorkspace = (agentName: string) => {
     }
   };
 
+  const handleSecondaryFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const file = event.target.files?.[0];
+  if (file) {
+    setSecondaryFile(file);
+  }
+};
+
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -310,6 +323,10 @@ export const useAgentWorkspace = (agentName: string) => {
     setSelectedFile,
     dragActive,
     setDragActive,
+    secondaryFile,
+    setSecondaryFile,
+    secondaryDragActive,
+    setSecondaryDragActive,
     selectedStoryId,
     inputMode,
     setInputMode,
@@ -323,6 +340,7 @@ export const useAgentWorkspace = (agentName: string) => {
     handleStatusUpdate,
     handleProcess,
     handleFileSelect,
+    handleSecondaryFileSelect,
     handleDrag,
     handleDrop,
     handleCopy,
