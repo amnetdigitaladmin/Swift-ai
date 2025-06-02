@@ -396,7 +396,7 @@ const InputSection = ({
             {isProcessing ? (
               <>
                 <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                {agentName == "SwiftPlan Business Analyst" ? 'Generating the File...' : 'Generating Code...'}
+                Generating with AI
               </>
             ) : (
               <>
