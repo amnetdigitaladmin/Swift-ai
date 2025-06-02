@@ -11,7 +11,15 @@ import InputSection from "./InputSection";
 import ConditionalOutput from "./ConditionalOutput";
 import HistorySection from "./HistorySection";
 import { useAgentWorkspace } from "@/hooks/useAgentWorkspace";
-
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 interface AgentWorkspaceProps {
   agentName: string;
   onBack: () => void;
@@ -43,6 +51,12 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
     setInputMode,
     selectedStory,
     currentProject,
+
+    isAlertOpen,
+    setIsAlertOpen,
+    alertContent,
+
+
     handleStorySelection,
     handleStatusUpdate,
     handleProcess,
@@ -191,6 +205,23 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
         onClose={() => setIsAzureDevOpsModalOpen(false)}
         onSubmit={handleAzureDevOpsSubmit}
       />
+
+
+
+        {/* Add this before the closing div */}
+      <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Sensitive Information Alert</AlertDialogTitle>
+            <AlertDialogDescription>{alertContent}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setIsAlertOpen(false)}>
+              Acknowledge
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

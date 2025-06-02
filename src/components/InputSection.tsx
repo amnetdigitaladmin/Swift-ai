@@ -314,7 +314,7 @@ const InputSection = ({
           </div>
         )}
 
-        {/* <div className="space-y-2">
+        <div className="space-y-2">
           <label className="text-sm font-medium">Additional Document Upload</label>
           {!secondaryFile ? (
             <div
@@ -383,7 +383,7 @@ const InputSection = ({
               </Button>
             </div>
           )}
-        </div> */}
+        </div>
 
         <div className="flex items-center justify-between">
           <p className="text-sm text-gray-500">

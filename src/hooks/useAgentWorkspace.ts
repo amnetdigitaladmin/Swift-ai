@@ -39,6 +39,9 @@ export const useAgentWorkspace = (agentName: string) => {
   const [secondaryFile, setSecondaryFile] = useState<File | null>(null);
   const [secondaryDragActive, setSecondaryDragActive] = useState(false);
 
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [alertContent, setAlertContent] = useState("");
+
 
   const [selectedStoryId, setSelectedStoryId] = useState<string | null>(null);
   const [inputMode, setInputMode] = useState<"type" | "upload">("type");
@@ -130,13 +133,49 @@ export const useAgentWorkspace = (agentName: string) => {
             const fileResult = reader.result as string;
             const base64Content = fileResult.split(",")[1];
 
-            const payload = {
+            // Define the type for the payload
+          interface FilePayload {
+            filename: string;
+            content: string;
+            extension: string | undefined;
+          }
+
+
+          interface Payload {
+          file: FilePayload;
+          template?: FilePayload;  // Make template optional
+        }
+
+            const payload: Payload = {
               file: {
                 filename: selectedFile.name.replace(/\.[^/.]+$/, ""),
                 content: base64Content,
                 extension: selectedFile.name.split(".").pop(),
               },
             };
+
+             // If there's a secondary file, add it to the payload
+          if (secondaryFile) {
+            const secondaryReader = new FileReader();
+            secondaryReader.readAsDataURL(secondaryFile);
+
+            // Convert the secondary file reading to a Promise
+            const secondaryBase64Content = await new Promise<string>((resolve, reject) => {
+              secondaryReader.onload = () => {
+                const secondaryResult = secondaryReader.result as string;
+                resolve(secondaryResult.split(",")[1]);
+              };
+              secondaryReader.onerror = reject;
+            });
+
+            // Add the secondary file to the payload
+            payload.template = {
+              filename: secondaryFile.name.replace(/\.[^/.]+$/, ""),
+              content: secondaryBase64Content,
+              extension: secondaryFile.name.split(".").pop(),
+            };
+          }
+
 
             const response = await fetch(
               "https://sewlzvr57rnjulvehobu2ienvu0ritqy.lambda-url.ap-south-1.on.aws/",
@@ -154,6 +193,14 @@ export const useAgentWorkspace = (agentName: string) => {
             }
 
             const apiResult = await response.json();
+
+            if (apiResult.sensitive_info_status && apiResult.sensitive_info_status !== '') {
+              setAlertContent(apiResult.sensitive_info_status);
+              setIsAlertOpen(true);
+              // setIsProcessing(false);
+              // setProgress(0);
+              // return;
+            }
 
             // The Lambda function should return a URL in the response
             if (apiResult && apiResult.docx_download_url) {
@@ -334,6 +381,11 @@ export const useAgentWorkspace = (agentName: string) => {
     selectedStory,
     isBusinessAnalyst,
     currentProject,
+
+    isAlertOpen,
+    setIsAlertOpen,
+    alertContent,
+    setAlertContent,
 
     // Handlers
     handleStorySelection,
