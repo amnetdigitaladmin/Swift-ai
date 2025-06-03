@@ -136,7 +136,8 @@ const OutputSectionWithTabs = ({
   // Show initial state when no processing has happened yet
   const showInitialState = !isProcessing && output === "";
 
-  const cleanName = (name: string) => {
+  const cleanName = (name: string | undefined) => {
+    if (!name) return "";
     return name.replace(/[\*\`]/g, "");
   };
 
