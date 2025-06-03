@@ -453,7 +453,7 @@ const Index = () => {
 
             {/* Capability overview */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
-              <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-6">
+              <div className="bg-custom-bg border border-gray-700 rounded-lg p-6">
                 <FileText className="h-8 w-8 text-blue-400 mb-3" />
                 <h3 className="text-lg font-semibold text-gray-200 mb-2">
                   Requirements
@@ -463,7 +463,7 @@ const Index = () => {
                   mapping, and requirement gathering
                 </p>
               </div>
-              <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-6">
+              <div className="bg-custom-bg border border-gray-700 rounded-lg p-6">
                 <Code className="h-8 w-8 text-green-400 mb-3" />
                 <h3 className="text-lg font-semibold text-gray-200 mb-2">
                   Development
@@ -473,7 +473,7 @@ const Index = () => {
                   security implementation
                 </p>
               </div>
-              <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-6">
+              <div className="bg-custom-bg border border-gray-700 rounded-lg p-6">
                 <CheckCircle className="h-8 w-8 text-red-400 mb-3" />
                 <h3 className="text-lg font-semibold text-gray-200 mb-2">
                   Testing
