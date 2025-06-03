@@ -1,9 +1,21 @@
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { User, Lock, AlertCircle } from "lucide-react";
 
 interface LoginProps {
@@ -20,60 +32,64 @@ const Login = ({ onLogin }: LoginProps) => {
     {
       id: "business-analyst",
       title: "Business Analyst",
-      description: "Focus on requirements analysis and business process optimization",
-      phases: ["requirements"]
+      description:
+        "Focus on requirements analysis and business process optimization",
+      phases: ["requirements"],
     },
     {
       id: "designer",
-      title: "UI/UX Designer", 
+      title: "UI/UX Designer",
       description: "Specialized in design and user experience workflows",
-      phases: ["design"]
+      phases: ["design"],
     },
     {
       id: "developer",
       title: "Developer",
       description: "Full-stack development and implementation focus",
-      phases: ["development"]
+      phases: ["development"],
     },
     {
       id: "qa-engineer",
       title: "QA Engineer",
       description: "Testing, quality assurance, and validation expertise",
-      phases: ["testing"]
+      phases: ["testing"],
     },
     {
       id: "architect",
       title: "Architect",
       description: "System architecture and cross-team coordination",
-      phases: ["requirements", "development", "testing"]
+      phases: ["requirements", "development", "testing"],
     },
     {
       id: "project-manager",
       title: "Project Manager",
       description: "Complete oversight of all development phases",
-      phases: ["requirements", "design", "development", "testing"]
+      phases: ["requirements", "design", "development", "testing"],
     },
     {
       id: "admin",
       title: "Administrator",
-      description: "Full system access with all agents and administrative capabilities",
-      phases: ["requirements", "design", "development", "testing"]
-    }
+      description:
+        "Full system access with all agents and administrative capabilities",
+      phases: ["requirements", "design", "development", "testing"],
+    },
   ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    
+
     if (username && password && persona) {
       const success = onLogin(username, password, persona);
       if (!success) {
-        setError("Invalid credentials. Please check your username and password.");
+        setError(
+          "Invalid credentials. Please check your username and password."
+        );
       }
     }
   };
 
-  const selectedPersona = personas.find(p => p.id === persona);
+  const selectedPersona = personas.find((p) => p.id === persona);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center p-6">
@@ -107,7 +123,10 @@ const Login = ({ onLogin }: LoginProps) => {
 
             {/* Username Field */}
             <div className="space-y-2">
-              <Label htmlFor="username" className="text-sm font-medium text-gray-200">
+              <Label
+                htmlFor="username"
+                className="text-sm font-medium text-gray-200"
+              >
                 Username
               </Label>
               <div className="relative">

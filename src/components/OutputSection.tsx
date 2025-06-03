@@ -15,6 +15,7 @@ import {
   Users,
   CheckCircle,
   RefreshCw,
+  GitBranch,
 } from "lucide-react";
 
 interface OutputSectionProps {
@@ -152,8 +153,8 @@ const OutputSection = ({
                   size="sm"
                   onClick={onPushToProjectManager}
                 >
-                  <Users className="h-4 w-4 mr-2" />
-                  Push to Project Manager
+                  <GitBranch className="h-4 w-4 mr-2" />
+                  Push to git
                 </Button>
                 {selectedStory && selectedStory.status !== "completed" && (
                   <Button
