@@ -86,7 +86,7 @@ const Login = ({ onLogin }: LoginProps) => {
               className="h-24 w-24 object-contain"
             />
           </div>
-          <CardTitle className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+          <CardTitle className="text-2xl font-bold text-white bg-clip-text">
             Log in to your account
           </CardTitle>
           <CardDescription className="text-gray-300">
