@@ -40,7 +40,7 @@ const AgentCard = ({ title, description, icon: Icon, features, onSelect }: Agent
           </div>
           <Button 
             onClick={onSelect} 
-            className="w-full bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-700 hover:to-purple-700 transition-all duration-300 text-white"
+            className="w-full bg-gradient-to-r from-gradient-background-from to-gradient-background-to hover:from-cyan-700 hover:to-purple-700 transition-all duration-300 text-white"
           >
             Select Agent
           </Button>

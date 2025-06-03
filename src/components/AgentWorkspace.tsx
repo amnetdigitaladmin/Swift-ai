@@ -121,7 +121,7 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
             {currentProject && (
               <div className="flex items-center space-x-2 mt-1">
                 <FolderOpen className="h-4 w-4 text-blue-500" />
-                <span className="text-sm text-blue-600 font-medium">
+                <span className="text-sm bg-gradient-to-r from-gradient-background-from to-gradient-background-to bg-clip-text text-transparent font-medium">
                   {currentProject.name}
                 </span>
               </div>

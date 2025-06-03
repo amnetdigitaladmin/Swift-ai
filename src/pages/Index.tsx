@@ -184,7 +184,7 @@ const Index = () => {
                 </span>
                 <div className="flex items-center space-x-2 mt-1">
                   <FolderOpen className="h-4 w-4 text-cyan-400" />
-                  <span className="text-cyan-400 font-medium">
+                  <span className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to bg-clip-text text-transparent font-medium">
                     {currentProject.name}
                   </span>
                 </div>
