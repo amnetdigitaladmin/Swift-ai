@@ -234,7 +234,7 @@ const OutputSectionWithTabs = ({
   };
 
   return (
-    <Card className="shadow-md">
+    <Card className="shadow-md bg-custom-bg">
       <CardContent className="p-6 space-y-4">
         {isProcessing ? (
           <div className="h-[600px] flex flex-col items-center justify-center">
