@@ -173,7 +173,7 @@ const Login = ({ onLogin }: LoginProps) => {
 
             <Button 
               type="submit" 
-              className="w-full bg-gradient-to-r from-gradient-background-from to-gradient-background-to hover:from-cyan-700 hover:to-purple-700 transition-all duration-300 text-black"
+              className="w-full bg-gradient-to-r from-gradient-background-from to-gradient-background-to  transition-all duration-300 text-black"
               disabled={!username || !password}
             >
               Sign In

@@ -15,7 +15,7 @@ interface ConditionalOutputProps {
   onMarkStoryComplete: () => void;
 }
 
-const ConditionalOutput = (props: ConditionalOutputProps) => {
+const ConditionalOutput = (props: any) => {
   const isSwiftCodeFrontend = props.agentName?.includes(
     "SwiftCode Frontend Developer"
   );

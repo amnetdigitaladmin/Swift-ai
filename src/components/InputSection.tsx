@@ -102,7 +102,7 @@ const InputSection = ({
   const filteredTemplates = getFilteredTemplates();
 
   return (
-    <Card>
+    <Card className="bg-custom-bg">
       <CardHeader>
         <CardTitle>Input</CardTitle>
         <CardDescription>
@@ -144,7 +144,7 @@ const InputSection = ({
             placeholder="Enter your project requirements, user stories, technical specifications, or any other relevant information..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            className="min-h-[200px]"
+            className="min-h-[200px] bg-custom-bg"
           />
         )}
 
@@ -227,12 +227,12 @@ const InputSection = ({
         <div className="space-y-2">
           <label className="text-sm font-medium">Template (Optional)</label>
           <Select value={selectedTemplate} onValueChange={setSelectedTemplate}>
-            <SelectTrigger>
+            <SelectTrigger className="bg-custom-bg" >
               <SelectValue placeholder="Select a template" />
             </SelectTrigger>
             <SelectContent>
               {filteredTemplates.map((template) => (
-                <SelectItem key={template} value={template}>
+                <SelectItem key={template} value={template} className="bg-custom-bg">
                   {template}
                 </SelectItem>
               ))}
@@ -282,7 +282,7 @@ const InputSection = ({
                   <p className="text-xs text-gray-500">PDF, DOC, DOCX, TXT</p>
                   <label htmlFor="file-upload">
                     <Button variant="outline" size="sm" asChild>
-                      <span className="cursor-pointer">Browse Files</span>
+                      <span className="cursor-pointer bg-custom-bg">Browse Files</span>
                     </Button>
                   </label>
                   <input
@@ -354,7 +354,7 @@ const InputSection = ({
                 <p className="text-xs text-gray-500">PDF, DOC, DOCX, TXT</p>
                 <label htmlFor="additional-file-upload">
                   <Button variant="outline" size="sm" asChild>
-                    <span className="cursor-pointer">Browse Files</span>
+                    <span className="cursor-pointer bg-custom-bg">Browse Files</span>
                   </Button>
                 </label>
                 <input
@@ -392,7 +392,7 @@ const InputSection = ({
               : `${input.length} characters`
             }
           </p>
-          <Button onClick={onProcess} disabled={isProcessing}>
+          <Button onClick={onProcess} disabled={isProcessing} className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to">
             {isProcessing ? (
               <>
                 <RefreshCw className="h-4 w-4 mr-2 animate-spin" />

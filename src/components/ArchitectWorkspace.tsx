@@ -168,7 +168,7 @@ const ArchitectWorkspace = () => {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">Architect Workspace</h1>
+        <h1 className="text-3xl font-bold text-white mb-4">Architect Workspace</h1>
         <p className="text-lg text-gray-600 max-w-3xl mx-auto">
           Access all AI-powered agents across requirements, development, and QA phases. 
           Select a tab to explore agents in each category.
@@ -184,7 +184,7 @@ const ArchitectWorkspace = () => {
 
         <TabsContent value="requirements" className="space-y-4">
           <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Requirements Agents</h2>
+            <h2 className="text-2xl font-bold text-white mb-2">Requirements Agents</h2>
             <p className="text-gray-600">Agents specialized in gathering and analyzing business requirements</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

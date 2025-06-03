@@ -85,7 +85,7 @@ const OutputSection = ({
     : "AI is generating code for your user story...";
 
   return (
-    <Card className="shadow-md">
+    <Card className="shadow-md bg-custom-bg">
       <CardContent className="p-6 space-y-4">
         {isProcessing ? (
           <div className="h-[600px] flex flex-col items-center justify-center">
@@ -121,7 +121,7 @@ const OutputSection = ({
             <Textarea
               value={typeof output === "string" ? output : ""}
               readOnly
-              className="min-h-[300px] bg-gray-800 text-gray-100 border-gray-600 font-mono text-xs"
+              className="min-h-[300px] bg-custom-bg text-gray-100 border-gray-600 font-mono text-xs"
               placeholder={
                 isRequirementsAgent
                   ? "AI-generated analysis will appear here..."

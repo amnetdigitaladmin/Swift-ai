@@ -49,7 +49,8 @@ export default {
 				},
 				custom: {
 					bg: 'hsl(var(--custom-bg))',
-					nav_bg:'hsl(var(--custom-nav-bg))'
+					nav_bg:'hsl(var(--custom-nav-bg))',
+					tab_bg:'hsl(var(--tab-bg))',
 				},
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
