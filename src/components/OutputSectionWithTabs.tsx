@@ -24,9 +24,6 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 // @ts-ignore
 import { oneLight } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { useState, useEffect } from "react";
-import mockData from "../mock/mockData.json";
-export const mockFilesAndFolders = mockData;
-// import { mockFilesAndFolders } from "@/mock/fileData";
 
 type FileItem = {
   name: string;
@@ -51,7 +48,7 @@ const isFile = (item: FileItem | FolderItem): item is FileItem => {
 };
 
 interface OutputSectionWithTabsProps {
-  output: string | { docx_download_url?: string; [key: string]: any };
+  output: string | { result: (FileItem | FolderItem)[]; [key: string]: any };
   isProcessing: boolean;
   progress: number;
   selectedStory: any;
@@ -119,10 +116,11 @@ const OutputSectionWithTabs = ({
       }, []);
     };
 
-    setFlattenedFiles(
-      getAllFiles(mockFilesAndFolders as (FileItem | FolderItem)[])
-    );
-  }, []);
+    // Check if output contains result array and update flattenedFiles
+    if (typeof output === "object" && output !== null && "result" in output) {
+      setFlattenedFiles(getAllFiles(output.result));
+    }
+  }, [output]);
 
   const isRequirementsAgent = agentName?.toLowerCase().includes("swiftplan");
   const outputTitle = isRequirementsAgent
@@ -137,6 +135,10 @@ const OutputSectionWithTabs = ({
 
   // Show initial state when no processing has happened yet
   const showInitialState = !isProcessing && output === "";
+
+  const cleanName = (name: string) => {
+    return name.replace(/[\*\`]/g, "");
+  };
 
   const handleCopy = () => {
     const currentContent = flattenedFiles[activeFileIndex].content;
@@ -158,6 +160,12 @@ const OutputSectionWithTabs = ({
     );
   };
 
+  const handleFileDownload = (url: string) => {
+    // Clean up the URL by removing extra backslashes
+    const cleanUrl = url.replace(/\\\//g, "/");
+    onS3Download(cleanUrl);
+  };
+
   const RenderTree = ({
     items,
     path = "",
@@ -168,7 +176,9 @@ const OutputSectionWithTabs = ({
     return (
       <div className="pl-4">
         {items.map((item, idx) => {
-          const fullPath = path ? `${path}/${item.name}` : item.name;
+          const fullPath = path
+            ? `${path}/${cleanName(item.name)}`
+            : cleanName(item.name);
 
           if (isFolder(item)) {
             return (
@@ -183,7 +193,7 @@ const OutputSectionWithTabs = ({
                     }`}
                   />
                   <Folder className="h-4 w-4 text-yellow-500" />
-                  {item.name}
+                  {cleanName(item.name)}
                 </button>
                 {expandedFolders.includes(fullPath) && (
                   <RenderTree items={item.items} path={fullPath} />
@@ -198,17 +208,20 @@ const OutputSectionWithTabs = ({
                 key={fullPath}
                 onClick={() => {
                   const fileIndex = flattenedFiles.findIndex(
-                    (f) => f.name === item.name && f.content === item.content
+                    (f) =>
+                      cleanName(f.name) === cleanName(item.name) &&
+                      f.content === item.content
                   );
                   if (fileIndex !== -1) setActiveFileIndex(fileIndex);
                 }}
                 className={`flex items-center gap-2 py-1 pl-6 hover:text-indigo-600 w-full text-left ${
-                  flattenedFiles[activeFileIndex]?.name === item.name
+                  cleanName(flattenedFiles[activeFileIndex]?.name) ===
+                  cleanName(item.name)
                     ? "text-indigo-600 font-medium"
                     : ""
                 }`}
               >
-                {item.name}
+                {cleanName(item.name)}
               </button>
             );
           }
@@ -252,28 +265,27 @@ const OutputSectionWithTabs = ({
             <div className="grid grid-cols-[200px,1fr] gap-4 h-[calc(100vh-200px)]">
               {/* File Tree */}
               <div className="border-r pr-2 overflow-y-auto">
-                <RenderTree
-                  items={mockFilesAndFolders as (FileItem | FolderItem)[]}
-                  path=""
-                />
+                {typeof output === "object" &&
+                  output !== null &&
+                  "result" in output && (
+                    <RenderTree items={output.result} path="" />
+                  )}
               </div>
 
               {/* File Content */}
               <div className="space-y-4 overflow-y-auto pr-2">
                 <div className="flex justify-between items-center sticky top-0 bg-white py-2">
                   <h3 className="text-lg font-semibold">
-                    {flattenedFiles[activeFileIndex]?.name}
+                    {flattenedFiles[activeFileIndex]
+                      ? cleanName(flattenedFiles[activeFileIndex].name)
+                      : ""}
                   </h3>
                   <div className="flex gap-2 px-2">
-                    {/* <Button variant="secondary" size="sm" onClick={handleCopy}>
-                      <Copy className="h-4 w-4 mr-2" />
-                      Copy
-                    </Button> */}
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() =>
-                        onS3Download(flattenedFiles[activeFileIndex]?.url)
+                        handleFileDownload(flattenedFiles[activeFileIndex]?.url)
                       }
                       className="border-indigo-500 text-indigo-500 hover:bg-indigo-500 hover:text-white"
                     >

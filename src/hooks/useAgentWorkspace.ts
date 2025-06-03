@@ -108,17 +108,71 @@ export const useAgentWorkspace = (agentName: string) => {
     setProgress(0);
 
     if (isSwiftCodeFrontend) {
-      // For SwiftCode Frontend Developer, simulate processing
-      let currentProgress = 0;
-      const progressInterval = setInterval(() => {
-        currentProgress += 10;
-        setProgress(currentProgress);
-        if (currentProgress >= 100) {
-          clearInterval(progressInterval);
-          setIsProcessing(false);
-          setOutput("processed");
-        }
-      }, 1000);
+      try {
+        if (selectedFile) {
+          const reader = new FileReader();
+          reader.readAsDataURL(selectedFile);
+    
+          reader.onload = async () => {
+            try {
+              const fileResult = reader.result as string;
+              const base64Content = fileResult.split(",")[1];
+    
+              const payload = {
+                file: {
+                  filename: selectedFile.name.replace(/\.[^/.]+$/, ""),
+                  content: base64Content,
+                  extension: selectedFile.name.split(".").pop(),
+                }
+              };
+    
+              // Make API call to your frontend agent endpoint
+              const response = await fetch("https://smi25q3swrw3aprk2h3ccr7tri0mdflr.lambda-url.ap-south-1.on.aws/", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+              });
+    
+              if (!response.ok) {
+                throw new Error("Processing failed");
+              }
+    
+              const apiResult = await response.json();
+              console.log(apiResult.result)
+              // API should return file structure data
+              setOutput(apiResult);
+              
+            } catch (error) {
+              // Handle errors
+              console.error("API error:", error);
+              toast({
+                title: "Processing Failed",
+                description: "Failed to process your request. Please try again.",
+                variant: "destructive",
+              });
+            } finally {
+              setIsProcessing(false);
+              setProgress(100);
+            }
+          };
+    
+          reader.onerror = () => {
+            // Handle file reading errors
+            console.error("File reading error:", reader.error);
+            toast({
+              title: "File Reading Failed",
+              description: "Failed to read the file. Please try again.",
+              variant: "destructive",
+            });
+            setIsProcessing(false);
+            setProgress(0);
+          };
+        } 
+      } catch (error) {
+        // Handle any other errors
+      }
     } else {
       try {
         if (!selectedFile) {
