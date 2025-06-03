@@ -358,7 +358,7 @@ const Index = () => {
                     Create New Project
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="bg-gray-800 border-gray-700">
+                <DialogContent className="bg-custom-bg border-gray-700">
                   <DialogHeader>
                     <DialogTitle className="text-gray-200">
                       Create Architecture Project
@@ -373,7 +373,7 @@ const Index = () => {
                         value={newProjectName}
                         onChange={(e) => setNewProjectName(e.target.value)}
                         placeholder="Enter project name..."
-                        className="bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400"
+                        className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400"
                       />
                     </div>
                     <div>
@@ -387,21 +387,21 @@ const Index = () => {
                         }
                         placeholder="Describe your architecture project..."
                         rows={3}
-                        className="bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400"
+                        className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400"
                       />
                     </div>
                     <div className="flex justify-end space-x-2">
                       <Button
                         variant="outline"
                         onClick={() => setIsCreateDialogOpen(false)}
-                        className="border-gray-600 text-gray-200 hover:bg-gray-700"
+                        className="bg-custom-bg text-gray-200 "
                       >
                         Cancel
                       </Button>
                       <Button
                         onClick={handleCreateProject}
                         disabled={!newProjectName.trim()}
-                        className="bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-700 hover:to-purple-700"
+                        className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to"
                       >
                         Create Project
                       </Button>
