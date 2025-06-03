@@ -13,7 +13,7 @@ interface AgentCardProps {
 
 const AgentCard = ({ title, description, icon: Icon, features, onSelect }: AgentCardProps) => {
   return (
-    <Card className="h-full hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-gray-800/50 border-gray-700 hover:border-cyan-400">
+    <Card className="h-full hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-custom-bg border-gray-700 hover:border-cyan-400">
       <CardHeader className="pb-3">
         <div className="flex items-center space-x-3">
           <div className="bg-cyan-900/40 p-2 rounded-lg">
