@@ -422,7 +422,7 @@ const Index = () => {
                   {projects.map((project) => (
                     <Card
                       key={project.id}
-                      className="cursor-pointer hover:shadow-lg transition-all bg-gray-800/50 border-gray-700 hover:border-gray-600"
+                      className="cursor-pointer hover:shadow-lg transition-all bg-custom-bg border-gray-700 hover:border-gray-600"
                       onClick={() => handleSelectProject(project)}
                     >
                       <CardHeader className="pb-3">
