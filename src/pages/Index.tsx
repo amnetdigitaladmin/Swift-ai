@@ -352,7 +352,7 @@ const Index = () => {
                 <DialogTrigger asChild>
                   <Button
                     size="lg"
-                    className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to hover:from-cyan-700 hover:to-purple-700 text-lg px-8 py-4"
+                    className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to  text-lg px-8 py-4"
                   >
                     <Plus className="h-5 w-5 mr-2" />
                     Create New Project
