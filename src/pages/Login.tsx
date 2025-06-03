@@ -78,7 +78,7 @@ const Login = ({ onLogin }: LoginProps) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center p-6">
-      <Card className="w-full max-w-md shadow-2xl border border-gray-700 bg-gray-800/90 backdrop-blur-sm">
+      <Card className="w-full max-w-md shadow-2xl border border-gray-700 bg-custom-bg  backdrop-blur-sm">
         <CardHeader className="text-center space-y-4">
           <div className="flex justify-center">
             <img 
@@ -87,7 +87,7 @@ const Login = ({ onLogin }: LoginProps) => {
               className="h-24 w-auto"
             />
           </div>
-          <CardTitle className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+          <CardTitle className="text-2xl font-bold  text-white bg-clip-text ">
             Swift AI Login
           </CardTitle>
           <CardDescription className="text-gray-300">
@@ -118,7 +118,7 @@ const Login = ({ onLogin }: LoginProps) => {
                   placeholder="Enter your username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="pl-10 bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400"
+                  className="pl-10 bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400"
                   required
                 />
               </div>
@@ -137,7 +137,7 @@ const Login = ({ onLogin }: LoginProps) => {
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10 bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400"
+                  className="pl-10 bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400"
                   required
                 />
               </div>
@@ -149,10 +149,10 @@ const Login = ({ onLogin }: LoginProps) => {
                 Select Your Role
               </Label>
               <Select value={persona} onValueChange={setPersona}>
-                <SelectTrigger className="bg-gray-700/50 border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400">
+                <SelectTrigger className="bg-custom-bg border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400">
                   <SelectValue placeholder="Choose your role" />
                 </SelectTrigger>
-                <SelectContent className="bg-gray-800 border-gray-600">
+                <SelectContent className="bg-custom-bg border-gray-600">
                   {personas.map((p) => (
                     <SelectItem 
                       key={p.id} 
@@ -173,7 +173,7 @@ const Login = ({ onLogin }: LoginProps) => {
 
             <Button 
               type="submit" 
-              className="w-full bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-700 hover:to-purple-700 transition-all duration-300 text-white"
+              className="w-full bg-gradient-to-r from-gradient-background-from to-gradient-background-to hover:from-cyan-700 hover:to-purple-700 transition-all duration-300 text-black"
               disabled={!username || !password}
             >
               Sign In

@@ -5,6 +5,12 @@
 
 @layer base {
   :root {
+    
+    --gradient-background-from: 160 84% 39%;    
+    --gradient-background-to: 92 89% 71%;  
+    
+    --custom-bg: 220 20% 6%;
+    --custom-nav-bg:218, 17%, 9%;
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
 

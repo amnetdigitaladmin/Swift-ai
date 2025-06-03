@@ -39,6 +39,18 @@ export default {
 				'9xl': '7.5rem',     // 120px (was 128px)
 			},
 			colors: {
+				 gradient: {
+					background: {
+						from: 'hsl(var(--gradient-background-from))',
+						to: 'hsl(var(--gradient-background-to))',
+						'hover-from': 'hsl(var(--gradient-background-hover-from))',
+						'hover-to': 'hsl(var(--gradient-background-hover-to))',
+						}
+				},
+				custom: {
+					bg: 'hsl(var(--custom-bg))',
+					nav_bg:'hsl(var(--custom-nav-bg))'
+				},
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',

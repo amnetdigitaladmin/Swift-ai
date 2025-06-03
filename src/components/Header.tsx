@@ -8,12 +8,12 @@ const Header = () => {
   const { user } = useUser();
 
   return (
-    <header className="bg-gradient-to-r from-gray-900 via-gray-800 to-black text-white shadow-2xl border-b border-gray-700">
+    <header className="bg-custom-nav_bg to-black text-white shadow-2xl border-b border-gray-700">
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">Swift AI</h1>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-gradient-background-from to-gradient-background-to bg-clip-text text-transparent">Swift AI</h1>
               <p className="text-gray-300 text-sm">Expedite, Optimize, Realize</p>
             </div>
           </div>

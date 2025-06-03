@@ -1,152 +1,194 @@
 [
-  {
-    "name": "backend",
-    "type": "folder",
-    "items": [
-      {
-        "name": "app",
-        "type": "folder",
-        "items": [
-          {
-            "name": "config.py",
-            "type": "python",
-            "content": "import os\nfrom pydantic import BaseSettings\n\nclass Settings(BaseSettings):\n    DATABASE_URL: str = os.getenv(\"DATABASE_URL\", \"sqlite:///./test.db\")\n    SECRET_KEY: str = os.getenv(\"SECRET_KEY\", \"your_secret_key\")\n    ALGORITHM: str = \"HS256\"\n    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30\n\nsettings = Settings()",
-            "url": "mock-url"
-          },
-          {
-            "name": "database.py",
-            "type": "python",
-            "content": "from sqlalchemy import create_engine\nfrom sqlalchemy.ext.declarative import declarative_base\nfrom sqlalchemy.orm import sessionmaker\nfrom .config import settings\n\n# Database setup\nengine = create_engine(settings.DATABASE_URL)\nSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)\nBase = declarative_base()\n\n# Dependency to get DB session\ndef get_db():\n    db = SessionLocal()\n    try:\n        yield db\n    finally:\n        db.close()",
-            "url": "mock-url"
-          },
-          {
-            "name": "main.py",
-            "type": "python",
-            "content": "from fastapi import FastAPI\nfrom fastapi.middleware.cors import CORSMiddleware\nfrom app.routes import auth, users, attendance, reports, alerts\nfrom app.database import engine, Base\n\n# Create FastAPI instance\napp = FastAPI()\n\n# CORS configuration\norigins = [\"http://localhost:3000\"]  # Adjust as necessary\napp.add_middleware(\n    CORSMiddleware,\n    allow_origins=origins,\n    allow_credentials=True,\n    allow_methods=[\"*\"],\n    allow_headers=[\"*\"]\n)\n\n# Create database tables\nBase.metadata.create_all(bind=engine)\n\n# Include routers\napp.include_router(auth.router)\napp.include_router(users.router)\napp.include_router(attendance.router)\napp.include_router(reports.router)\napp.include_router(alerts.router)\n\n@app.get(\"/\")\ndef read_root():\n    return {\"message\": \"Welcome to the Attendance Management System API\"}",
-            "url": "mock-url"
-          },
-          {
-            "name": "models",
+        {
+            "name": "generated_files_info.json",
+            "type": "json",
+            "content": "[\n  {\n    \"name\": \"**`app\",\n    \"type\": \"folder\",\n    \"items\": [\n      {\n        \"name\": \"models\",\n        \"type\": \"folder\",\n        \"items\": [\n          {\n            \"name\": \"attendance.py\",\n            \"type\": \"python\",\n            \"content\": \"from sqlalchemy import Column, Integer, DateTime, ForeignKey\\nfrom sqlalchemy.orm import relationship\\nfrom app.database import Base\\n\\nclass Attendance(Base):\\n    __tablename__ = \\\"attendance\\\"\\n\\n    id = Column(Integer, primary_key=True, index=True)\\n    user_id = Column(Integer, ForeignKey(\\\"users.id\\\"))\\n    check_in = Column(DateTime)\\n    check_out = Column(DateTime)\\n\\n    user = relationship(\\\"User\\\", back_populates=\\\"attendance_records\\\")\",\n            \"url\": \"https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/dddec3fe-8a8d-4c38-b2aa-a456e587e5e7\/output\/**`app\/models\/attendance.py\"\n          },\n          {\n            \"name\": \"user.py\",\n            \"type\": \"python\",\n            \"content\": \"from sqlalchemy import Column, Integer, String, Enum\\nfrom sqlalchemy.orm import relationship\\nfrom app.database import Base\\nfrom enum import Enum as PyEnum\\n\\nclass Role(PyEnum):\\n    ADMIN = \\\"admin\\\"\\n    HR = \\\"hr\\\"\\n    SUPERVISOR = \\\"supervisor\\\"\\n    EMPLOYEE = \\\"employee\\\"\\n\\nclass User(Base):\\n    __tablename__ = \\\"users\\\"\\n\\n    id = Column(Integer, primary_key=True, index=True)\\n    username = Column(String, unique=True, index=True)\\n    hashed_password = Column(String)\\n    role = Column(Enum(Role))\\n\\n    attendance_records = relationship(\\\"Attendance\\\", back_populates=\\\"user\\\")\",\n            \"url\": \"https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/dddec3fe-8a8d-4c38-b2aa-a456e587e5e7\/output\/**`app\/models\/user.py\"\n          }\n        ]\n      },\n      {\n        \"name\": \"routes\",\n        \"type\": \"folder\",\n        \"items\": [\n          {\n            \"name\": \"auth.py\",\n            \"type\": \"python\",\n            \"content\": \"from fastapi import APIRouter, Depends, HTTPException, status\\nfrom sqlalchemy.ext.asyncio import AsyncSession\\nfrom app.database import async_session\\nfrom app.schemas.auth import Token, TokenData\\nfrom app.schemas.user import UserCreate\\nfrom app.services.auth_service import create_user, authenticate_user, create_access_token\\n\\nrouter = APIRouter()\\n\\n@router.post(\\\"\/auth\/register\\\", response_model=Token)\\nasync def register(user: UserCreate):\\n    return await create_user(user)\\n\\n@router.post(\\\"\/auth\/login\\\", response_model=Token)\\nasync def login(username: str, password: str):\\n    user = await authenticate_user(username, password)\\n    if not user:\\n        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=\\\"Invalid credentials\\\")\\n    access_token = create_access_token(data={\\\"sub\\\": user.username})\\n    return {\\\"access_token\\\": access_token, \\\"token_type\\\": \\\"bearer\\\"}\",\n            \"url\": \"https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/dddec3fe-8a8d-4c38-b2aa-a456e587e5e7\/output\/**`app\/routes\/auth.py\"\n          }\n        ]\n      },\n      {\n        \"name\": \"schemas\",\n        \"type\": \"folder\",\n        \"items\": [\n          {\n            \"name\": \"auth.py\",\n            \"type\": \"python\",\n            \"content\": \"from pydantic import BaseModel\\n\\nclass Token(BaseModel):\\n    access_token: str\\n    token_type: str\\n\\nclass TokenData(BaseModel):\\n    username: str\",\n            \"url\": \"https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/dddec3fe-8a8d-4c38-b2aa-a456e587e5e7\/output\/**`app\/schemas\/auth.py\"\n          },\n          {\n            \"name\": \"user.py\",\n            \"type\": \"python\",\n            \"content\": \"from pydantic import BaseModel\\nfrom typing import Optional\\nfrom app.models.user import Role\\n\\nclass UserBase(BaseModel):\\n    username: str\\n    role: Role\\n\\nclass UserCreate(UserBase):\\n    password: str\\n\\nclass User(UserBase):\\n    id: int\\n\\n    class Config:\\n        orm_mode = True\",\n            \"url\": \"https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/dddec3fe-8a8d-4c38-b2aa-a456e587e5e7\/output\/**`app\/schemas\/user.py\"\n          }\n        ]\n      },\n      {\n        \"name\": \"services\",\n        \"type\": \"folder\",\n        \"items\": [\n          {\n            \"name\": \"auth_service.py\",\n            \"type\": \"python\",\n            \"content\": \"from sqlalchemy.ext.asyncio import AsyncSession\\nfrom app.models.user import User\\nfrom app.schemas.user import UserCreate\\nfrom app.utils.security import hash_password, verify_password\\nfrom app.config import settings\\nfrom jose import JWTError, jwt\\nfrom datetime import datetime, timedelta\\n\\nasync def create_user(user: UserCreate):\\n    async with async_session() as session:\\n        db_user = User(username=user.username, hashed_password=hash_password(user.password), role=user.role)\\n        session.add(db_user)\\n        await session.commit()\\n        await session.refresh(db_user)\\n        return db_user\\n\\nasync def authenticate_user(username: str, password: str):\\n    async with async_session() as session:\\n        user = await session.execute(select(User).filter(User.username == username))\\n        user = user.scalars().first()\\n        if user and verify_password(password, user.hashed_password):\\n            return user\\n    return None\\n\\ndef create_access_token(data: dict, expires_delta: timedelta = None):\\n    to_encode = data.copy()\\n    if expires_delta:\\n        expire = datetime.utcnow() + expires_delta\\n    else:\\n        expire = datetime.utcnow() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)\\n    to_encode.update({\\\"exp\\\": expire})\\n    encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)\\n    return encoded_jwt\",\n            \"url\": \"https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/dddec3fe-8a8d-4c38-b2aa-a456e587e5e7\/output\/**`app\/services\/auth_service.py\"\n          }\n        ]\n      },\n      {\n        \"name\": \"tests\",\n        \"type\": \"folder\",\n        \"items\": [\n          {\n            \"name\": \"test_auth.py\",\n            \"type\": \"python\",\n            \"content\": \"import pytest\\nfrom fastapi.testclient import TestClient\\nfrom app.main import app\\n\\nclient = TestClient(app)\\n\\ndef test_register():\\n    response = client.post(\\\"\/auth\/register\\\", json={\\\"username\\\": \\\"testuser\\\", \\\"password\\\": \\\"testpass\\\", \\\"role\\\": \\\"employee\\\"})\\n    assert response.status_code == 200\",\n            \"url\": \"https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/dddec3fe-8a8d-4c38-b2aa-a456e587e5e7\/output\/**`app\/tests\/test_auth.py\"\n          }\n        ]\n      },\n      {\n        \"name\": \"utils\",\n        \"type\": \"folder\",\n        \"items\": [\n          {\n            \"name\": \"security.py\",\n            \"type\": \"python\",\n            \"content\": \"from passlib.context import CryptContext\\n\\npwd_context = CryptContext(schemes=[\\\"bcrypt\\\"], deprecated=\\\"auto\\\")\\n\\ndef hash_password(password: str) -> str:\\n    return pwd_context.hash(password)\\n\\ndef verify_password(plain_password: str, hashed_password: str) -> bool:\\n    return pwd_context.verify(plain_password, hashed_password)\",\n            \"url\": \"https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/dddec3fe-8a8d-4c38-b2aa-a456e587e5e7\/output\/**`app\/utils\/security.py\"\n          }\n        ]\n      },\n      {\n        \"name\": \"config.py\",\n        \"type\": \"python\",\n        \"content\": \"import os\\n\\nclass Settings:\\n    DATABASE_URL = os.getenv(\\\"DATABASE_URL\\\", \\\"sqlite+aiosqlite:\/\/\/.\/test.db\\\")\\n    SECRET_KEY = os.getenv(\\\"SECRET_KEY\\\", \\\"your_secret_key\\\")\\n    ALGORITHM = \\\"HS256\\\"\\n    ACCESS_TOKEN_EXPIRE_MINUTES = 30\\n\\nsettings = Settings()\",\n        \"url\": \"https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/dddec3fe-8a8d-4c38-b2aa-a456e587e5e7\/output\/**`app\/config.py\"\n      },\n      {\n        \"name\": \"database.py\",\n        \"type\": \"python\",\n        \"content\": \"from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession\\nfrom sqlalchemy.orm import sessionmaker\\nfrom app.config import settings\\n\\n# Create the database engine\\nengine = create_async_engine(settings.DATABASE_URL, echo=True)\\n\\n# Create a session factory\\nasync_session = sessionmaker(\\n    bind=engine,\\n    class_=AsyncSession,\\n    expire_on_commit=False,\\n)\",\n        \"url\": \"https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/dddec3fe-8a8d-4c38-b2aa-a456e587e5e7\/output\/**`app\/database.py\"\n      },\n      {\n        \"name\": \"main.py\",\n        \"type\": \"python\",\n        \"content\": \"from fastapi import FastAPI\\nfrom fastapi.middleware.cors import CORSMiddleware\\nfrom app.database import engine\\nfrom app.models import Base\\nfrom app.routes import auth, users, attendance, reports, alerts\\n\\n# Create the FastAPI app\\napp = FastAPI()\\n\\n# CORS configuration\\napp.add_middleware(\\n    CORSMiddleware,\\n    allow_origins=[\\\"*\\\"],  # Change to your frontend URL in production\\n    allow_credentials=True,\\n    allow_methods=[\\\"*\\\"],\\n    allow_headers=[\\\"*\\\"],\\n)\\n\\n# Include routers\\napp.include_router(auth.router)\\napp.include_router(users.router)\\napp.include_router(attendance.router)\\napp.include_router(reports.router)\\napp.include_router(alerts.router)\\n\\n# Create database tables\\n@app.on_event(\\\"startup\\\")\\nasync def startup():\\n    async with engine.begin() as conn:\\n        await conn.run_sync(Base.metadata.create_all)\\n\\n# Root endpoint\\n@app.get(\\\"\/\\\")\\nasync def read_root():\\n    return {\\\"message\\\": \\\"Welcome to the Attendance Management System API\\\"}\",\n        \"url\": \"https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/dddec3fe-8a8d-4c38-b2aa-a456e587e5e7\/output\/**`app\/main.py\"\n      }\n    ]\n  },\n  {\n    \"name\": \"**`src\",\n    \"type\": \"folder\",\n    \"items\": [\n      {\n        \"name\": \"pages\",\n        \"type\": \"folder\",\n        \"items\": [\n          {\n            \"name\": \"LoginPage.js\",\n            \"type\": \"javascript\",\n            \"content\": \"import React, { useState } from 'react';\\nimport { useDispatch } from 'react-redux';\\nimport { setCredentials } from '..\/store\/authSlice';\\nimport { login } from '..\/services\/auth';\\nimport { useHistory } from 'react-router-dom';\\n\\nconst LoginPage = () => {\\n  const [username, setUsername] = useState('');\\n  const [password, setPassword] = useState('');\\n  const dispatch = useDispatch();\\n  const history = useHistory();\\n\\n  const handleSubmit = async (e) => {\\n    e.preventDefault();\\n    try {\\n      const data = await login(username, password);\\n      dispatch(setCredentials({ user: data.user, token: data.access_token }));\\n      history.push('\/admin'); \/\/ Redirect to admin dashboard\\n    } catch (error) {\\n      console.error('Login failed:', error);\\n    }\\n  };\\n\\n  return (\\n    <form onSubmit={handleSubmit}>\\n      <input\\n        type=\\\"text\\\"\\n        placeholder=\\\"Username\\\"\\n        value={username}\\n        onChange={(e) => setUsername(e.target.value)}\\n        required\\n      \/>\\n      <input\\n        type=\\\"password\\\"\\n        placeholder=\\\"Password\\\"\\n        value={password}\\n        onChange={(e) => setPassword(e.target.value)}\\n        required\\n      \/>\\n      <button type=\\\"submit\\\">Login<\/button>\\n    <\/form>\\n  );\\n};\\n\\nexport default LoginPage;\",\n            \"url\": \"https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/dddec3fe-8a8d-4c38-b2aa-a456e587e5e7\/output\/**`src\/pages\/LoginPage.js\"\n          }\n        ]\n      },\n      {\n        \"name\": \"services\",\n        \"type\": \"folder\",\n        \"items\": [\n          {\n            \"name\": \"api.js\",\n            \"type\": \"javascript\",\n            \"content\": \"import axios from 'axios';\\n\\nconst api = axios.create({\\n  baseURL: 'http:\/\/localhost:8000', \/\/ Backend API URL\\n});\\n\\nexport default api;\",\n            \"url\": \"https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/dddec3fe-8a8d-4c38-b2aa-a456e587e5e7\/output\/**`src\/services\/api.js\"\n          },\n          {\n            \"name\": \"auth.js\",\n            \"type\": \"javascript\",\n            \"content\": \"import api from '.\/api';\\n\\nexport const login = async (username, password) => {\\n  const response = await api.post('\/auth\/login', { username, password });\\n  return response.data;\\n};\\n\\nexport const register = async (userData) => {\\n  const response = await api.post('\/auth\/register', userData);\\n  return response.data;\\n};\",\n            \"url\": \"https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/dddec3fe-8a8d-4c38-b2aa-a456e587e5e7\/output\/**`src\/services\/auth.js\"\n          }\n        ]\n      },\n      {\n        \"name\": \"store\",\n        \"type\": \"folder\",\n        \"items\": [\n          {\n            \"name\": \"authSlice.js\",\n            \"type\": \"javascript\",\n            \"content\": \"import { createSlice } from '@reduxjs\/toolkit';\\n\\nconst authSlice = createSlice({\\n  name: 'auth',\\n  initialState: {\\n    user: null,\\n    token: null,\\n  },\\n  reducers: {\\n    setCredentials: (state, action) => {\\n      state.user = action.payload.user;\\n      state.token = action.payload.token;\\n    },\\n    logout: (state) => {\\n      state.user = null;\\n      state.token = null;\\n    },\\n  },\\n});\\n\\nexport const { setCredentials, logout } = authSlice.actions;\\nexport default authSlice.reducer;\",\n            \"url\": \"https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/dddec3fe-8a8d-4c38-b2aa-a456e587e5e7\/output\/**`src\/store\/authSlice.js\"\n          },\n          {\n            \"name\": \"index.js\",\n            \"type\": \"javascript\",\n            \"content\": \"import { configureStore } from '@reduxjs\/toolkit';\\nimport authReducer from '.\/authSlice';\\n\\nconst store = configureStore({\\n  reducer: {\\n    auth: authReducer,\\n  },\\n});\\n\\nexport default store;\",\n            \"url\": \"https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/dddec3fe-8a8d-4c38-b2aa-a456e587e5e7\/output\/**`src\/store\/index.js\"\n          }\n        ]\n      },\n      {\n        \"name\": \"App.js\",\n        \"type\": \"javascript\",\n        \"content\": \"import React from 'react';\\nimport { BrowserRouter as Router, Route, Switch } from 'react-router-dom';\\nimport LoginPage from '.\/pages\/LoginPage';\\nimport AdminDashboard from '.\/pages\/AdminDashboard';\\nimport AttendanceLogs from '.\/pages\/AttendanceLogs';\\nimport ManualEntry from '.\/pages\/ManualEntry';\\nimport Reports from '.\/pages\/Reports';\\nimport { Provider } from 'react-redux';\\nimport store from '.\/store';\\n\\nconst App = () => {\\n  return (\\n    <Provider store={store}>\\n      <Router>\\n        <Switch>\\n          <Route path=\\\"\/\\\" exact component={LoginPage} \/>\\n          <Route path=\\\"\/admin\\\" component={AdminDashboard} \/>\\n          <Route path=\\\"\/attendance-logs\\\" component={AttendanceLogs} \/>\\n          <Route path=\\\"\/manual-entry\\\" component={ManualEntry} \/>\\n          <Route path=\\\"\/reports\\\" component={Reports} \/>\\n        <\/Switch>\\n      <\/Router>\\n    <\/Provider>\\n  );\\n};\\n\\nexport default App;\",\n        \"url\": \"https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/dddec3fe-8a8d-4c38-b2aa-a456e587e5e7\/output\/**`src\/App.js\"\n      }\n    ]\n  },\n  {\n    \"name\": \"response.js\",\n    \"type\": \"javascript\",\n    \"content\": \"\\n### Frontend Implementation (React)\\n\\n#### 1. Project Structure\",\n    \"url\": \"https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/dddec3fe-8a8d-4c38-b2aa-a456e587e5e7\/output\/response.js\"\n  },\n  {\n    \"name\": \"**`package.js\",\n    \"type\": \"javascript\",\n    \"content\": \"{\\n  \\\"name\\\": \\\"attendance-management-system\\\",\\n  \\\"version\\\": \\\"1.0.0\\\",\\n  \\\"private\\\": true,\\n  \\\"dependencies\\\": {\\n    \\\"axios\\\": \\\"^0.21.1\\\",\\n    \\\"react\\\": \\\"^17.0.2\\\",\\n    \\\"react-dom\\\": \\\"^17.0.2\\\",\\n    \\\"react-redux\\\": \\\"^7.2.4\\\",\\n    \\\"react-router-dom\\\": \\\"^5.2.0\\\",\\n    \\\"redux\\\": \\\"^4.1.0\\\",\\n    \\\"redux-thunk\\\": \\\"^2.3.0\\\",\\n    \\\"@mui\/material\\\": \\\"^5.0.0\\\",\\n    \\\"@emotion\/react\\\": \\\"^11.0.0\\\",\\n    \\\"@emotion\/styled\\\": \\\"^11.0.0\\\"\\n  },\\n  \\\"scripts\\\": {\\n    \\\"start\\\": \\\"react-scripts start\\\",\\n    \\\"build\\\": \\\"react-scripts build\\\",\\n    \\\"test\\\": \\\"react-scripts test\\\",\\n    \\\"eject\\\": \\\"react-scripts eject\\\"\\n  },\\n  \\\"eslintConfig\\\": {\\n    \\\"extends\\\": [\\n      \\\"react-app\\\",\\n      \\\"react-app\/jest\\\"\\n    ]\\n  },\\n  \\\"browserslist\\\": {\\n    \\\"production\\\": [\\n      \\\">0.2%\\\",\\n      \\\"not dead\\\",\\n      \\\"not op_mini all\\\"\\n    ],\\n    \\\"development\\\": [\\n      \\\"last 1 chrome version\\\",\\n      \\\"last 1 firefox version\\\",\\n      \\\"last 1 safari version\\\"\\n    ]\\n  }\\n}\",\n    \"url\": \"https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/dddec3fe-8a8d-4c38-b2aa-a456e587e5e7\/output\/**`package.js\"\n  },\n  {\n    \"name\": \"README.md\",\n    \"type\": \"markdown\",\n    \"content\": \"\\n#### 2. Frontend Code\\n\",\n    \"url\": \"https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/dddec3fe-8a8d-4c38-b2aa-a456e587e5e7\/output\/README.md\"\n  }\n]",
+            "url": "https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/d63a6097-9498-4d1f-91b3-a3fd0f393363\/output\/generated_files_info.json"
+        },
+        {
+            "name": "**`app",
             "type": "folder",
             "items": [
-              {
-                "name": "attendance.py",
-                "type": "python",
-                "content": "from sqlalchemy import Column, Integer, DateTime, ForeignKey\nfrom sqlalchemy.orm import relationship\nfrom ..database import Base\n\nclass Attendance(Base):\n    __tablename__ = \"attendance\"\n\n    id = Column(Integer, primary_key=True, index=True)\n    user_id = Column(Integer, ForeignKey(\"users.id\"))\n    check_in = Column(DateTime)\n    check_out = Column(DateTime)\n\n    user = relationship(\"User\", back_populates=\"attendance_records\")",
-                "url": "mock-url"
-              },
-              {
-                "name": "user.py",
-                "type": "python",
-                "content": "from sqlalchemy import Column, Integer, String, Enum\nfrom sqlalchemy.orm import relationship\nfrom ..database import Base\nimport enum\n\nclass Role(enum.Enum):\n    admin = \"admin\"\n    hr = \"hr\"\n    supervisor = \"supervisor\"\n    employee = \"employee\"\n\nclass User(Base):\n    __tablename__ = \"users\"\n\n    id = Column(Integer, primary_key=True, index=True)\n    username = Column(String, unique=True, index=True)\n    hashed_password = Column(String)\n    role = Column(Enum(Role))\n\n    attendance_records = relationship(\"Attendance\", back_populates=\"user\")",
-                "url": "mock-url"
-              }
+                {
+                    "name": "models",
+                    "type": "folder",
+                    "items": [
+                        {
+                            "name": "attendance.py",
+                            "type": "python",
+                            "content": "from sqlalchemy import Column, Integer, DateTime, ForeignKey\nfrom app.database import Base\nfrom sqlalchemy.orm import relationship\n\nclass Attendance(Base):\n    __tablename__ = \"attendance\"\n\n    id = Column(Integer, primary_key=True, index=True)\n    user_id = Column(Integer, ForeignKey(\"users.id\"))\n    check_in = Column(DateTime)\n    check_out = Column(DateTime)\n\n    owner = relationship(\"User\", back_populates=\"attendance_records\")",
+                            "url": "https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/d63a6097-9498-4d1f-91b3-a3fd0f393363\/output\/**`app\/models\/attendance.py"
+                        },
+                        {
+                            "name": "user.py",
+                            "type": "python",
+                            "content": "from sqlalchemy import Column, Integer, String, ForeignKey\nfrom sqlalchemy.orm import relationship\nfrom app.database import Base\n\nclass User(Base):\n    __tablename__ = \"users\"\n\n    id = Column(Integer, primary_key=True, index=True)\n    username = Column(String, unique=True, index=True)\n    hashed_password = Column(String)\n    role = Column(String)  # e.g., 'admin', 'hr', 'supervisor', 'employee'\n\n    attendance_records = relationship(\"Attendance\", back_populates=\"owner\")",
+                            "url": "https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/d63a6097-9498-4d1f-91b3-a3fd0f393363\/output\/**`app\/models\/user.py"
+                        }
+                    ]
+                },
+                {
+                    "name": "routes",
+                    "type": "folder",
+                    "items": [
+                        {
+                            "name": "auth.py",
+                            "type": "python",
+                            "content": "from fastapi import APIRouter, Depends, HTTPException, status\nfrom sqlalchemy.orm import Session\nfrom app import models, schemas, utils\nfrom app.database import SessionLocal\nfrom app.services.auth_service import create_user, authenticate_user\n\nrouter = APIRouter()\n\n# Dependency to get DB session\ndef get_db():\n    db = SessionLocal()\n    try:\n        yield db\n    finally:\n        db.close()\n\n@router.post(\"\/auth\/register\", response_model=schemas.User)\ndef register(user: schemas.UserCreate, db: Session = Depends(get_db)):\n    db_user = create_user(db, user)\n    return db_user\n\n@router.post(\"\/auth\/login\", response_model=schemas.Token)\ndef login(user: schemas.UserCreate, db: Session = Depends(get_db)):\n    db_user = authenticate_user(db, user.username, user.password)\n    if not db_user:\n        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=\"Invalid credentials\")\n    access_token = utils.create_access_token(data={\"sub\": db_user.username})\n    return {\"access_token\": access_token, \"token_type\": \"bearer\"}",
+                            "url": "https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/d63a6097-9498-4d1f-91b3-a3fd0f393363\/output\/**`app\/routes\/auth.py"
+                        }
+                    ]
+                },
+                {
+                    "name": "schemas",
+                    "type": "folder",
+                    "items": [
+                        {
+                            "name": "auth.py",
+                            "type": "python",
+                            "content": "from pydantic import BaseModel\n\nclass Token(BaseModel):\n    access_token: str\n    token_type: str\n\nclass TokenData(BaseModel):\n    username: str",
+                            "url": "https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/d63a6097-9498-4d1f-91b3-a3fd0f393363\/output\/**`app\/schemas\/auth.py"
+                        },
+                        {
+                            "name": "user.py",
+                            "type": "python",
+                            "content": "from pydantic import BaseModel\n\nclass UserBase(BaseModel):\n    username: str\n    role: str\n\nclass UserCreate(UserBase):\n    password: str\n\nclass User(UserBase):\n    id: int\n\n    class Config:\n        orm_mode = True",
+                            "url": "https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/d63a6097-9498-4d1f-91b3-a3fd0f393363\/output\/**`app\/schemas\/user.py"
+                        }
+                    ]
+                },
+                {
+                    "name": "services",
+                    "type": "folder",
+                    "items": [
+                        {
+                            "name": "auth_service.py",
+                            "type": "python",
+                            "content": "from sqlalchemy.orm import Session\nfrom app import models, schemas\nfrom app.utils import hash_password\n\ndef create_user(db: Session, user: schemas.UserCreate):\n    hashed_password = hash_password(user.password)\n    db_user = models.User(username=user.username, hashed_password=hashed_password, role=user.role)\n    db.add(db_user)\n    db.commit()\n    db.refresh(db_user)\n    return db_user\n\ndef authenticate_user(db: Session, username: str, password: str):\n    user = db.query(models.User).filter(models.User.username == username).first()\n    if user and utils.verify_password(password, user.hashed_password):\n        return user\n    return None",
+                            "url": "https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/d63a6097-9498-4d1f-91b3-a3fd0f393363\/output\/**`app\/services\/auth_service.py"
+                        }
+                    ]
+                },
+                {
+                    "name": "tests",
+                    "type": "folder",
+                    "items": [
+                        {
+                            "name": "test_auth.py",
+                            "type": "python",
+                            "content": "from fastapi.testclient import TestClient\nfrom app.main import app\n\nclient = TestClient(app)\n\ndef test_register():\n    response = client.post(\"\/auth\/register\", json={\"username\": \"testuser\", \"password\": \"testpass\", \"role\": \"employee\"})\n    assert response.status_code == 200",
+                            "url": "https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/d63a6097-9498-4d1f-91b3-a3fd0f393363\/output\/**`app\/tests\/test_auth.py"
+                        }
+                    ]
+                },
+                {
+                    "name": "utils",
+                    "type": "folder",
+                    "items": [
+                        {
+                            "name": "security.py",
+                            "type": "python",
+                            "content": "from passlib.context import CryptContext\nfrom jose import JWTError, jwt\nfrom datetime import datetime, timedelta\nfrom app.config import SECRET_KEY, ALGORITHM\n\npwd_context = CryptContext(schemes=[\"bcrypt\"], deprecated=\"auto\")\n\ndef hash_password(password: str) -> str:\n    return pwd_context.hash(password)\n\ndef verify_password(plain_password: str, hashed_password: str) -> bool:\n    return pwd_context.verify(plain_password, hashed_password)\n\ndef create_access_token(data: dict, expires_delta: timedelta = None):\n    to_encode = data.copy()\n    if expires_delta:\n        expire = datetime.utcnow() + expires_delta\n    else:\n        expire = datetime.utcnow() + timedelta(minutes=30)\n    to_encode.update({\"exp\": expire})\n    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)\n    return encoded_jwt",
+                            "url": "https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/d63a6097-9498-4d1f-91b3-a3fd0f393363\/output\/**`app\/utils\/security.py"
+                        }
+                    ]
+                },
+                {
+                    "name": "config.py",
+                    "type": "python",
+                    "content": "import os\nfrom dotenv import load_dotenv\n\nload_dotenv()\n\nDATABASE_URL = os.getenv(\"DATABASE_URL\", \"sqlite:\/\/\/.\/attendance.db\")\nSECRET_KEY = os.getenv(\"SECRET_KEY\", \"your_secret_key\")\nALGORITHM = \"HS256\"\nACCESS_TOKEN_EXPIRE_MINUTES = 30",
+                    "url": "https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/d63a6097-9498-4d1f-91b3-a3fd0f393363\/output\/**`app\/config.py"
+                },
+                {
+                    "name": "database.py",
+                    "type": "python",
+                    "content": "from sqlalchemy import create_engine\nfrom sqlalchemy.ext.declarative import declarative_base\nfrom sqlalchemy.orm import sessionmaker\n\nDATABASE_URL = \"sqlite:\/\/\/.\/attendance.db\"  # Change to your database URL\n\nengine = create_engine(DATABASE_URL)\nSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)\nBase = declarative_base()",
+                    "url": "https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/d63a6097-9498-4d1f-91b3-a3fd0f393363\/output\/**`app\/database.py"
+                },
+                {
+                    "name": "main.py",
+                    "type": "python",
+                    "content": "from fastapi import FastAPI\nfrom fastapi.middleware.cors import CORSMiddleware\nfrom app.database import engine\nfrom app.models import Base\nfrom app.routes import auth, users, attendance, reports, alerts\n\n# Create the FastAPI app\napp = FastAPI()\n\n# CORS configuration\norigins = [\"http:\/\/localhost:3000\"]  # Adjust as needed for your frontend\napp.add_middleware(\n    CORSMiddleware,\n    allow_origins=origins,\n    allow_credentials=True,\n    allow_methods=[\"*\"],\n    allow_headers=[\"*\"],\n)\n\n# Include routers\napp.include_router(auth.router)\napp.include_router(users.router)\napp.include_router(attendance.router)\napp.include_router(reports.router)\napp.include_router(alerts.router)\n\n# Create database tables\n@app.on_event(\"startup\")\ndef startup():\n    Base.metadata.create_all(bind=engine)\n\n# Root endpoint\n@app.get(\"\/\")\ndef read_root():\n    return {\"message\": \"Welcome to the Attendance Management System API\"}",
+                    "url": "https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/d63a6097-9498-4d1f-91b3-a3fd0f393363\/output\/**`app\/main.py"
+                }
             ]
-          },
-          {
-            "name": "routes",
+        },
+        {
+            "name": "**`src",
             "type": "folder",
             "items": [
-              {
-                "name": "auth.py",
-                "type": "python",
-                "content": "from fastapi import APIRouter, Depends, HTTPException, status\nfrom sqlalchemy.orm import Session\nfrom .. import schemas, models, utils\nfrom ..database import get_db\n\nrouter = APIRouter()\n\n@router.post(\"/auth/register\", response_model=schemas.User)\ndef register(user: schemas.UserCreate, db: Session = Depends(get_db)):\n    hashed_password = utils.get_password_hash(user.password)\n    db_user = models.User(username=user.username, hashed_password=hashed_password, role=user.role)\n    db.add(db_user)\n    db.commit()\n    db.refresh(db_user)\n    return db_user\n\n@router.post(\"/auth/login\")\ndef login(user: schemas.UserCreate, db: Session = Depends(get_db)):\n    db_user = db.query(models.User).filter(models.User.username == user.username).first()\n    if not db_user or not utils.verify_password(user.password, db_user.hashed_password):\n        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=\"Invalid credentials\")\n    access_token = utils.create_access_token(data={\"sub\": db_user.username, \"role\": db_user.role})\n    return {\"access_token\": access_token, \"token_type\": \"bearer\"}",
-                "url": "mock-url"
-              }
+                {
+                    "name": "pages",
+                    "type": "folder",
+                    "items": [
+                        {
+                            "name": "LoginPage.js",
+                            "type": "javascript",
+                            "content": "import React, { useState } from 'react';\nimport { useDispatch } from 'react-redux';\nimport { login as loginAction } from '..\/store\/authSlice';\nimport { login } from '..\/services\/auth';\n\nconst LoginPage = () => {\n  const [username, setUsername] = useState('');\n  const [password, setPassword] = useState('');\n  const dispatch = useDispatch();\n\n  const handleSubmit = async (e) => {\n    e.preventDefault();\n    try {\n      const data = await login(username, password);\n      dispatch(loginAction({ user: data.username, token: data.access_token }));\n      \/\/ Redirect to dashboard or other page\n    } catch (error) {\n      console.error('Login failed:', error);\n    }\n  };\n\n  return (\n    <form onSubmit={handleSubmit}>\n      <input\n        type=\"text\"\n        value={username}\n        onChange={(e) => setUsername(e.target.value)}\n        placeholder=\"Username\"\n        required\n      \/>\n      <input\n        type=\"password\"\n        value={password}\n        onChange={(e) => setPassword(e.target.value)}\n        placeholder=\"Password\"\n        required\n      \/>\n      <button type=\"submit\">Login<\/button>\n    <\/form>\n  );\n};\n\nexport default LoginPage;",
+                            "url": "https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/d63a6097-9498-4d1f-91b3-a3fd0f393363\/output\/**`src\/pages\/LoginPage.js"
+                        }
+                    ]
+                },
+                {
+                    "name": "services",
+                    "type": "folder",
+                    "items": [
+                        {
+                            "name": "api.js",
+                            "type": "javascript",
+                            "content": "import axios from 'axios';\n\nconst API_URL = 'http:\/\/localhost:8000'; \/\/ Adjust to your backend URL\n\nconst api = axios.create({\n  baseURL: API_URL,\n});\n\nexport default api;",
+                            "url": "https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/d63a6097-9498-4d1f-91b3-a3fd0f393363\/output\/**`src\/services\/api.js"
+                        },
+                        {
+                            "name": "auth.js",
+                            "type": "javascript",
+                            "content": "import api from '.\/api';\n\nexport const login = async (username, password) => {\n  const response = await api.post('\/auth\/login', { username, password });\n  return response.data;\n};\n\nexport const register = async (username, password, role) => {\n  const response = await api.post('\/auth\/register', { username, password, role });\n  return response.data;\n};",
+                            "url": "https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/d63a6097-9498-4d1f-91b3-a3fd0f393363\/output\/**`src\/services\/auth.js"
+                        }
+                    ]
+                },
+                {
+                    "name": "store",
+                    "type": "folder",
+                    "items": [
+                        {
+                            "name": "authSlice.js",
+                            "type": "javascript",
+                            "content": "import { createSlice } from '@reduxjs\/toolkit';\n\nconst authSlice = createSlice({\n  name: 'auth',\n  initialState: {\n    user: null,\n    token: null,\n  },\n  reducers: {\n    login: (state, action) => {\n      state.user = action.payload.user;\n      state.token = action.payload.token;\n    },\n    logout: (state) => {\n      state.user = null;\n      state.token = null;\n    },\n  },\n});\n\nexport const { login, logout } = authSlice.actions;\nexport default authSlice.reducer;",
+                            "url": "https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/d63a6097-9498-4d1f-91b3-a3fd0f393363\/output\/**`src\/store\/authSlice.js"
+                        },
+                        {
+                            "name": "index.js",
+                            "type": "javascript",
+                            "content": "import { configureStore } from '@reduxjs\/toolkit';\nimport authReducer from '.\/authSlice';\n\nconst store = configureStore({\n  reducer: {\n    auth: authReducer,\n  },\n});\n\nexport default store;",
+                            "url": "https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/d63a6097-9498-4d1f-91b3-a3fd0f393363\/output\/**`src\/store\/index.js"
+                        }
+                    ]
+                },
+                {
+                    "name": "App.js",
+                    "type": "javascript",
+                    "content": "import React from 'react';\nimport { BrowserRouter as Router, Route, Switch } from 'react-router-dom';\nimport LoginPage from '.\/pages\/LoginPage';\nimport AdminDashboard from '.\/pages\/AdminDashboard';\nimport AttendanceLogs from '.\/pages\/AttendanceLogs';\nimport ManualEntry from '.\/pages\/ManualEntry';\nimport Reports from '.\/pages\/Reports';\nimport { Provider } from 'react-redux';\nimport store from '.\/store';\n\nconst App = () => {\n  return (\n    <Provider store={store}>\n      <Router>\n        <Switch>\n          <Route path=\"\/\" exact component={LoginPage} \/>\n          <Route path=\"\/admin\" component={AdminDashboard} \/>\n          <Route path=\"\/attendance-logs\" component={AttendanceLogs} \/>\n          <Route path=\"\/manual-entry\" component={ManualEntry} \/>\n          <Route path=\"\/reports\" component={Reports} \/>\n        <\/Switch>\n      <\/Router>\n    <\/Provider>\n  );\n};\n\nexport default App;",
+                    "url": "https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/d63a6097-9498-4d1f-91b3-a3fd0f393363\/output\/**`src\/App.js"
+                }
             ]
-          },
-          {
-            "name": "schemas",
-            "type": "folder",
-            "items": [
-              {
-                "name": "user.py",
-                "type": "python",
-                "content": "from pydantic import BaseModel\nfrom typing import Optional\nfrom enum import Enum\n\nclass Role(str, Enum):\n    admin = \"admin\"\n    hr = \"hr\"\n    supervisor = \"supervisor\"\n    employee = \"employee\"\n\nclass UserBase(BaseModel):\n    username: str\n    role: Role\n\nclass UserCreate(UserBase):\n    password: str\n\nclass User(UserBase):\n    id: int\n\n    class Config:\n        orm_mode = True",
-                "url": "mock-url"
-              }
-            ]
-          },
-          {
-            "name": "utils",
-            "type": "folder",
-            "items": [
-              {
-                "name": "security.py",
-                "type": "python",
-                "content": "from datetime import datetime, timedelta\nfrom jose import JWTError, jwt\nfrom passlib.context import CryptContext\nfrom .config import settings\n\n# Password hashing\npwd_context = CryptContext(schemes=[\"bcrypt\"], deprecated=\"auto\")\n\ndef get_password_hash(password: str) -> str:\n    return pwd_context.hash(password)\n\ndef verify_password(plain_password: str, hashed_password: str) -> bool:\n    return pwd_context.verify(plain_password, hashed_password)\n\n# JWT token creation\ndef create_access_token(data: dict, expires_delta: timedelta = None) -> str:\n    to_encode = data.copy()\n    if expires_delta:\n        expire = datetime.utcnow() + expires_delta\n    else:\n        expire = datetime.utcnow() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)\n    to_encode.update({\"exp\": expire})\n    encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)\n    return encoded_jwt",
-                "url": "mock-url"
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "name": "frontend",
-    "type": "folder",
-    "items": [
-      {
-        "name": "package.json",
-        "type": "json",
-        "content": "{\n  \"name\": \"attendance-management-system\",\n  \"version\": \"1.0.0\",\n  \"private\": true,\n  \"dependencies\": {\n    \"axios\": \"^0.21.1\",\n    \"react\": \"^17.0.2\",\n    \"react-dom\": \"^17.0.2\",\n    \"react-redux\": \"^7.2.4\",\n    \"react-router-dom\": \"^5.2.0\",\n    \"@reduxjs/toolkit\": \"^1.6.0\"\n  },\n  \"scripts\": {\n    \"start\": \"react-scripts start\",\n    \"build\": \"react-scripts build\",\n    \"test\": \"react-scripts test\",\n    \"eject\": \"react-scripts eject\"\n  },\n  \"eslintConfig\": {\n    \"extends\": [\n      \"react-app\",\n      \"react-app/jest\"\n    ]\n  },\n  \"browserslist\": {\n    \"production\": [\n      \">0.2%\",\n      \"not dead\",\n      \"not op_mini all\"\n    ],\n    \"development\": [\n      \"last 1 chrome version\",\n      \"last 1 firefox version\",\n      \"last 1 safari version\"\n    ]\n  }\n}",
-        "url": "mock-url"
-      },
-      {
-        "name": "src",
-        "type": "folder",
-        "items": [
-          {
-            "name": "pages",
-            "type": "folder",
-            "items": [
-              {
-                "name": "LoginPage.js",
-                "type": "javascript",
-                "content": "import React, { useState } from 'react';\nimport { useDispatch } from 'react-redux';\nimport { login } from '../services/auth';\nimport { useNavigate } from 'react-router-dom';\n\nconst LoginPage = () => {\n    const [username, setUsername] = useState('');\n    const [password, setPassword] = useState('');\n    const dispatch = useDispatch();\n    const navigate = useNavigate();\n\n    const handleSubmit = async (e) => {\n        e.preventDefault();\n        try {\n            await dispatch(login({ username, password }));\n            navigate('/admin'); // Redirect to admin dashboard\n        } catch (error) {\n            console.error(\"Login failed\", error);\n        }\n    };\n\n    return (\n        <form onSubmit={handleSubmit}>\n            <input\n                type=\"text\"\n                placeholder=\"Username\"\n                value={username}\n                onChange={(e) => setUsername(e.target.value)}\n                required\n            />\n            <input\n                type=\"password\"\n                placeholder=\"Password\"\n                value={password}\n                onChange={(e) => setPassword(e.target.value)}\n                required\n            />\n            <button type=\"submit\">Login</button>\n        </form>\n    );\n};\n\nexport default LoginPage;",
-                "url": "mock-url"
-              }
-            ]
-          },
-          {
-            "name": "services",
-            "type": "folder",
-            "items": [
-              {
-                "name": "auth.js",
-                "type": "javascript",
-                "content": "import axios from 'axios';\n\nconst API_URL = 'http://localhost:8000/auth/';\n\nexport const login = async (userData) => {\n    const response = await axios.post(API_URL + 'login', userData);\n    if (response.data.access_token) {\n        localStorage.setItem('user', JSON.stringify(response.data));\n    }\n    return response.data;\n};\n\nexport const logout = () => {\n    localStorage.removeItem('user');\n};",
-                "url": "mock-url"
-              }
-            ]
-          },
-          {
-            "name": "store",
-            "type": "folder",
-            "items": [
-              {
-                "name": "authSlice.js",
-                "type": "javascript",
-                "content": "import { createSlice } from '@reduxjs/toolkit';\n\nconst authSlice = createSlice({\n    name: 'auth',\n    initialState: {\n        user: null,\n    },\n    reducers: {\n        setUser: (state, action) => {\n            state.user = action.payload;\n        },\n        clearUser: (state) => {\n            state.user = null;\n        },\n    },\n});\n\nexport const { setUser, clearUser } = authSlice.actions;\nexport default authSlice.reducer;",
-                "url": "mock-url"
-              },
-              {
-                "name": "index.js",
-                "type": "javascript",
-                "content": "import { configureStore } from '@reduxjs/toolkit';\nimport authReducer from './authSlice';\n\nconst store = configureStore({\n    reducer: {\n        auth: authReducer,\n    },\n});\n\nexport default store;",
-                "url": "mock-url"
-              }
-            ]
-          },
-          {
-            "name": "App.js",
+        },
+        {
+            "name": "response.js",
             "type": "javascript",
-            "content": "import React from 'react';\nimport { BrowserRouter as Router, Route, Switch } from 'react-router-dom';\nimport LoginPage from './pages/LoginPage';\nimport AdminDashboard from './pages/AdminDashboard';\nimport AttendanceLogs from './pages/AttendanceLogs';\nimport ManualEntry from './pages/ManualEntry';\nimport Reports from './pages/Reports';\nimport { Provider } from 'react-redux';\nimport store from './store';\n\nconst App = () => {\n    return (\n        <Provider store={store}>\n            <Router>\n                <Switch>\n                    <Route path=\"/\" exact component={LoginPage} />\n                    <Route path=\"/admin\" component={AdminDashboard} />\n                    <Route path=\"/attendance-logs\" component={AttendanceLogs} />\n                    <Route path=\"/manual-entry\" component={ManualEntry} />\n                    <Route path=\"/reports\" component={Reports} />\n                </Switch>\n            </Router>\n        </Provider>\n    );\n};\n\nexport default App;",
-            "url": "mock-url"
-          }
-        ]
-      }
+            "content": "\n### Frontend Implementation (React)\n\n#### 1. Project Structure",
+            "url": "https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/d63a6097-9498-4d1f-91b3-a3fd0f393363\/output\/response.js"
+        },
+        {
+            "name": "**`package.js",
+            "type": "javascript",
+            "content": "{\n  \"name\": \"attendance-management-system\",\n  \"version\": \"1.0.0\",\n  \"private\": true,\n  \"dependencies\": {\n    \"axios\": \"^0.21.1\",\n    \"react\": \"^17.0.2\",\n    \"react-dom\": \"^17.0.2\",\n    \"react-redux\": \"^7.2.4\",\n    \"react-router-dom\": \"^5.2.0\",\n    \"redux\": \"^4.1.0\",\n    \"redux-thunk\": \"^2.3.0\",\n    \"@mui\/material\": \"^5.0.0\"\n  },\n  \"scripts\": {\n    \"start\": \"react-scripts start\",\n    \"build\": \"react-scripts build\",\n    \"test\": \"react-scripts test\",\n    \"eject\": \"react-scripts eject\"\n  },\n  \"eslintConfig\": {\n    \"extends\": [\n      \"react-app\",\n      \"react-app\/jest\"\n    ]\n  },\n  \"browserslist\": {\n    \"production\": [\n      \">0.2%\",\n      \"not dead\",\n      \"not op_mini all\"\n    ],\n    \"development\": [\n      \"last 1 chrome version\",\n      \"last 1 firefox version\",\n      \"last 1 safari version\"\n    ]\n  }\n}",
+            "url": "https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/d63a6097-9498-4d1f-91b3-a3fd0f393363\/output\/**`package.js"
+        },
+        {
+            "name": "README.md",
+            "type": "markdown",
+            "content": "\n#### 2. Frontend Code\n",
+            "url": "https:\/\/knowledgebase-pdf-qa-backend-dls.s3.ap-south-1.amazonaws.com\/code_genarator\/d63a6097-9498-4d1f-91b3-a3fd0f393363\/output\/README.md"
+        }
     ]
-  }
-]

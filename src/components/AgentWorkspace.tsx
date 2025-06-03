@@ -11,14 +11,7 @@ import InputSection from "./InputSection";
 import ConditionalOutput from "./ConditionalOutput";
 import HistorySection from "./HistorySection";
 import { useAgentWorkspace } from "@/hooks/useAgentWorkspace";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
+import {AlertDialog,AlertDialogAction,AlertDialogContent,AlertDialogDescription,AlertDialogFooter,AlertDialogHeader,AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 interface AgentWorkspaceProps {
   agentName: string;
