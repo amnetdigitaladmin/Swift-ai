@@ -25,9 +25,9 @@ const Header = () => {
               </Link>
             </Button>
             <img 
-              src="/lovable-uploads/6d2ee624-da66-4058-bda5-573daec3e844.png" 
+              src="/Swift-ai-logo.svg" 
               alt="Swift AI Logo" 
-              className="h-24 w-auto"
+              className="h-24 w-24 object-contain"
             />
           </div>
         </div>
