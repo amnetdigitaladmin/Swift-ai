@@ -203,7 +203,7 @@ const ArchitectWorkspace = () => {
 
         <TabsContent value="development" className="space-y-4">
           <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Development Agents</h2>
+            <h2 className="text-2xl font-bold text-white mb-2">Development Agents</h2>
             <p className="text-gray-600">Agents focused on building and implementing solutions</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -222,7 +222,7 @@ const ArchitectWorkspace = () => {
 
         <TabsContent value="qa" className="space-y-4">
           <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">QA Agents</h2>
+            <h2 className="text-2xl font-bold text-white mb-2">QA Agents</h2>
             <p className="text-gray-600">Agents dedicated to testing and quality assurance</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

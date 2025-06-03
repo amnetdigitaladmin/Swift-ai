@@ -13,7 +13,11 @@ const Header = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-gradient-background-from to-gradient-background-to bg-clip-text text-transparent">Swift AI</h1>
+              <img 
+              src="/Swift-ai-logo.svg" 
+              alt="Swift AI Logo" 
+              className="h-6 w-24 object-contain"
+              />
               <p className="text-gray-300 text-sm">Expedite, Optimize, Realize</p>
             </div>
           </div>

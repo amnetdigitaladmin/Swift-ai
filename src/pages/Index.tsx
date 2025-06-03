@@ -173,7 +173,7 @@ const Index = () => {
                 variant="outline"
                 onClick={() => selectProject(null as any)}
                 size="sm"
-                className="border-gray-600 text-gray-200 hover:bg-gray-800"
+                className="bg-custom-nav-bg text-gray-200 hover:bg-gray-800"
               >
                 ← Back to Projects
               </Button>
@@ -194,7 +194,7 @@ const Index = () => {
               variant="outline"
               size="sm"
               onClick={logout}
-              className="border-gray-600 text-gray-200 hover:bg-gray-800"
+              className="bg-custom-nav-bg text-gray-200 "
             >
               <LogOut className="h-4 w-4 mr-2" />
               Logout

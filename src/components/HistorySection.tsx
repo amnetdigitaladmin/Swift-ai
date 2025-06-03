@@ -32,7 +32,7 @@ const HistorySection = () => {
   ];
 
   return (
-    <Card>
+    <Card className="bg-custom-bg">
       <CardHeader>
         <CardTitle>Recent Sessions</CardTitle>
         <CardDescription>Your previous AI processing sessions with project information</CardDescription>
