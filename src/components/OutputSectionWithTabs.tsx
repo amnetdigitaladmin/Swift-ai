@@ -186,15 +186,29 @@ const OutputSectionWithTabs = ({
               <div key={fullPath}>
                 <button
                   onClick={() => toggleFolder(fullPath)}
-                  className="flex items-center gap-2 py-1 hover:text-indigo-600 w-full text-left"
+                  className="flex items-center gap-2 py-1 hover:bg-gradient-to-r hover:from-gradient-background-from hover:to-gradient-background-to hover:bg-clip-text hover:text-transparent w-full text-left"
                 >
                   <ChevronRight
-                    className={`h-4 w-4 transition-transform ${
+                    className={`h-4 w-4 transition-transform text-white ${
                       expandedFolders.includes(fullPath) ? "rotate-90" : ""
                     }`}
                   />
-                  <Folder className="h-4 w-4 text-yellow-500" />
-                  {cleanName(item.name)}
+                  <Folder
+                    className={`h-4 w-4 ${
+                      expandedFolders.includes(fullPath)
+                        ? "text-gradient-background-to"
+                        : "text-ready-txt"
+                    }`}
+                  />
+                  <span
+                    className={`${
+                      expandedFolders.includes(fullPath)
+                        ? "bg-gradient-to-r from-gradient-background-from to-gradient-background-to bg-clip-text text-transparent"
+                        : ""
+                    }`}
+                  >
+                    {cleanName(item.name)}
+                  </span>
                 </button>
                 {expandedFolders.includes(fullPath) && (
                   <RenderTree items={item.items} path={fullPath} />
@@ -215,10 +229,10 @@ const OutputSectionWithTabs = ({
                   );
                   if (fileIndex !== -1) setActiveFileIndex(fileIndex);
                 }}
-                className={`flex items-center gap-2 py-1 pl-6 hover:text-indigo-600 w-full text-left ${
+                className={`flex items-center gap-2 py-1 pl-6 hover:bg-gradient-to-r hover:from-gradient-background-from hover:to-gradient-background-to hover:bg-clip-text hover:text-transparent w-full text-left ${
                   cleanName(flattenedFiles[activeFileIndex]?.name) ===
                   cleanName(item.name)
-                    ? "text-indigo-600 font-medium"
+                    ? "bg-gradient-to-r from-gradient-background-from to-gradient-background-to bg-clip-text text-transparent font-medium"
                     : ""
                 }`}
               >
@@ -288,23 +302,37 @@ const OutputSectionWithTabs = ({
                       onClick={() =>
                         handleFileDownload(flattenedFiles[activeFileIndex]?.url)
                       }
-                       className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to"
+                      className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to"
                     >
-                      <Download className="h-4 w-4 mr-2" />
-                      Download
+                      <Download className="h-4 w-4 mr-2 text-black" />
+                      <span className="text-black font-semibold">Download</span>
+                   
                     </Button>
                   </div>
                 </div>
 
                 <SyntaxHighlighter
                   language={flattenedFiles[activeFileIndex]?.type}
-                  style={oneLight}
+                  style={{
+                    ...oneLight,
+                    'pre[class*="language-"]': {
+                      ...oneLight['pre[class*="language-"]'],
+                      background: "transparent",
+                      color: "#ffffff",
+                    },
+                    'code[class*="language-"]': {
+                      ...oneLight['code[class*="language-"]'],
+                      background: "transparent",
+                      color: "#ffffff",
+                    },
+                  }}
                   customStyle={{
                     margin: 0,
                     borderRadius: "0",
                     fontSize: "0.875rem",
-                    backgroundColor: "#0C0E12",
+                    backgroundColor: "transparent",
                     border: "1px solid #e2e8f0",
+                    color: "#ffffff",
                   }}
                   showLineNumbers={true}
                   lineNumberStyle={{
@@ -324,7 +352,7 @@ const OutputSectionWithTabs = ({
                     onClick={onAzureDevOpsPush}
                     className="bg-custom-bg"
                   >
-                    <Cloud className="h-4 w-4 mr-2" />
+                    <Cloud className="h-4 w-4 mr-2 text-ready-txt" />
                     Push to Azure DevOps
                   </Button>
                   <Button
@@ -333,7 +361,7 @@ const OutputSectionWithTabs = ({
                     onClick={onPushToProjectManager}
                     className="bg-custom-bg"
                   >
-                    <GitBranch className="h-4 w-4 mr-2" />
+                    <GitBranch className="h-4 w-4 mr-2 text-ready-txt" />
                     Push to Git
                   </Button>
                   {/* {selectedStory && selectedStory.status !== "completed" && (
