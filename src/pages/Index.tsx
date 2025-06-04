@@ -373,7 +373,7 @@ const Index = () => {
                         value={newProjectName}
                         onChange={(e) => setNewProjectName(e.target.value)}
                         placeholder="Enter project name..."
-                        className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400"
+                        className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
                       />
                     </div>
                     <div>
@@ -387,7 +387,7 @@ const Index = () => {
                         }
                         placeholder="Describe your architecture project..."
                         rows={3}
-                        className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400"
+                        className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
                       />
                     </div>
                     <div className="flex justify-end space-x-2">

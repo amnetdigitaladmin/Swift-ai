@@ -137,7 +137,8 @@ const Login = ({ onLogin }: LoginProps) => {
                   placeholder="Enter your username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="pl-10 bg-gray-700/50 border border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
+                  className="pl-10 bg-gray-700/50 border border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors [appearance:textfield] [&::-webkit-credentials-auto-fill-button]:hidden [&:-webkit-autofill]:!bg-[#374151]/50 [&:-webkit-autofill]:!shadow-[inset_0_0_0px_1000px_rgb(55,65,81,0.5)] [&:-webkit-autofill]:!text-[#fff] [-webkit-text-fill-color:#fff] [&:-webkit-autofill]:[-webkit-text-fill-color:#fff]"
+                  autoComplete="username"
                   required
                 />
               </div>
@@ -159,7 +160,8 @@ const Login = ({ onLogin }: LoginProps) => {
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10 bg-gray-700/50 border border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
+                  className="pl-10 bg-gray-700/50 border border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors [appearance:textfield] [&::-webkit-credentials-auto-fill-button]:hidden [&:-webkit-autofill]:!bg-[#374151]/50 [&:-webkit-autofill]:!shadow-[inset_0_0_0px_1000px_rgb(55,65,81,0.5)] [&:-webkit-autofill]:!text-[#fff] [-webkit-text-fill-color:#fff] [&:-webkit-autofill]:[-webkit-text-fill-color:#fff]"
+                  autoComplete="current-password"
                   required
                 />
               </div>

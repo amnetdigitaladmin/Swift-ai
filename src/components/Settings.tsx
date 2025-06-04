@@ -76,22 +76,22 @@ const Settings = () => {
 
   return (
     <div className="space-y-6">
-      <Card className="bg-white">
+      <Card className="bg-custom-bg">
         <CardHeader>
-          <CardTitle className="text-gray-900">Architect Settings</CardTitle>
+          <CardTitle className="text-white">Architect Settings</CardTitle>
           <CardDescription className="text-gray-600">Configure LLM assignments for different SDLC phases</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div>
-            <Label className="text-base font-medium mb-4 block text-gray-900">LLM Assignments by Phase</Label>
+            <Label className="text-base font-medium mb-4 block text-white">LLM Assignments by Phase</Label>
             <p className="text-sm text-gray-600 mb-4">
               Assign specific Large Language Models to each SDLC phase for optimized performance across your architecture workflow.
             </p>
             <div className="space-y-4">
               {phases.map((phase) => (
-                <div key={phase.id} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg bg-white shadow-sm">
+                <div key={phase.id} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg bg-custom-bg shadow-sm">
                   <div>
-                    <Label className="font-medium text-gray-900">{phase.name}</Label>
+                    <Label className="font-medium text-white">{phase.name}</Label>
                     <p className="text-sm text-gray-500 mt-1">
                       {phase.id === "requirements" && "Business analysis, stakeholder mapping, and requirement gathering"}
                       {phase.id === "design" && "System architecture, UI/UX design, and technical specifications"}
@@ -104,12 +104,12 @@ const Settings = () => {
                       value={llmAssignments[phase.id as keyof typeof llmAssignments]}
                       onValueChange={(value) => handleLlmChange(phase.id, value)}
                     >
-                      <SelectTrigger className="bg-white border-gray-300 text-gray-900">
+                      <SelectTrigger className="bg-custom-bg border-gray-300 text-white">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-white border-gray-300 z-50">
+                      <SelectContent className="bg-custom-bg border-gray-300 z-50">
                         {llmOptions.map((llm) => (
-                          <SelectItem key={llm.value} value={llm.value} className="text-gray-900 hover:bg-gray-100">
+                          <SelectItem key={llm.value} value={llm.value} className="text-white hover:bg-gray-100">
                             {llm.label}
                           </SelectItem>
                         ))}
@@ -121,9 +121,9 @@ const Settings = () => {
             </div>
           </div>
           
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <h4 className="text-sm font-medium text-blue-900 mb-2">Model Recommendations</h4>
-            <ul className="text-sm text-blue-800 space-y-1">
+          <div className="bg-ready-bg border border-blue-200 rounded-lg p-4">
+            <h4 className="text-sm font-medium text-white mb-2">Model Recommendations</h4>
+            <ul className="text-sm text-gray-500  space-y-1">
               <li>• <strong>GPT-4:</strong> Best for complex reasoning and business analysis</li>
               <li>• <strong>Claude:</strong> Excellent for code generation and technical documentation</li>
               <li>• <strong>Gemini:</strong> Strong performance in testing scenarios and quality assurance</li>
@@ -131,7 +131,7 @@ const Settings = () => {
           </div>
           
           <div className="flex justify-end pt-4 border-t">
-            <Button onClick={handleSaveSettings} className="bg-blue-600 hover:bg-blue-700 text-white">
+            <Button onClick={handleSaveSettings} className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to text-black font-semibold">
               Save Settings
             </Button>
           </div>
