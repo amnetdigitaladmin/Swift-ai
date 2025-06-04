@@ -92,8 +92,8 @@ const Login = ({ onLogin }: LoginProps) => {
   const selectedPersona = personas.find((p) => p.id === persona);
 
   return (
-  <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center p-6 relative overflow-hidden before:absolute before:w-[800px] before:h-[800px] before:-left-[300px] before:bottom-[-200px] before:rounded-full before:bg-emerald-400/10 before:blur-[120px]">
-      <Card className="w-full max-w-md shadow-2xl border border-gray-700 bg-gray-800/90 backdrop-blur-sm">
+  <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center p-6 relative overflow-hidden before:absolute before:w-[800px] before:h-[800px] before:-left-[300px] before:bottom-[-500px] before:rounded-full before:bg-emerald-400/10 before:blur-[120px]">
+      <Card className="w-full max-w-md shadow-2xl border border-gray-700 bg-gray-800/90 backdrop-blur-sm before:absolute before:w-[600px] before:h-[200px] before:-left-[200px] before:top-[-200px] before:rounded-full before:bg-emerald-400/10 before:blur-[120px]">
         <CardHeader className="text-center space-y-4">
           <div className="flex justify-center">
             <img
@@ -195,7 +195,7 @@ const Login = ({ onLogin }: LoginProps) => {
 
             <Button
               type="submit"
-              className="w-full bg-gradient-to-r from-gradient-background-from to-gradient-background-to hover:from-gradiant-background-from-hover hover:to-gradiant-background-to-hover transition-all duration-300 text-white"
+              className="w-full bg-gradient-to-r from-gradient-background-from to-gradient-background-to hover:from-gradiant-background-from-hover hover:to-gradiant-background-to-hover transition-all duration-300 text-black font-semibold"
               disabled={!username || !password}
             >
               Sign In

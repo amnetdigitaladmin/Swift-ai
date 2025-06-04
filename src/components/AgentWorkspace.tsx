@@ -120,15 +120,15 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
             <p className="text-gray-600">AI-Powered Development Assistant</p>
             {currentProject && (
               <div className="flex items-center space-x-2 mt-1">
-                <FolderOpen className="h-4 w-4 text-blue-500" />
-                <span className="text-sm bg-gradient-to-r from-gradient-background-from to-gradient-background-to bg-clip-text text-transparent font-medium">
+                <FolderOpen className="h-4 w-4 text-ready-txt" />
+                <span className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to bg-clip-text text-transparent generate-button-text text-base">
                   {currentProject.name}
                 </span>
               </div>
             )}
           </div>
         </div>
-        <Badge className="bg-green-100 text-green-800">Ready</Badge>
+        <Badge className="bg-ready-bg hover:bg-ready-bg text-ready-txt">Ready</Badge>
       </div>
 
       <UserStorySection
@@ -202,14 +202,14 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
 
 
         {/* Add this before the closing div */}
-      <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
-        <AlertDialogContent>
+      <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen} >
+        <AlertDialogContent className="bg-custom-bg">
           <AlertDialogHeader>
             <AlertDialogTitle>Sensitive Information Alert</AlertDialogTitle>
             <AlertDialogDescription>{alertContent}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogAction onClick={() => setIsAlertOpen(false)}>
+            <AlertDialogAction onClick={() => setIsAlertOpen(false)} className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to font-semibold generate-button-text text-base">
               Acknowledge
             </AlertDialogAction>
           </AlertDialogFooter>

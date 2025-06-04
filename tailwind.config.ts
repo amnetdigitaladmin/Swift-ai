@@ -52,6 +52,10 @@ export default {
 					nav_bg:'hsl(var(--custom-nav-bg))',
 					tab_bg:'hsl(var(--tab-bg))',
 				},
+				ready: {
+					bg: 'hsl(var(--ready-bg))',
+					txt: 'hsl(var(--ready-txt-clr))',
+				},
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',

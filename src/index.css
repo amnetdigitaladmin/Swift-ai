@@ -1,19 +1,20 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    
-    --gradient-background-from: 160 84% 39%;    
-    --gradient-background-to: 92 89% 71%;  
-    
+    --gradient-background-from: 160 84% 39%;
+    --gradient-background-to: 92 89% 71%;
+
     --custom-bg: 220 20% 6%;
-    --custom-nav-bg:218, 17%, 9%;
-    --tab-bg:222, 16%, 16%;
+    --custom-nav-bg: 218, 17%, 9%;
+    --tab-bg: 222, 16%, 16%;
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
+
+    --ready-bg: 170, 38%, 20%;
+    --ready-txt-clr: 161, 70%, 46%;
 
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
@@ -98,5 +99,11 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .generate-button-text {
+    @apply font-semibold text-sm tracking-wide;
   }
 }

@@ -54,7 +54,7 @@ const HistorySection = () => {
                 <TableCell className="font-medium">{session.name}</TableCell>
                 <TableCell>
                   <div className="flex items-center space-x-2">
-                    <FolderOpen className="h-4 w-4 text-blue-500" />
+                    <FolderOpen className="h-4 w-4 text-ready-txt" />
                     <span>{session.project}</span>
                   </div>
                 </TableCell>
@@ -68,7 +68,7 @@ const HistorySection = () => {
                   </div>
                 </TableCell>
                 <TableCell>
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" className="bg-custom-bg">
                     View
                   </Button>
                 </TableCell>

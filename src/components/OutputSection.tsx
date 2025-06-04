@@ -91,7 +91,7 @@ const OutputSection = ({
         {isProcessing ? (
           <div className="h-[600px] flex flex-col items-center justify-center">
             <div className="text-center py-8">
-              <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4 text-indigo-600" />
+              <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4 text-ready-txt" />
               <p className="text-gray-600">{processingMessage}</p>
               {progress > 0 && (
                 <div className="w-64 mt-4">
@@ -105,7 +105,7 @@ const OutputSection = ({
             <div className="text-center py-8">
               <Button
                 onClick={() => onS3Download(s3Url!)}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white"
+                className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to text-black generate-button-text text-base"
                 size="lg"
               >
                 <Download className="h-5 w-5 mr-2" />
@@ -115,7 +115,7 @@ const OutputSection = ({
           </div>
         ) : (
           <>
-            <CardHeader className="py-6 px-2">
+            <CardHeader className="p-0">
               <CardTitle>{outputTitle}</CardTitle>
               <CardDescription>{outputDescription}</CardDescription>
             </CardHeader>

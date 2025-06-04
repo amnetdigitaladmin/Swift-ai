@@ -239,7 +239,7 @@ const OutputSectionWithTabs = ({
         {isProcessing ? (
           <div className="h-[600px] flex flex-col items-center justify-center">
             <div className="text-center py-8">
-              <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4 text-indigo-600" />
+              <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4 stroke-current  bg-clip-text bg-gradient-to-r from-gradient-background-from to-gradient-background-to" />
               <p className="text-gray-600">{processingMessage}</p>
               {progress > 0 && (
                 <div className="w-64 mt-4 ml-auto mr-auto">
@@ -275,20 +275,20 @@ const OutputSectionWithTabs = ({
 
               {/* File Content */}
               <div className="space-y-4 overflow-y-auto pr-2">
-                <div className="flex justify-between items-center sticky top-0 bg-white py-2">
-                  <h3 className="text-lg font-semibold">
+                <div className="flex justify-between flex-row-reverse items-center sticky top-0  py-2 bg-custom-nav_bg">
+                  {/* <h3 className="text-lg font-semibold">
                     {flattenedFiles[activeFileIndex]
                       ? cleanName(flattenedFiles[activeFileIndex].name)
                       : ""}
-                  </h3>
-                  <div className="flex gap-2 px-2">
+                  </h3> */}
+                  <div className="flex  gap-2 px-2">
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() =>
                         handleFileDownload(flattenedFiles[activeFileIndex]?.url)
                       }
-                      className="border-indigo-500 text-indigo-500 hover:bg-indigo-500 hover:text-white"
+                       className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to"
                     >
                       <Download className="h-4 w-4 mr-2" />
                       Download
@@ -303,7 +303,7 @@ const OutputSectionWithTabs = ({
                     margin: 0,
                     borderRadius: "0",
                     fontSize: "0.875rem",
-                    backgroundColor: "#f8fafc",
+                    backgroundColor: "#0C0E12",
                     border: "1px solid #e2e8f0",
                   }}
                   showLineNumbers={true}
@@ -322,6 +322,7 @@ const OutputSectionWithTabs = ({
                     variant="outline"
                     size="sm"
                     onClick={onAzureDevOpsPush}
+                    className="bg-custom-bg"
                   >
                     <Cloud className="h-4 w-4 mr-2" />
                     Push to Azure DevOps
@@ -330,11 +331,12 @@ const OutputSectionWithTabs = ({
                     variant="outline"
                     size="sm"
                     onClick={onPushToProjectManager}
+                    className="bg-custom-bg"
                   >
                     <GitBranch className="h-4 w-4 mr-2" />
                     Push to Git
                   </Button>
-                  {selectedStory && selectedStory.status !== "completed" && (
+                  {/* {selectedStory && selectedStory.status !== "completed" && (
                     <Button
                       size="sm"
                       onClick={onMarkStoryComplete}
@@ -343,7 +345,7 @@ const OutputSectionWithTabs = ({
                       <CheckCircle className="h-4 w-4 mr-2" />
                       Mark Story Complete
                     </Button>
-                  )}
+                  )} */}
                 </div>
               </div>
             </div>

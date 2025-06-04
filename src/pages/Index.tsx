@@ -183,8 +183,8 @@ const Index = () => {
                   {getPersonaTitle(user?.persona || "")})
                 </span>
                 <div className="flex items-center space-x-2 mt-1">
-                  <FolderOpen className="h-4 w-4 text-cyan-400" />
-                  <span className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to bg-clip-text text-transparent font-medium">
+                  <FolderOpen className="h-4 w-4 text-ready-txt" />
+                  <span className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to bg-clip-text text-transparent generate-button-text text-base">
                     {currentProject.name}
                   </span>
                 </div>
@@ -324,7 +324,7 @@ const Index = () => {
             <Button
               variant="outline"
               onClick={logout}
-              className="border-gray-600 text-white hover:bg-gray-800"
+              className="border-gray-600 bg-custom-bg text-white hover:bg-gray-800"
             >
               <LogOut className="h-4 w-4 mr-2" />
               Logout
@@ -415,7 +415,7 @@ const Index = () => {
             {projects.length > 0 && (
               <div>
                 <h3 className="text-xl font-semibold text-gray-200 mb-6 flex items-center justify-center">
-                  <FolderOpen className="h-5 w-5 mr-2" />
+                  <FolderOpen className="h-5 w-5 mr-2 text-ready-txt" />
                   Existing Projects ({projects.length})
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -436,10 +436,10 @@ const Index = () => {
                       <CardContent>
                         <div className="space-y-2">
                           <div className="flex items-center justify-between">
-                            <span className="text-xs text-gray-500">
+                            <span className="text-sm font-normal text-gray-500">
                               Created {formatDate(project.createdAt)}
                             </span>
-                            <span className="text-xs bg-gradient-to-r from-gradient-background-from to-gradient-background-to bg-clip-text text-transparent hover:opacity-90 transition-colors">
+                            <span className="text-sm underline relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0.5 after:w-full after:h-px after:bg-gradient-to-r after:from-gradient-background-from after:to-gradient-background-to bg-gradient-to-r from-gradient-background-from to-gradient-background-to bg-clip-text text-transparent hover:opacity-90 transition-colors">
                               Click to open
                             </span>
                           </div>
@@ -454,7 +454,7 @@ const Index = () => {
             {/* Capability overview */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
               <div className="bg-custom-bg border border-gray-700 rounded-lg p-6">
-                <FileText className="h-8 w-8 text-blue-400 mb-3" />
+                <FileText className="h-8 w-8 text-ready-txt mb-3" />
                 <h3 className="text-lg font-semibold text-gray-200 mb-2">
                   Requirements
                 </h3>
@@ -474,7 +474,7 @@ const Index = () => {
                 </p>
               </div>
               <div className="bg-custom-bg border border-gray-700 rounded-lg p-6">
-                <CheckCircle className="h-8 w-8 text-red-400 mb-3" />
+                <CheckCircle className="h-8 w-8 text-ready-txt mb-3" />
                 <h3 className="text-lg font-semibold text-gray-200 mb-2">
                   Testing
                 </h3>

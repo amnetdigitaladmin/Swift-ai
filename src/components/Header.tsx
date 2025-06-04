@@ -22,7 +22,7 @@ const Header = () => {
             </div>
           </div>
           <div className="flex items-center space-x-4">
-            <Button variant="secondary" size="sm" className="bg-gray-800/80 hover:bg-gray-700/80 border border-gray-600 text-gray-200" asChild>
+            <Button variant="secondary" size="sm" className="bg-custom-bg hover:bg-gray-700/80 border border-gray-600 text-gray-200" asChild>
               <Link to="/settings">
                 <Settings className="h-4 w-4 mr-2" />
                 Settings
