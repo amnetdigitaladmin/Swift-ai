@@ -205,7 +205,7 @@ const InputSection = ({
                     Drag and drop or browse files
                   </p>
                   <p className="text-xs text-gray-500">
-                    Supported: PDF, DOC, DOCX, TXT
+                    Supported: PDF, DOC, DOCX, TXT, XLSX, XLS
                   </p>
                   <label htmlFor="file-upload">
                     <Button variant="outline" size="sm" asChild>
@@ -215,7 +215,7 @@ const InputSection = ({
                   <input
                     id="file-upload"
                     type="file"
-                    accept=".pdf,.doc,.docx,.txt"
+                    accept=".pdf,.doc,.docx,.txt,.xlsx,.xls"
                     onChange={onFileSelect}
                     className="hidden"
                   />
@@ -307,7 +307,9 @@ const InputSection = ({
                 <Upload className="h-8 w-8 mx-auto mb-2 text-gray-400" />
                 <div className="space-y-1">
                   <p className="text-sm">Drag and drop or browse files</p>
-                  <p className="text-xs text-gray-500">PDF, DOC, DOCX, TXT</p>
+                  <p className="text-xs text-gray-500">
+                    PDF, DOC, DOCX, TXT, XLSX, XLS
+                  </p>
                   <label htmlFor="file-upload">
                     <Button variant="outline" size="sm" asChild>
                       <span className="cursor-pointer bg-custom-bg">
@@ -318,7 +320,7 @@ const InputSection = ({
                   <input
                     id="file-upload"
                     type="file"
-                    accept=".pdf,.doc,.docx,.txt"
+                    accept=".pdf,.doc,.docx,.txt,.xlsx,.xls"
                     onChange={onFileSelect}
                     className="hidden"
                   />
@@ -389,7 +391,9 @@ const InputSection = ({
               <Upload className="h-8 w-8 mx-auto mb-2 text-gray-400" />
               <div className="space-y-1">
                 <p className="text-sm">Drag and drop or browse files</p>
-                <p className="text-xs text-gray-500">PDF, DOC, DOCX, TXT</p>
+                <p className="text-xs text-gray-500">
+                  PDF, DOC, DOCX, TXT, XLSX, XLS
+                </p>
                 <label htmlFor="additional-file-upload">
                   <Button variant="outline" size="sm" asChild>
                     <span className="cursor-pointer bg-custom-bg">
@@ -400,7 +404,7 @@ const InputSection = ({
                 <input
                   id="additional-file-upload"
                   type="file"
-                  accept=".pdf,.doc,.docx,.txt"
+                  accept=".pdf,.doc,.docx,.txt,.xlsx,.xls"
                   onChange={onSecondaryFileSelect}
                   className="hidden"
                 />
