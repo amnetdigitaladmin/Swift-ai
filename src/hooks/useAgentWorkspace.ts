@@ -90,9 +90,9 @@ export const useAgentWorkspace = (agentName: string) => {
     });
   };
 
-  const isSwiftCodeFrontend = agentName?.includes(
-    "SwiftCode Frontend Developer"
-  );
+
+  const isSwiftCodeFrontend = agentName?.includes("SwiftCode Frontend Developer");
+  const isSwiftCodeBackend = agentName?.includes("SwiftCode Backend Engineer");
 
   const handleProcess = async () => {
     if (!input.trim() && !selectedFile) {
@@ -107,7 +107,7 @@ export const useAgentWorkspace = (agentName: string) => {
     setIsProcessing(true);
     setProgress(0);
 
-    if (isSwiftCodeFrontend) {
+    if (isSwiftCodeFrontend || isSwiftCodeBackend) {
       try {
         if (selectedFile) {
           const reader = new FileReader();
@@ -125,9 +125,13 @@ export const useAgentWorkspace = (agentName: string) => {
                   extension: selectedFile.name.split(".").pop(),
                 }
               };
+
+               const apiEndpoint = isSwiftCodeFrontend 
+                                            ? "https://c3677yvqbobzen7zfwoxy7ybjq0qletv.lambda-url.ap-south-1.on.aws/"
+                                            : "https://smi25q3swrw3aprk2h3ccr7tri0mdflr.lambda-url.ap-south-1.on.aws/"; // You would replace this with actual backend endpoint
     
               // Make API call to your frontend agent endpoint
-              const response = await fetch("https://smi25q3swrw3aprk2h3ccr7tri0mdflr.lambda-url.ap-south-1.on.aws/", {
+              const response = await fetch(apiEndpoint, {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
@@ -140,9 +144,9 @@ export const useAgentWorkspace = (agentName: string) => {
               }
     
               const apiResult = await response.json();
-              console.log(apiResult.result)
+              console.log(apiResult.result.result)
               // API should return file structure data
-              setOutput(apiResult);
+              setOutput(apiResult.result);
               
             } catch (error) {
               // Handle errors

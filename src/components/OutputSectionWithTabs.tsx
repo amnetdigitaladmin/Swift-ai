@@ -186,7 +186,7 @@ const OutputSectionWithTabs = ({
               <div key={fullPath}>
                 <button
                   onClick={() => toggleFolder(fullPath)}
-                  className="flex items-center gap-2 py-1 hover:bg-gradient-to-r hover:from-gradient-background-from hover:to-gradient-background-to hover:bg-clip-text hover:text-transparent w-full text-left"
+                  className="flex items-center gap-2 py-1 w-full text-left"
                 >
                   <ChevronRight
                     className={`h-4 w-4 transition-transform text-white ${
@@ -196,16 +196,16 @@ const OutputSectionWithTabs = ({
                   <Folder
                     className={`h-4 w-4 ${
                       expandedFolders.includes(fullPath)
-                        ? "text-gradient-background-to"
+                        ? "text-white"
                         : "text-ready-txt"
                     }`}
                   />
                   <span
-                    className={`${
+                    className={
                       expandedFolders.includes(fullPath)
-                        ? "bg-gradient-to-r from-gradient-background-from to-gradient-background-to bg-clip-text text-transparent"
+                        ? "text-white font-medium"
                         : ""
-                    }`}
+                    }
                   >
                     {cleanName(item.name)}
                   </span>
@@ -229,10 +229,10 @@ const OutputSectionWithTabs = ({
                   );
                   if (fileIndex !== -1) setActiveFileIndex(fileIndex);
                 }}
-                className={`flex items-center gap-2 py-1 pl-6 hover:bg-gradient-to-r hover:from-gradient-background-from hover:to-gradient-background-to hover:bg-clip-text hover:text-transparent w-full text-left ${
+                className={`flex items-center gap-2 py-1 pl-6 w-full text-left ${
                   cleanName(flattenedFiles[activeFileIndex]?.name) ===
                   cleanName(item.name)
-                    ? "bg-gradient-to-r from-gradient-background-from to-gradient-background-to bg-clip-text text-transparent font-medium"
+                    ? "text-white font-medium"
                     : ""
                 }`}
               >
@@ -306,7 +306,6 @@ const OutputSectionWithTabs = ({
                     >
                       <Download className="h-4 w-4 mr-2 text-black" />
                       <span className="text-black font-semibold">Download</span>
-                   
                     </Button>
                   </div>
                 </div>
@@ -331,7 +330,7 @@ const OutputSectionWithTabs = ({
                     borderRadius: "0",
                     fontSize: "0.875rem",
                     backgroundColor: "transparent",
-                    border: "1px solid #e2e8f0",
+
                     color: "#ffffff",
                   }}
                   showLineNumbers={true}
