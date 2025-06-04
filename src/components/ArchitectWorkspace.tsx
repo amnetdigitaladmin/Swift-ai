@@ -175,14 +175,14 @@ const ArchitectWorkspace = () => {
         </p>
       </div>
 
-      <Tabs defaultValue="requirements" className="space-y-6">
+      <Tabs defaultValue="plan" className="space-y-6">
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="requirements">Requirements</TabsTrigger>
-          <TabsTrigger value="development">Development</TabsTrigger>
-          <TabsTrigger value="qa">QA</TabsTrigger>
+          <TabsTrigger value="plan">Plan</TabsTrigger>
+          <TabsTrigger value="build">Build</TabsTrigger>
+          <TabsTrigger value="test">Test</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="requirements" className="space-y-4">
+        <TabsContent value="plan" className="space-y-4">
           <div className="text-center mb-6">
             <h2 className="text-2xl font-bold text-white mb-2">Requirements Agents</h2>
             <p className="text-gray-600">Agents specialized in gathering and analyzing business requirements</p>
@@ -201,7 +201,7 @@ const ArchitectWorkspace = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="development" className="space-y-4">
+        <TabsContent value="build" className="space-y-4">
           <div className="text-center mb-6">
             <h2 className="text-2xl font-bold text-white mb-2">Development Agents</h2>
             <p className="text-gray-600">Agents focused on building and implementing solutions</p>
@@ -220,7 +220,7 @@ const ArchitectWorkspace = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="qa" className="space-y-4">
+        <TabsContent value="test" className="space-y-4">
           <div className="text-center mb-6">
             <h2 className="text-2xl font-bold text-white mb-2">QA Agents</h2>
             <p className="text-gray-600">Agents dedicated to testing and quality assurance</p>
