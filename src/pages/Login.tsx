@@ -137,7 +137,7 @@ const Login = ({ onLogin }: LoginProps) => {
                   placeholder="Enter your username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="pl-10 bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400 [&:not(:placeholder-shown)]:bg-gray-700/50"
+                  className="pl-10 bg-gray-700/50 border border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
                   required
                 />
               </div>
@@ -159,7 +159,7 @@ const Login = ({ onLogin }: LoginProps) => {
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10 bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400 [&:not(:placeholder-shown)]:bg-gray-700/50"
+                  className="pl-10 bg-gray-700/50 border border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
                   required
                 />
               </div>
@@ -171,15 +171,18 @@ const Login = ({ onLogin }: LoginProps) => {
                 Select Your Role
               </Label>
               <Select value={persona} onValueChange={setPersona}>
-                <SelectTrigger className="bg-gray-700/50 border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400">
-                  <SelectValue placeholder="Choose your role" />
+                <SelectTrigger className="bg-gray-700/50 border border-gray-600 text-white focus:border-2 focus:border-gradient-background-from outline-none ring-0 ring-offset-0 focus:outline-none focus:ring-0 focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors">
+                  <SelectValue
+                    placeholder="Choose your role"
+                    className="outline-none focus:outline-none focus-visible:outline-none"
+                  />
                 </SelectTrigger>
-                <SelectContent className="bg-gray-800 border-gray-600">
+                <SelectContent className="bg-gray-800 border-gray-600 outline-none ring-0 ring-offset-0 focus:outline-none focus:ring-0 focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0">
                   {personas.map((p) => (
                     <SelectItem
                       key={p.id}
                       value={p.id}
-                      className="text-gray-200 focus:bg-gray-700 focus:text-white"
+                      className="text-gray-200 outline-none ring-0 ring-offset-0 focus:outline-none focus:ring-0 focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
                     >
                       {p.title}
                     </SelectItem>
