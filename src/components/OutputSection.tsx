@@ -131,30 +131,31 @@ const OutputSection = ({
             />
             {output && (
               <div className="flex flex-wrap gap-2 mt-4">
-                <Button variant="secondary" size="sm" onClick={onCopy}>
-                  <Copy className="h-4 w-4 mr-2" />
-                  Copy
+                <Button variant="outline" size="sm" onClick={onCopy} className="bg-custom-bg">
+                  <Copy className="h-4 w-4 mr-2 text-ready-txt" />
+                  <span>Copy</span>
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={onDownload}
-                  className="border-indigo-500 text-indigo-500 hover:bg-indigo-50"
+                  className="text-white bg-custom-bg"
                 >
-                  <Download className="h-4 w-4 mr-2" />
-                  Download
+                  <Download className="h-4 w-4 mr-2 text-ready-txt" />
+                   <span>Download</span> 
                 </Button>
-                <Button variant="outline" size="sm" onClick={onAzureDevOpsPush}>
-                  <Cloud className="h-4 w-4 mr-2" />
-                  Push to Azure DevOps
+                <Button variant="outline" size="sm" onClick={onAzureDevOpsPush} className="bg-custom-bg">
+                  <Cloud className="h-4 w-4 mr-2 text-ready-txt" />
+                   <span>Push to Azure DevOps</span>
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={onPushToProjectManager}
+                  className="bg-custom-bg"
                 >
-                  <GitBranch className="h-4 w-4 mr-2" />
-                  Push to git
+                  <GitBranch className="h-4 w-4 mr-2 text-ready-txt" />
+                   <span>Push to git</span>
                 </Button>
                 {selectedStory && selectedStory.status !== "completed" && (
                   <Button
@@ -162,7 +163,7 @@ const OutputSection = ({
                     onClick={onMarkStoryComplete}
                     className="bg-green-600 hover:bg-green-700 text-white"
                   >
-                    <CheckCircle className="h-4 w-4 mr-2" />
+                    <CheckCircle className="h-4 w-4 mr-2 text-ready-txt" />
                     Mark Story Complete
                   </Button>
                 )}
