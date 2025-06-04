@@ -92,7 +92,7 @@ const Login = ({ onLogin }: LoginProps) => {
   const selectedPersona = personas.find((p) => p.id === persona);
 
   return (
-  <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center p-6 relative overflow-hidden before:absolute before:w-[800px] before:h-[800px] before:-left-[300px] before:bottom-[-500px] before:rounded-full before:bg-emerald-400/10 before:blur-[120px]">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center p-6 relative overflow-hidden before:absolute before:w-[800px] before:h-[800px] before:-left-[300px] before:bottom-[-500px] before:rounded-full before:bg-emerald-400/10 before:blur-[120px]">
       <Card className="w-full max-w-md shadow-2xl border border-gray-700 bg-gray-800/90 backdrop-blur-sm before:absolute before:w-[600px] before:h-[200px] before:-left-[200px] before:top-[-200px] before:rounded-full before:bg-emerald-400/10 before:blur-[120px]">
         <CardHeader className="text-center space-y-4">
           <div className="flex justify-center">
@@ -137,7 +137,7 @@ const Login = ({ onLogin }: LoginProps) => {
                   placeholder="Enter your username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="pl-10 bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400"
+                  className="pl-10 bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400 [&:not(:placeholder-shown)]:bg-gray-700/50"
                   required
                 />
               </div>
@@ -159,7 +159,7 @@ const Login = ({ onLogin }: LoginProps) => {
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10 bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400"
+                  className="pl-10 bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400 [&:not(:placeholder-shown)]:bg-gray-700/50"
                   required
                 />
               </div>
