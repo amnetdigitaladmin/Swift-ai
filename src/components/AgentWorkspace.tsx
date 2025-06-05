@@ -170,15 +170,15 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
         <TabsContent value="workspace" className="space-y-6">
           <div className="relative">
             {showOutput && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleBackToInput}
-                className="absolute -left-2 top-0 z-10 flex items-center gap-2 text-ready-txt hover:text-white"
-              >
-                <ArrowLeftCircle className="h-5 w-5" />
-                <span>Back to Input</span>
-              </Button>
+              <div className="flex items-center gap-2 mb-4 text-sm text-ready-txt">
+                <button
+                  onClick={handleBackToInput}
+                  className="flex items-center gap-1.5 hover:text-white transition-colors"
+                >
+                  <ArrowLeftCircle className="h-4 w-4" />
+                  <span>Switch to input mode</span>
+                </button>
+              </div>
             )}
 
             <div

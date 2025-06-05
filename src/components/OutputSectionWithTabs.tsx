@@ -212,7 +212,7 @@ const OutputSectionWithTabs = ({
                       expandedFolders.includes(fullPath) ? "rotate-90" : ""
                     }`}
                   />
-                  <Folder className="h-4 w-4 text-blue-400" />
+                  <Folder className="h-4 w-4 " />
                   <span className="text-sm">{cleanName(item.name)}</span>
                 </button>
                 {expandedFolders.includes(fullPath) && (
@@ -274,10 +274,10 @@ const OutputSectionWithTabs = ({
               <CardDescription>{outputDescription}</CardDescription>
             </CardHeader>
 
-            <div className="flex flex-1 overflow-hidden border rounded-lg">
+            <div className="flex flex-1 overflow-hidden border rounded-lg ">
               {/* File Explorer */}
               <div
-                className={`transition-all duration-300 border-r bg-gray-900/30 ${
+                className={`transition-all duration-300 border-r ${
                   isTreeCollapsed ? "w-12" : "w-64"
                 }`}
               >
@@ -299,7 +299,7 @@ const OutputSectionWithTabs = ({
                   </Button>
                 </div>
                 {!isTreeCollapsed && (
-                  <div className="overflow-y-auto h-[calc(100%-2.5rem)]">
+                  <div className="overflow-y-auto h-[calc(100%-2.5rem)] custom-scrollbar">
                     {typeof output === "object" &&
                       output !== null &&
                       "result" in output && (
@@ -313,7 +313,7 @@ const OutputSectionWithTabs = ({
               <div className="flex-1 flex flex-col overflow-hidden">
                 {/* Tabs Bar */}
                 {openFiles.length > 0 && (
-                  <div className="flex items-center border-b overflow-x-auto bg-gray-900/30">
+                  <div className="flex items-center border-b overflow-x-auto custom-scrollbar ">
                     {openFiles.map((file, index) => (
                       <div
                         key={file.name + index}
@@ -352,16 +352,7 @@ const OutputSectionWithTabs = ({
                 <div className="flex-1 overflow-hidden">
                   <div className="h-full flex flex-col">
                     {/* Action Bar */}
-                    <div className="flex justify-end items-center gap-2 p-2 bg-gray-900/30">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleCopy}
-                        className="bg-custom-bg"
-                      >
-                        <Copy className="h-4 w-4 mr-2" />
-                        Copy
-                      </Button>
+                    <div className="flex justify-end items-center gap-2 p-2 ">
                       <Button
                         variant="outline"
                         size="sm"
@@ -376,7 +367,7 @@ const OutputSectionWithTabs = ({
                     </div>
 
                     {/* Code Content */}
-                    <div className="flex-1 overflow-auto">
+                    <div className="flex-1 overflow-auto custom-scrollbar">
                       <SyntaxHighlighter
                         language={openFiles[activeTab]?.type}
                         style={{
@@ -385,6 +376,8 @@ const OutputSectionWithTabs = ({
                             ...oneLight['pre[class*="language-"]'],
                             background: "transparent",
                             color: "#ffffff",
+                            margin: 0,
+                            padding: "1rem",
                           },
                           'code[class*="language-"]': {
                             ...oneLight['code[class*="language-"]'],
@@ -400,6 +393,7 @@ const OutputSectionWithTabs = ({
                           backgroundColor: "transparent",
                           color: "#ffffff",
                         }}
+                        className="custom-scrollbar h-full"
                         showLineNumbers={true}
                         lineNumberStyle={{
                           minWidth: "3em",
@@ -413,7 +407,7 @@ const OutputSectionWithTabs = ({
                     </div>
 
                     {/* Bottom Action Bar */}
-                    <div className="flex items-center gap-2 p-2 border-t bg-gray-900/30">
+                    <div className="flex items-center gap-2 p-2 border-t">
                       <Button
                         variant="outline"
                         size="sm"
