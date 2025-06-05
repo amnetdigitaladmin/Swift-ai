@@ -281,9 +281,9 @@ const OutputSectionWithTabs = ({
                   isTreeCollapsed ? "w-12" : "w-64"
                 }`}
               >
-                <div className="flex items-center justify-between p-2 border-b">
+                <div className="flex items-center justify-between p-2 border-b h-12">
                   {!isTreeCollapsed && (
-                    <span className="text-sm font-medium">Files</span>
+                    <span className="text-base font-medium">Files</span>
                   )}
                   <Button
                     variant="ghost"
@@ -313,7 +313,7 @@ const OutputSectionWithTabs = ({
               <div className="flex-1 flex flex-col overflow-hidden">
                 {/* Tabs Bar */}
                 {openFiles.length > 0 && (
-                  <div className="flex items-center border-b overflow-x-auto custom-scrollbar ">
+                  <div className="flex items-center border-b overflow-x-auto custom-scrollbar p-2 h-12">
                     {openFiles.map((file, index) => (
                       <div
                         key={file.name + index}
