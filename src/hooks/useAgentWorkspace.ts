@@ -42,9 +42,9 @@ export const useAgentWorkspace = (agentName: string) => {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [alertContent, setAlertContent] = useState("");
 
-
   const [selectedStoryId, setSelectedStoryId] = useState<string | null>(null);
   const [inputMode, setInputMode] = useState<"type" | "upload">("type");
+  const [showOutput, setShowOutput] = useState(false);
 
   const { toast } = useToast();
   const { user } = useUser();
@@ -90,8 +90,9 @@ export const useAgentWorkspace = (agentName: string) => {
     });
   };
 
-
-  const isSwiftCodeFrontend = agentName?.includes("SwiftCode Frontend Developer");
+  const isSwiftCodeFrontend = agentName?.includes(
+    "SwiftCode Frontend Developer"
+  );
   const isSwiftCodeBackend = agentName?.includes("SwiftCode Backend Engineer");
 
   const handleProcess = async () => {
@@ -106,30 +107,31 @@ export const useAgentWorkspace = (agentName: string) => {
 
     setIsProcessing(true);
     setProgress(0);
+    setShowOutput(true);
 
     if (isSwiftCodeFrontend || isSwiftCodeBackend) {
       try {
         if (selectedFile) {
           const reader = new FileReader();
           reader.readAsDataURL(selectedFile);
-    
+
           reader.onload = async () => {
             try {
               const fileResult = reader.result as string;
               const base64Content = fileResult.split(",")[1];
-    
+
               const payload = {
                 file: {
                   filename: selectedFile.name.replace(/\.[^/.]+$/, ""),
                   content: base64Content,
                   extension: selectedFile.name.split(".").pop(),
-                }
+                },
               };
 
-               const apiEndpoint = isSwiftCodeFrontend 
-                                            ? "https://c3677yvqbobzen7zfwoxy7ybjq0qletv.lambda-url.ap-south-1.on.aws/"
-                                            : "https://smi25q3swrw3aprk2h3ccr7tri0mdflr.lambda-url.ap-south-1.on.aws/"; // You would replace this with actual backend endpoint
-    
+              const apiEndpoint = isSwiftCodeFrontend
+                ? "https://c3677yvqbobzen7zfwoxy7ybjq0qletv.lambda-url.ap-south-1.on.aws/"
+                : "https://smi25q3swrw3aprk2h3ccr7tri0mdflr.lambda-url.ap-south-1.on.aws/"; // You would replace this with actual backend endpoint
+
               // Make API call to your frontend agent endpoint
               const response = await fetch(apiEndpoint, {
                 method: "POST",
@@ -138,22 +140,22 @@ export const useAgentWorkspace = (agentName: string) => {
                 },
                 body: JSON.stringify(payload),
               });
-    
+
               if (!response.ok) {
                 throw new Error("Processing failed");
               }
-    
+
               const apiResult = await response.json();
-              console.log(apiResult.result.result)
+              console.log(apiResult.result.result);
               // API should return file structure data
               setOutput(apiResult.result);
-              
             } catch (error) {
               // Handle errors
               console.error("API error:", error);
               toast({
                 title: "Processing Failed",
-                description: "Failed to process your request. Please try again.",
+                description:
+                  "Failed to process your request. Please try again.",
                 variant: "destructive",
               });
             } finally {
@@ -161,7 +163,7 @@ export const useAgentWorkspace = (agentName: string) => {
               setProgress(100);
             }
           };
-    
+
           reader.onerror = () => {
             // Handle file reading errors
             console.error("File reading error:", reader.error);
@@ -173,7 +175,7 @@ export const useAgentWorkspace = (agentName: string) => {
             setIsProcessing(false);
             setProgress(0);
           };
-        } 
+        }
       } catch (error) {
         // Handle any other errors
       }
@@ -192,17 +194,16 @@ export const useAgentWorkspace = (agentName: string) => {
             const base64Content = fileResult.split(",")[1];
 
             // Define the type for the payload
-          interface FilePayload {
-            filename: string;
-            content: string;
-            extension: string | undefined;
-          }
+            interface FilePayload {
+              filename: string;
+              content: string;
+              extension: string | undefined;
+            }
 
-
-          interface Payload {
-          file: FilePayload;
-          template?: FilePayload;  // Make template optional
-        }
+            interface Payload {
+              file: FilePayload;
+              template?: FilePayload; // Make template optional
+            }
 
             const payload: Payload = {
               file: {
@@ -212,28 +213,29 @@ export const useAgentWorkspace = (agentName: string) => {
               },
             };
 
-             // If there's a secondary file, add it to the payload
-          if (secondaryFile) {
-            const secondaryReader = new FileReader();
-            secondaryReader.readAsDataURL(secondaryFile);
+            // If there's a secondary file, add it to the payload
+            if (secondaryFile) {
+              const secondaryReader = new FileReader();
+              secondaryReader.readAsDataURL(secondaryFile);
 
-            // Convert the secondary file reading to a Promise
-            const secondaryBase64Content = await new Promise<string>((resolve, reject) => {
-              secondaryReader.onload = () => {
-                const secondaryResult = secondaryReader.result as string;
-                resolve(secondaryResult.split(",")[1]);
+              // Convert the secondary file reading to a Promise
+              const secondaryBase64Content = await new Promise<string>(
+                (resolve, reject) => {
+                  secondaryReader.onload = () => {
+                    const secondaryResult = secondaryReader.result as string;
+                    resolve(secondaryResult.split(",")[1]);
+                  };
+                  secondaryReader.onerror = reject;
+                }
+              );
+
+              // Add the secondary file to the payload
+              payload.template = {
+                filename: secondaryFile.name.replace(/\.[^/.]+$/, ""),
+                content: secondaryBase64Content,
+                extension: secondaryFile.name.split(".").pop(),
               };
-              secondaryReader.onerror = reject;
-            });
-
-            // Add the secondary file to the payload
-            payload.template = {
-              filename: secondaryFile.name.replace(/\.[^/.]+$/, ""),
-              content: secondaryBase64Content,
-              extension: secondaryFile.name.split(".").pop(),
-            };
-          }
-
+            }
 
             const response = await fetch(
               "https://sewlzvr57rnjulvehobu2ienvu0ritqy.lambda-url.ap-south-1.on.aws/",
@@ -252,7 +254,10 @@ export const useAgentWorkspace = (agentName: string) => {
 
             const apiResult = await response.json();
 
-            if (apiResult.sensitive_info_status && apiResult.sensitive_info_status !== '') {
+            if (
+              apiResult.sensitive_info_status &&
+              apiResult.sensitive_info_status !== ""
+            ) {
               setAlertContent(apiResult.sensitive_info_status);
               setIsAlertOpen(true);
               // setIsProcessing(false);
@@ -325,12 +330,14 @@ export const useAgentWorkspace = (agentName: string) => {
     }
   };
 
-  const handleSecondaryFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-  const file = event.target.files?.[0];
-  if (file) {
-    setSecondaryFile(file);
-  }
-};
+  const handleSecondaryFileSelect = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSecondaryFile(file);
+    }
+  };
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -379,27 +386,27 @@ export const useAgentWorkspace = (agentName: string) => {
   };
 
   const handle3Download = (url: string) => {
-  if (!url) return;
+    if (!url) return;
 
-  // Extract filename from URL (strip query parameters)
-  const urlParts = url.split('/');
-  const lastPart = urlParts[urlParts.length - 1];
-  const [filename] = lastPart.split('?');
+    // Extract filename from URL (strip query parameters)
+    const urlParts = url.split("/");
+    const lastPart = urlParts[urlParts.length - 1];
+    const [filename] = lastPart.split("?");
 
-  const link = document.createElement('a');
-  link.href = url;
-  link.setAttribute('download', filename || 'downloaded-file');
-  link.setAttribute('target', '_blank');
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", filename || "downloaded-file");
+    link.setAttribute("target", "_blank");
 
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 
-  toast({
-    title: "Download Started",
-    description: "Your file is being downloaded.",
-    duration: 5000
-  });
+    toast({
+      title: "Download Started",
+      description: "Your file is being downloaded.",
+      duration: 5000,
+    });
   };
 
   const handlePushToProjectManager = () => {
@@ -412,6 +419,10 @@ export const useAgentWorkspace = (agentName: string) => {
 
   const handleIsProcessing = (processing: boolean) => {
     setIsProcessing(processing);
+  };
+
+  const handleBackToInput = () => {
+    setShowOutput(false);
   };
 
   return {
@@ -444,6 +455,9 @@ export const useAgentWorkspace = (agentName: string) => {
     setIsAlertOpen,
     alertContent,
     setAlertContent,
+
+    showOutput,
+    handleBackToInput,
 
     // Handlers
     handleStorySelection,

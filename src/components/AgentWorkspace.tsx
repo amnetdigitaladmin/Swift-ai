@@ -1,18 +1,34 @@
 import { useState } from "react";
-import {Card,CardContent,CardDescription,CardHeader,CardTitle,} from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, FolderOpen } from "lucide-react";
+import { ArrowLeft, FolderOpen, ArrowLeftCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import AzureDevOpsAuthModal, {AzureDevOpsCredentials,} from "./AzureDevOpsAuthModal";
+import AzureDevOpsAuthModal, {
+  AzureDevOpsCredentials,
+} from "./AzureDevOpsAuthModal";
 import UserStorySection from "./UserStorySection";
 import InputSection from "./InputSection";
 import ConditionalOutput from "./ConditionalOutput";
 import HistorySection from "./HistorySection";
 import { useAgentWorkspace } from "@/hooks/useAgentWorkspace";
-import {AlertDialog,AlertDialogAction,AlertDialogContent,AlertDialogDescription,AlertDialogFooter,AlertDialogHeader,AlertDialogTitle,
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+
 interface AgentWorkspaceProps {
   agentName: string;
   onBack: () => void;
@@ -44,11 +60,12 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
     setInputMode,
     selectedStory,
     currentProject,
+    showOutput,
+    handleBackToInput,
 
     isAlertOpen,
     setIsAlertOpen,
     alertContent,
-
 
     handleStorySelection,
     handleStatusUpdate,
@@ -109,9 +126,14 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between sticky top-0 z-10 bg-background py-4">
         <div className="flex items-center space-x-4">
-          <Button variant="outline" onClick={onBack}  className="bg-custom-nav-bg" size="sm">
+          <Button
+            variant="outline"
+            onClick={onBack}
+            className="bg-custom-nav-bg"
+            size="sm"
+          >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Agents
           </Button>
@@ -128,7 +150,9 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
             )}
           </div>
         </div>
-        <Badge className="bg-ready-bg hover:bg-ready-bg text-ready-txt">Ready</Badge>
+        <Badge className="bg-ready-bg hover:bg-ready-bg text-ready-txt">
+          Ready
+        </Badge>
       </div>
 
       <UserStorySection
@@ -144,47 +168,67 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
         </TabsList>
 
         <TabsContent value="workspace" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <InputSection
-              agentName={agentName}
-              input={input}
-              setInput={setInput}
-              setOutput={setOutput}
-              selectedTemplate={selectedTemplate}
-              setSelectedTemplate={setSelectedTemplate}
-              selectedFile={selectedFile}
-              setSelectedFile={setSelectedFile}
-              dragActive={dragActive}
-              setDragActive={setDragActive}
-              secondaryFile={secondaryFile}
-              setSecondaryFile={setSecondaryFile}
-              secondaryDragActive={secondaryDragActive}
-              setSecondaryDragActive={setSecondaryDragActive}
-              inputMode={inputMode}
-              setInputMode={setInputMode}
-              isProcessing={isProcessing}
-              onProcess={handleProcess}
-              onFileSelect={handleFileSelect}
-              onSecondaryFileSelect={handleSecondaryFileSelect}
-              onDrag={handleDrag}
-              onDrop={handleDrop}
-              formatFileSize={formatFileSize}
-              handleIsProcessing={handleIsProcessing}
-            />
+          <div className="relative">
+            {showOutput && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleBackToInput}
+                className="absolute -left-2 top-0 z-10 flex items-center gap-2 text-ready-txt hover:text-white"
+              >
+                <ArrowLeftCircle className="h-5 w-5" />
+                <span>Back to Input</span>
+              </Button>
+            )}
 
-            <ConditionalOutput
-              output={output}
-              isProcessing={isProcessing}
-              progress={progress}
-              selectedStory={selectedStory}
-              agentName={agentName}
-              onCopy={handleCopy}
-              onDownload={handleDownload}
-              onS3Download={handle3Download}
-              onAzureDevOpsPush={handleAzureDevOpsPush}
-              onPushToProjectManager={handlePushToProjectManager}
-              onMarkStoryComplete={handleMarkStoryComplete}
-            />
+            <div
+              className={`grid ${
+                showOutput ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-2"
+              } gap-6`}
+            >
+              {!showOutput && (
+                <InputSection
+                  agentName={agentName}
+                  input={input}
+                  setInput={setInput}
+                  setOutput={setOutput}
+                  selectedTemplate={selectedTemplate}
+                  setSelectedTemplate={setSelectedTemplate}
+                  selectedFile={selectedFile}
+                  setSelectedFile={setSelectedFile}
+                  dragActive={dragActive}
+                  setDragActive={setDragActive}
+                  secondaryFile={secondaryFile}
+                  setSecondaryFile={setSecondaryFile}
+                  secondaryDragActive={secondaryDragActive}
+                  setSecondaryDragActive={setSecondaryDragActive}
+                  inputMode={inputMode}
+                  setInputMode={setInputMode}
+                  isProcessing={isProcessing}
+                  onProcess={handleProcess}
+                  onFileSelect={handleFileSelect}
+                  onSecondaryFileSelect={handleSecondaryFileSelect}
+                  onDrag={handleDrag}
+                  onDrop={handleDrop}
+                  formatFileSize={formatFileSize}
+                  handleIsProcessing={handleIsProcessing}
+                />
+              )}
+
+              <ConditionalOutput
+                output={output}
+                isProcessing={isProcessing}
+                progress={progress}
+                selectedStory={selectedStory}
+                agentName={agentName}
+                onCopy={handleCopy}
+                onDownload={handleDownload}
+                onS3Download={handle3Download}
+                onAzureDevOpsPush={handleAzureDevOpsPush}
+                onPushToProjectManager={handlePushToProjectManager}
+                onMarkStoryComplete={handleMarkStoryComplete}
+              />
+            </div>
           </div>
         </TabsContent>
 
@@ -199,17 +243,17 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
         onSubmit={handleAzureDevOpsSubmit}
       />
 
-
-
-        {/* Add this before the closing div */}
-      <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen} >
+      <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
         <AlertDialogContent className="bg-custom-bg">
           <AlertDialogHeader>
             <AlertDialogTitle>Sensitive Information Alert</AlertDialogTitle>
             <AlertDialogDescription>{alertContent}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogAction onClick={() => setIsAlertOpen(false)} className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to font-semibold generate-button-text text-base">
+            <AlertDialogAction
+              onClick={() => setIsAlertOpen(false)}
+              className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to font-semibold generate-button-text text-base"
+            >
               Acknowledge
             </AlertDialogAction>
           </AlertDialogFooter>
