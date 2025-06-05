@@ -138,7 +138,7 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
       />
 
       <Tabs defaultValue="workspace" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-2 border-custom-tab_border">
           <TabsTrigger value="workspace">Workspace</TabsTrigger>
           <TabsTrigger value="history">History</TabsTrigger>
         </TabsList>
