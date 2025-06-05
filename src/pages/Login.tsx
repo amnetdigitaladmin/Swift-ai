@@ -93,13 +93,7 @@ const Login = ({ onLogin }: LoginProps) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center p-6 relative overflow-hidden before:absolute before:w-[800px] before:h-[800px] before:-left-[300px] before:bottom-[-500px] before:rounded-full before:bg-emerald-400/10 before:blur-[120px]">
-      {/* <div className="absolute top-20 right-24 hidden md:block">
-        <img
-          src="/swift-round-icon.svg"
-          alt="Swift AI Icon"
-          className="h-14 w-14 hover:opacity-80 transition-opacity cursor-pointer"
-        />
-      </div> */}
+    
       <Card className="w-full max-w-md shadow-2xl border border-gray-700 bg-gray-800/90 backdrop-blur-sm before:absolute before:w-[600px] before:h-[200px] before:-left-[200px] before:top-[-200px] before:rounded-full before:bg-emerald-400/10 before:blur-[120px]">
         <CardHeader className="text-center space-y-4 relative">
           <div className="flex justify-center">
@@ -144,7 +138,7 @@ const Login = ({ onLogin }: LoginProps) => {
                   placeholder="Enter your username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="pl-10 bg-gray-700/50 border border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors [appearance:textfield] [&::-webkit-credentials-auto-fill-button]:hidden [&:-webkit-autofill]:!bg-[#374151]/50 [&:-webkit-autofill]:!shadow-[inset_0_0_0px_1000px_rgb(55,65,81,0.5)] [&:-webkit-autofill]:!text-[#fff] [-webkit-text-fill-color:#fff] [&:-webkit-autofill]:[-webkit-text-fill-color:#fff]"
+                  className="pl-10 bg-gray-700/50 border border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors [appearance:textfield]"
                   autoComplete="username"
                   required
                 />
