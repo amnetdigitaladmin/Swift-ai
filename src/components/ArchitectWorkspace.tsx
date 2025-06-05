@@ -61,49 +61,49 @@ const ArchitectWorkspace = () => {
 
   const developmentAgents = [
     {
-      title: "SwiftCode Frontend Developer",
+      title: "SwiftBuild Frontend Developer",
       description: "Builds responsive user interfaces with modern frameworks and best practices.",
       icon: Code,
       features: ["React/Vue development", "Responsive design", "Component libraries", "State management"],
     },
     {
-      title: "SwiftCode Backend Engineer",
+      title: "SwiftBuild Backend Engineer",
       description: "Develops robust server-side applications and APIs with scalable architecture.",
       icon: Database,
       features: ["API development", "Database design", "Authentication", "Performance optimization"],
     },
     {
-      title: "SwiftCode DevOps Specialist",
+      title: "SwiftBuild DevOps Specialist",
       description: "Manages deployment pipelines, infrastructure, and continuous integration workflows.",
       icon: Monitor,
       features: ["CI/CD pipelines", "Cloud deployment", "Monitoring", "Infrastructure as code"],
     },
     {
-      title: "SwiftCode Mobile Developer",
+      title: "SwiftBuild Mobile Developer",
       description: "Creates native and cross-platform mobile applications for iOS and Android.",
       icon: Smartphone,
       features: ["React Native", "Native development", "App store deployment", "Mobile optimization"],
     },
     {
-      title: "SwiftCode Full-Stack Engineer",
+      title: "SwiftBuild Full-Stack Engineer",
       description: "Handles end-to-end development from database to user interface.",
       icon: Palette,
       features: ["Full-stack development", "System integration", "Database management", "Frontend frameworks"],
     },
     {
-      title: "SwiftCode Security Engineer",
+      title: "SwiftBuild Security Engineer",
       description: "Implements security best practices and vulnerability assessments.",
       icon: Shield,
       features: ["Security audits", "Encryption", "Authentication systems", "Vulnerability scanning"],
     },
     {
-      title: "SwiftCode API Architect",
+      title: "SwiftBuild API Architect",
       description: "Designs and implements RESTful and GraphQL APIs with proper documentation.",
       icon: GitBranch,
       features: ["API design", "GraphQL", "Documentation", "Versioning strategies"],
     },
     {
-      title: "SwiftCode Performance Engineer",
+      title: "SwiftBuild Performance Engineer",
       description: "Optimizes application performance and implements monitoring solutions.",
       icon: Zap,
       features: ["Performance optimization", "Monitoring setup", "Profiling", "Caching strategies"],
@@ -177,14 +177,14 @@ const ArchitectWorkspace = () => {
 
       <Tabs defaultValue="plan" className="space-y-6">
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="plan">Plan</TabsTrigger>
-          <TabsTrigger value="build">Build</TabsTrigger>
-          <TabsTrigger value="test">Test</TabsTrigger>
+          <TabsTrigger value="plan">SwiftPlan</TabsTrigger>
+          <TabsTrigger value="build">SwiftBuild</TabsTrigger>
+          <TabsTrigger value="test">SwiftTest</TabsTrigger>
         </TabsList>
 
         <TabsContent value="plan" className="space-y-4">
           <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-white mb-2">Requirements Agents</h2>
+            <h2 className="text-2xl font-bold text-white mb-2">Plan Agents</h2>
             <p className="text-gray-600">Agents specialized in gathering and analyzing business requirements</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

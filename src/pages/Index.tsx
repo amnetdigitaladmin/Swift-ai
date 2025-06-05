@@ -166,8 +166,8 @@ const Index = () => {
     return (
       <div className="min-h-screen bg-custom-bg">
         <Header />
-        <div className="container mx-auto px-6 py-8">
-          <div className="flex items-center justify-between mb-6">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex items-center justify-between mb-2">
             <div className="flex items-center space-x-4">
               <Button
                 variant="outline"
