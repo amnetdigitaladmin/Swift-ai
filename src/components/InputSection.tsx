@@ -446,12 +446,12 @@ const InputSection = ({
           <Button
             onClick={onProcess}
             disabled={isProcessing}
-            className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to text-black"
+            className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to"
           >
             {isProcessing ? (
               <>
-                <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                {/* <img src="/workflow_loader.gif" alt="Loading" className="h-16 w-16 mx-auto"/> */}
+                {/* <RefreshCw className="h-4 w-4 mr-2 animate-spin" /> */}
+                {/* <img src="/workflow_loader.gif" alt="Loading" className="h-4 w-4 mx-auto"/> */}
                 <span className="generate-button-text">Generating with AI</span>
               </>
             ) : (
