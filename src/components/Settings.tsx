@@ -89,7 +89,7 @@ const Settings = () => {
             </p>
             <div className="space-y-4">
               {phases.map((phase) => (
-                <div key={phase.id} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg bg-custom-bg shadow-sm">
+                <div key={phase.id} className="flex items-center justify-between p-3 border border-custom-tab_border rounded-lg bg-custom-bg shadow-sm">
                   <div>
                     <Label className="font-medium text-white">{phase.name}</Label>
                     <p className="text-sm text-gray-500 mt-1">
@@ -104,10 +104,10 @@ const Settings = () => {
                       value={llmAssignments[phase.id as keyof typeof llmAssignments]}
                       onValueChange={(value) => handleLlmChange(phase.id, value)}
                     >
-                      <SelectTrigger className="bg-custom-bg border-gray-300 text-white">
+                      <SelectTrigger className="bg-custom-bg border-custom-tab_border text-white">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-custom-bg border-gray-300 z-50">
+                      <SelectContent className="bg-custom-bg border-custom-tab_border z-50">
                         {llmOptions.map((llm) => (
                           <SelectItem key={llm.value} value={llm.value} className="text-white hover:bg-gray-100">
                             {llm.label}

@@ -91,7 +91,8 @@ const OutputSection = ({
         {isProcessing ? (
           <div className="h-[600px] flex flex-col items-center justify-center">
             <div className="text-center py-8">
-              <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4 text-ready-txt" />
+              {/* <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4 text-ready-txt" /> */}
+              <img src="/workflow_loader.gif" alt="Loading" className="h-16 w-16 mx-auto"/>
               <p className="text-gray-600">{processingMessage}</p>
               {progress > 0 && (
                 <div className="w-64 mt-4">

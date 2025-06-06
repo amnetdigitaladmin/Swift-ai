@@ -450,7 +450,8 @@ const InputSection = ({
           >
             {isProcessing ? (
               <>
-                <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                {/* <RefreshCw className="h-4 w-4 mr-2 animate-spin" /> */}
+                <img src="/workflow_loader.gif" alt="Loading" className="h-16 w-16 mx-auto"/>
                 <span className="generate-button-text">Generating with AI</span>
               </>
             ) : (
