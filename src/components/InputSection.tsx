@@ -456,7 +456,7 @@ const InputSection = ({
               </>
             ) : (
               <>
-                <Play className="h-4 w-4 mr-2" />
+                <Play className="h-4 w-4" />
                 <span className="generate-button-text">Generate with AI</span>
               </>
             )}
