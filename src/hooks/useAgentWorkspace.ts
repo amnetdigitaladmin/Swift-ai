@@ -146,7 +146,7 @@ export const useAgentWorkspace = (agentName: string) => {
               const apiResult = await response.json();
               console.log(apiResult.result.result)
               // API should return file structure data
-              setOutput(apiResult.result.result);
+              setOutput(apiResult.result);
               
             } catch (error) {
               // Handle errors
