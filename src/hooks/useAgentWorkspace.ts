@@ -56,18 +56,18 @@ export const useAgentWorkspace = (agentName: string) => {
   } = useWorkflow();
 
   const agentConfigs: Record<string, { endpoint: string }> = {
-  "SwiftPlan Business Analyst": {
-    endpoint: "https://api.endpoint-for-agent-a.com/",
-  },
-  agentB: {
-    endpoint: "https://api.endpoint-for-agent-b.com/",
-  },
-  redactionAgent: {
-    endpoint: "https://sewlzvr57rnjulvehobu2ienvu0ritqy.lambda-url.ap-south-1.on.aws/",
-  },
-  "SwiftTest Automated Generator":{
-    endpoint: "https://sewlzvr57rnjulvehobu2ienvu0ritqy.lambda-url.ap-south-1.on.aws/",
-  }
+    "SwiftPlan Business Analyst": {
+      endpoint: "https://sewlzvr57rnjulvehobu2ienvu0ritqy.lambda-url.ap-south-1.on.aws/",
+    },
+    "SwiftBuild Frontend Developer": {
+      endpoint: "https://c3677yvqbobzen7zfwoxy7ybjq0qletv.lambda-url.ap-south-1.on.aws/",
+    },
+    "SwiftBuild Backend Engineer": {
+      endpoint: "https://smi25q3swrw3aprk2h3ccr7tri0mdflr.lambda-url.ap-south-1.on.aws/",
+    },
+    "SwiftTest Automated Generator":{
+      endpoint: "https://jfvhzql6k7pcrl3vrlmyk26g2a0jqwzy.lambda-url.ap-south-1.on.aws/",
+    }
 };
   const isBusinessAnalyst = user?.persona === "business-analyst";
 
@@ -120,7 +120,7 @@ export const useAgentWorkspace = (agentName: string) => {
 
     setIsProcessing(true);
     setProgress(0);
-
+    const config = agentConfigs[agentName];
     if (isSwiftCodeFrontend || isSwiftCodeBackend) {
       try {
         if (selectedFile) {
@@ -139,13 +139,7 @@ export const useAgentWorkspace = (agentName: string) => {
                   extension: selectedFile.name.split(".").pop(),
                 }
               };
-
-               const apiEndpoint = isSwiftCodeFrontend 
-                                            ? "https://c3677yvqbobzen7zfwoxy7ybjq0qletv.lambda-url.ap-south-1.on.aws/"
-                                            : "https://smi25q3swrw3aprk2h3ccr7tri0mdflr.lambda-url.ap-south-1.on.aws/"; // You would replace this with actual backend endpoint
-    
-              // Make API call to your frontend agent endpoint
-              const response = await fetch(apiEndpoint, {
+              const response = await fetch(config.endpoint, {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
@@ -250,7 +244,7 @@ export const useAgentWorkspace = (agentName: string) => {
 
 
             const response = await fetch(
-              "https://sewlzvr57rnjulvehobu2ienvu0ritqy.lambda-url.ap-south-1.on.aws/",
+              config.endpoint,
               {
                 method: "POST",
                 headers: {
@@ -273,8 +267,9 @@ export const useAgentWorkspace = (agentName: string) => {
             }
 
             // The Lambda function should return a URL in the response
-            if (apiResult && apiResult.docx_download_url) {
-              setOutput(apiResult.docx_download_url);
+            if (apiResult && (apiResult.docx_download_url || apiResult.excel_download_url)) {
+              let downloadedFileURL = apiResult.docx_download_url ? apiResult.docx_download_url : apiResult.excel_download_url
+              setOutput(downloadedFileURL);
               toast({
                 title: "Processing Complete",
                 description: "Your request has been processed successfully.",
