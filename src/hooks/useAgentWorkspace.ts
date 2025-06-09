@@ -55,6 +55,20 @@ export const useAgentWorkspace = (agentName: string) => {
     updateArtifactStatus,
   } = useWorkflow();
 
+  const agentConfigs: Record<string, { endpoint: string }> = {
+  "SwiftPlan Business Analyst": {
+    endpoint: "https://api.endpoint-for-agent-a.com/",
+  },
+  agentB: {
+    endpoint: "https://api.endpoint-for-agent-b.com/",
+  },
+  redactionAgent: {
+    endpoint: "https://sewlzvr57rnjulvehobu2ienvu0ritqy.lambda-url.ap-south-1.on.aws/",
+  },
+  "SwiftTest Automated Generator":{
+    endpoint: "https://sewlzvr57rnjulvehobu2ienvu0ritqy.lambda-url.ap-south-1.on.aws/",
+  }
+};
   const isBusinessAnalyst = user?.persona === "business-analyst";
 
   const assignedStories = currentProject
