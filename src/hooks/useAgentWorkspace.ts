@@ -91,8 +91,8 @@ export const useAgentWorkspace = (agentName: string) => {
   };
 
 
-  const isSwiftCodeFrontend = agentName?.includes("SwiftCode Frontend Developer");
-  const isSwiftCodeBackend = agentName?.includes("SwiftCode Backend Engineer");
+  const isSwiftCodeFrontend = agentName?.includes("SwiftBuild Frontend Developer");
+  const isSwiftCodeBackend = agentName?.includes("SwiftBuild Backend Engineer");
 
   const handleProcess = async () => {
     if (!input.trim() && !selectedFile) {
@@ -146,7 +146,7 @@ export const useAgentWorkspace = (agentName: string) => {
               const apiResult = await response.json();
               console.log(apiResult.result.result)
               // API should return file structure data
-              setOutput(apiResult.result);
+              setOutput(apiResult.result.result);
               
             } catch (error) {
               // Handle errors
@@ -204,13 +204,13 @@ export const useAgentWorkspace = (agentName: string) => {
           template?: FilePayload;  // Make template optional
         }
 
-            const payload: Payload = {
+          const payload: Payload = {
               file: {
                 filename: selectedFile.name.replace(/\.[^/.]+$/, ""),
                 content: base64Content,
                 extension: selectedFile.name.split(".").pop(),
               },
-            };
+          };
 
              // If there's a secondary file, add it to the payload
           if (secondaryFile) {
@@ -255,9 +255,7 @@ export const useAgentWorkspace = (agentName: string) => {
             if (apiResult.sensitive_info_status && apiResult.sensitive_info_status !== '') {
               setAlertContent(apiResult.sensitive_info_status);
               setIsAlertOpen(true);
-              // setIsProcessing(false);
-              // setProgress(0);
-              // return;
+            
             }
 
             // The Lambda function should return a URL in the response

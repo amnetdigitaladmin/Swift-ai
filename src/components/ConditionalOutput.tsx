@@ -16,8 +16,8 @@ interface ConditionalOutputProps {
 }
 
 const ConditionalOutput = (props: any) => {
-  const isSwiftCodeFrontend = props.agentName?.includes("SwiftCode Frontend Developer");
-  const isSwiftCodeBackend = props.agentName?.includes("SwiftCode Backend Engineer");
+  const isSwiftCodeFrontend = props.agentName?.includes("SwiftBuild Frontend Developer");
+  const isSwiftCodeBackend = props.agentName?.includes("SwiftBuild Backend Engineer");
   const shouldUseTabsOutput = isSwiftCodeFrontend || isSwiftCodeBackend;
 
   return shouldUseTabsOutput ? (
