@@ -15,9 +15,11 @@ import {
   CheckCircle,
   RefreshCw,
   ChevronRight,
+  ChevronLeft,
   Folder,
   File,
   GitBranch,
+  X,
 } from "lucide-react";
 // @ts-ignore
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -100,6 +102,9 @@ const OutputSectionWithTabs = ({
     "frontend",
   ]);
   const [flattenedFiles, setFlattenedFiles] = useState<FileItem[]>([]);
+  const [isTreeCollapsed, setIsTreeCollapsed] = useState(false);
+  const [openFiles, setOpenFiles] = useState<FileItem[]>([]);
+  const [activeTab, setActiveTab] = useState(0);
   let s3Url = getS3UrlFromOutput(output);
 
   // Function to flatten the file structure and get all files
@@ -118,7 +123,11 @@ const OutputSectionWithTabs = ({
 
     // Check if output contains result array and update flattenedFiles
     if (typeof output === "object" && output !== null && "result" in output) {
-      setFlattenedFiles(getAllFiles(output.result));
+      const files = getAllFiles(output.result);
+      setFlattenedFiles(files);
+      if (files.length > 0 && openFiles.length === 0) {
+        setOpenFiles([files[0]]);
+      }
     }
   }, [output]);
 
@@ -142,15 +151,13 @@ const OutputSectionWithTabs = ({
   };
 
   const handleCopy = () => {
-    const currentContent = flattenedFiles[activeFileIndex].content;
-    navigator.clipboard
-      .writeText(currentContent)
-      .then(() => {
-        onCopy();
-      })
-      .catch((err) => {
-        console.error("Failed to copy:", err);
-      });
+    const currentContent = openFiles[activeTab]?.content;
+    if (currentContent) {
+      navigator.clipboard
+        .writeText(currentContent)
+        .then(onCopy)
+        .catch((err) => console.error("Failed to copy:", err));
+    }
   };
 
   const toggleFolder = (folderPath: string) => {
@@ -161,10 +168,22 @@ const OutputSectionWithTabs = ({
     );
   };
 
-  const handleFileDownload = (url: string) => {
-    // Clean up the URL by removing extra backslashes
-    const cleanUrl = url.replace(/\\\//g, "/");
-    onS3Download(cleanUrl);
+  const handleFileSelect = (file: FileItem) => {
+    const fileIndex = openFiles.findIndex((f) => f.name === file.name);
+    if (fileIndex === -1) {
+      setOpenFiles([...openFiles, file]);
+      setActiveTab(openFiles.length);
+    } else {
+      setActiveTab(fileIndex);
+    }
+  };
+
+  const closeTab = (index: number) => {
+    const newOpenFiles = openFiles.filter((_, i) => i !== index);
+    setOpenFiles(newOpenFiles);
+    if (activeTab >= newOpenFiles.length) {
+      setActiveTab(Math.max(0, newOpenFiles.length - 1));
+    }
   };
 
   const RenderTree = ({
@@ -175,8 +194,8 @@ const OutputSectionWithTabs = ({
     path: string;
   }) => {
     return (
-      <div className="pl-4">
-        {items.map((item, idx) => {
+      <div className="pl-2">
+        {items.map((item) => {
           const fullPath = path
             ? `${path}/${cleanName(item.name)}`
             : cleanName(item.name);
@@ -186,28 +205,15 @@ const OutputSectionWithTabs = ({
               <div key={fullPath}>
                 <button
                   onClick={() => toggleFolder(fullPath)}
-                  className="flex items-center gap-2 py-1 w-full text-left"
+                  className="flex items-center gap-2 py-1 w-full text-left hover:bg-gray-800/50 rounded px-2"
                 >
                   <ChevronRight
-                    className={`h-4 w-4 transition-transform text-white ${
+                    className={`h-4 w-4 transition-transform ${
                       expandedFolders.includes(fullPath) ? "rotate-90" : ""
                     }`}
                   />
-                  <Folder
-                    className={`h-3 w-3 ${
-                      expandedFolders.includes(fullPath)
-                        ? "text-white"
-                        : "text-ready-txt"
-                    }`}
-                  />
-                  <span
-                    className={`${
-                      expandedFolders.includes(fullPath)
-                        ? "text-white font-medium"
-                        : ""} text-base`}
-                  >
-                    {cleanName(item.name)}
-                  </span>
+                  <Folder className="h-4 w-4 " />
+                  <span className="text-sm">{cleanName(item.name)}</span>
                 </button>
                 {expandedFolders.includes(fullPath) && (
                   <RenderTree items={item.items} path={fullPath} />
@@ -217,25 +223,17 @@ const OutputSectionWithTabs = ({
           }
 
           if (isFile(item)) {
+            const isActive = openFiles[activeTab]?.name === item.name;
             return (
               <button
                 key={fullPath}
-                onClick={() => {
-                  const fileIndex = flattenedFiles.findIndex(
-                    (f) =>
-                      cleanName(f.name) === cleanName(item.name) &&
-                      f.content === item.content
-                  );
-                  if (fileIndex !== -1) setActiveFileIndex(fileIndex);
-                }}
-                className={`flex items-center gap-2 py-1 pl-6 w-full text-left ${
-                  cleanName(flattenedFiles[activeFileIndex]?.name) ===
-                  cleanName(item.name)
-                    ? "text-white font-medium"
-                    : ""
-                } text-sm`}
+                onClick={() => handleFileSelect(item)}
+                className={`flex items-center gap-2 py-1 pl-6 w-full text-left hover:bg-gray-800/50 rounded px-2 ${
+                  isActive ? "bg-gray-800/30" : ""
+                }`}
               >
-                {cleanName(item.name)}
+                <File className="h-4 w-4 text-gray-400" />
+                <span className="text-sm">{cleanName(item.name)}</span>
               </button>
             );
           }
@@ -271,112 +269,170 @@ const OutputSectionWithTabs = ({
             </div>
           </div>
         ) : (
-          <>
-            <CardHeader className="px-0 pt-0">
+          <div className="flex flex-col h-[calc(100vh-200px)]">
+            <CardHeader className="px-0 pt-0 pb-4">
               <CardTitle>{outputTitle}</CardTitle>
               <CardDescription>{outputDescription}</CardDescription>
             </CardHeader>
 
-            <div className="grid grid-cols-[200px,1fr] gap-4 h-[calc(100vh-200px)]">
-              {/* File Tree */}
-              <div className="border-r pr-2 overflow-y-auto custom-scrollbar">
-                {typeof output === "object" &&
-                  output !== null &&
-                  "result" in output && (
-                    <RenderTree items={output.result} path="" />
+            <div className="flex flex-1 overflow-hidden border rounded-lg ">
+              {/* File Explorer */}
+              <div
+                className={`transition-all duration-300 border-r ${
+                  isTreeCollapsed ? "w-12" : "w-64"
+                }`}
+              >
+                <div className="flex items-center justify-between p-2 border-b h-12">
+                  {!isTreeCollapsed && (
+                    <span className="text-base font-medium">Files</span>
                   )}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setIsTreeCollapsed(!isTreeCollapsed)}
+                    className="p-1 h-6 w-6"
+                  >
+                    {isTreeCollapsed ? (
+                      <ChevronRight className="h-4 w-4" />
+                    ) : (
+                      <ChevronLeft className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+                {!isTreeCollapsed && (
+                  <div className="overflow-y-auto h-[calc(100%-2.5rem)] custom-scrollbar">
+                    {typeof output === "object" &&
+                      output !== null &&
+                      "result" in output && (
+                        <RenderTree items={output.result} path="" />
+                      )}
+                  </div>
+                )}
               </div>
 
-              {/* File Content */}
-              <div className="space-y-4 overflow-y-auto pr-2 custom-scrollbar">
-                <div className="flex justify-between flex-row-reverse items-center sticky top-0  py-2 bg-custom-nav_bg">
-                  {/* <h3 className="text-lg font-semibold">
-                    {flattenedFiles[activeFileIndex]
-                      ? cleanName(flattenedFiles[activeFileIndex].name)
-                      : ""}
-                  </h3> */}
-                  <div className="flex  gap-2 px-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() =>
-                        handleFileDownload(flattenedFiles[activeFileIndex]?.url)
-                      }
-                      className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to"
-                    >
-                      <Download className="h-4 w-4 mr-2 text-black" />
-                      <span className="text-black font-semibold">Download</span>
-                    </Button>
+              {/* Content Area */}
+              <div className="flex-1 flex flex-col overflow-hidden">
+                {/* Tabs Bar */}
+                {openFiles.length > 0 && (
+                  <div className="flex items-center border-b overflow-x-auto custom-scrollbar p-2 h-12">
+                    {openFiles.map((file, index) => (
+                      <div
+                        key={file.name + index}
+                        className={`flex items-center gap-1 px-3 py-1.5 border-r ${
+                          activeTab === index
+                            ? "bg-gray-800/50"
+                            : "hover:bg-gray-800/30"
+                        }`}
+                      >
+                        <button
+                          className="flex items-center gap-2"
+                          onClick={() => setActiveTab(index)}
+                        >
+                          <File className="h-4 w-4 text-gray-400" />
+                          <span className="text-sm">
+                            {cleanName(file.name)}
+                          </span>
+                        </button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            closeTab(index);
+                          }}
+                          className="p-0 h-4 w-4 hover:bg-gray-700/50 rounded-sm"
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    ))}
                   </div>
-                </div>
+                )}
 
-                <SyntaxHighlighter
-                  language={flattenedFiles[activeFileIndex]?.type}
-                  style={{
-                    ...oneLight,
-                    'pre[class*="language-"]': {
-                      ...oneLight['pre[class*="language-"]'],
-                      background: "transparent",
-                      color: "#ffffff",
-                    },
-                    'code[class*="language-"]': {
-                      ...oneLight['code[class*="language-"]'],
-                      background: "transparent",
-                      color: "#ffffff",
-                    },
-                  }}
-                  customStyle={{
-                    margin: 0,
-                    borderRadius: "0",
-                    fontSize: "0.875rem",
-                    backgroundColor: "transparent",
+                {/* File Content */}
+                <div className="flex-1 overflow-hidden">
+                  <div className="h-full flex flex-col">
+                    {/* Action Bar */}
+                    <div className="flex justify-end items-center gap-2 p-2 ">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => onS3Download(openFiles[activeTab]?.url)}
+                        className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to"
+                      >
+                        <Download className="h-4 w-4 mr-2 text-black" />
+                        <span className="text-black font-semibold">
+                          Download
+                        </span>
+                      </Button>
+                    </div>
 
-                    color: "#ffffff",
-                  }}
-                  showLineNumbers={true}
-                  lineNumberStyle={{
-                    minWidth: "3em",
-                    paddingRight: "1em",
-                    color: "#64748b",
-                    textAlign: "right",
-                  }}
-                >
-                  {flattenedFiles[activeFileIndex]?.content}
-                </SyntaxHighlighter>
+                    {/* Code Content */}
+                    <div className="flex-1 overflow-auto custom-scrollbar">
+                      <SyntaxHighlighter
+                        language={openFiles[activeTab]?.type}
+                        style={{
+                          ...oneLight,
+                          'pre[class*="language-"]': {
+                            ...oneLight['pre[class*="language-"]'],
+                            background: "transparent",
+                            color: "#ffffff",
+                            margin: 0,
+                            padding: "1rem",
+                          },
+                          'code[class*="language-"]': {
+                            ...oneLight['code[class*="language-"]'],
+                            background: "transparent",
+                            color: "#ffffff",
+                          },
+                        }}
+                        customStyle={{
+                          margin: 0,
+                          height: "100%",
+                          padding: "1rem",
+                          fontSize: "0.875rem",
+                          backgroundColor: "transparent",
+                          color: "#ffffff",
+                        }}
+                        className="custom-scrollbar h-full"
+                        showLineNumbers={true}
+                        lineNumberStyle={{
+                          minWidth: "3em",
+                          paddingRight: "1em",
+                          color: "#64748b",
+                          textAlign: "right",
+                        }}
+                      >
+                        {openFiles[activeTab]?.content || ""}
+                      </SyntaxHighlighter>
+                    </div>
 
-                <div className="flex flex-wrap gap-2 mt-4 sticky bottom-0  py-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={onAzureDevOpsPush}
-                    className="bg-custom-bg"
-                  >
-                    <Cloud className="h-4 w-4 mr-2 text-ready-txt" />
-                    Push to Azure DevOps
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={onPushToProjectManager}
-                    className="bg-custom-bg"
-                  >
-                    <GitBranch className="h-4 w-4 mr-2 text-ready-txt" />
-                    Push to Git
-                  </Button>
-                  {/* {selectedStory && selectedStory.status !== "completed" && (
-                    <Button
-                      size="sm"
-                      onClick={onMarkStoryComplete}
-                      className="bg-green-600 hover:bg-green-700 text-white"
-                    >
-                      <CheckCircle className="h-4 w-4 mr-2" />
-                      Mark Story Complete
-                    </Button>
-                  )} */}
+                    {/* Bottom Action Bar */}
+                    <div className="flex items-center gap-2 p-2 border-t">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={onAzureDevOpsPush}
+                        className="bg-custom-bg"
+                      >
+                        <Cloud className="h-4 w-4 mr-2 text-ready-txt" />
+                        Push to Azure DevOps
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={onPushToProjectManager}
+                        className="bg-custom-bg"
+                      >
+                        <GitBranch className="h-4 w-4 mr-2 text-ready-txt" />
+                        Push to Git
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </>
+          </div>
         )}
       </CardContent>
     </Card>
