@@ -465,7 +465,7 @@ const InputSection = ({
               <>
                 {/* <RefreshCw className="h-4 w-4 mr-2 animate-spin" /> */}
                 {/* <img src="/workflow_loader.gif" alt="Loading" className="h-4 w-4 mx-auto"/> */}
-                <span className="generate-button-text">Generating with AI</span>
+                <span className="generate-button-text">{agentName == "SwiftTest Automated Generator" ? "Generating Testing Artifacts" : "Generating with AI"}</span>
               </>
             ) : (
               <>
