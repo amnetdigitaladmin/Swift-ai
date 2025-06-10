@@ -20,7 +20,9 @@ import {
   File,
   GitBranch,
   X,
+  Maximize
 } from "lucide-react";
+
 // @ts-ignore
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 // @ts-ignore
@@ -50,6 +52,7 @@ const isFile = (item: FileItem | FolderItem): item is FileItem => {
 };
 
 interface OutputSectionWithTabsProps {
+  showOutput:boolean;
   output: string | { result: (FileItem | FolderItem)[]; [key: string]: any };
   isProcessing: boolean;
   progress: number;
@@ -61,6 +64,7 @@ interface OutputSectionWithTabsProps {
   onAzureDevOpsPush: () => void;
   onPushToProjectManager: () => void;
   onMarkStoryComplete: () => void;
+  onHandleFullScreen:() => void;
 }
 
 const getS3UrlFromOutput = (output: string | object): string | null => {
@@ -84,6 +88,7 @@ const getS3UrlFromOutput = (output: string | object): string | null => {
 };
 
 const OutputSectionWithTabs = ({
+  showOutput,
   output,
   isProcessing,
   progress,
@@ -95,6 +100,7 @@ const OutputSectionWithTabs = ({
   onAzureDevOpsPush,
   onPushToProjectManager,
   onMarkStoryComplete,
+  onHandleFullScreen,
 }: OutputSectionWithTabsProps) => {
   const [activeFileIndex, setActiveFileIndex] = useState(0);
   const [expandedFolders, setExpandedFolders] = useState<string[]>([
@@ -270,10 +276,36 @@ const OutputSectionWithTabs = ({
           </div>
         ) : (
           <div className="flex flex-col h-[calc(100vh-200px)]">
-            <CardHeader className="px-0 pt-0 pb-4">
+            {/* <CardHeader className="px-0 pt-0 pb-4">
               <CardTitle>{outputTitle}</CardTitle>
               <CardDescription>{outputDescription}</CardDescription>
+            </CardHeader> */}
+
+            <CardHeader className="px-0 pt-0 pb-4">
+              <CardTitle className="flex items-center justify-between">
+                <span>{outputTitle}</span>
+               {!showOutput && <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-6 w-6"
+                  onClick={onHandleFullScreen}
+                >
+                  {/* <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 3H5a2 2 0 00-2 2v3m0 8v3a2 2 0 002 2h3m8-18h3a2 2 0 012 2v3m0 8v3a2 2 0 01-2 2h-3" />
+                  </svg> */}
+
+                  <Maximize className="h-4 w-4" />
+                </Button>} 
+              </CardTitle>
+              <CardDescription>{outputDescription}</CardDescription>
             </CardHeader>
+
 
             <div className="flex flex-1 overflow-hidden border rounded-lg ">
               {/* File Explorer */}

@@ -161,6 +161,7 @@ export const useAgentWorkspace = (agentName: string) => {
               // API should return file structure data
 
               setOutput(isSwiftCodeFrontend ? apiResult.result : apiResult);
+              setShowOutput(true)
               
             } catch (error) {
               // Handle errors
@@ -433,8 +434,8 @@ export const useAgentWorkspace = (agentName: string) => {
     setIsProcessing(processing);
   };
 
-  const handleBackToInput = () => {
-    setShowOutput(false);
+  const handleFullScreen = () => {
+    setShowOutput(prev => !prev);
   };
 
   return {
@@ -469,7 +470,7 @@ export const useAgentWorkspace = (agentName: string) => {
     setAlertContent,
 
     showOutput,
-    handleBackToInput,
+    handleFullScreen,
 
     // Handlers
     handleStorySelection,

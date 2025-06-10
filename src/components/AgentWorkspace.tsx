@@ -61,7 +61,7 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
     selectedStory,
     currentProject,
     showOutput,
-    handleBackToInput,
+    handleFullScreen,
 
     isAlertOpen,
     setIsAlertOpen,
@@ -172,7 +172,7 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
             {showOutput && (
               <div className="flex items-center gap-2 mb-4 text-sm text-ready-txt">
                 <button
-                  onClick={handleBackToInput}
+                  onClick={handleFullScreen}
                   className="flex items-center gap-1.5 hover:text-white transition-colors"
                 >
                   <ArrowLeftCircle className="h-4 w-4" />
@@ -216,6 +216,7 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
               )}
 
               <ConditionalOutput
+                showOutput={showOutput}
                 output={output}
                 isProcessing={isProcessing}
                 progress={progress}
@@ -227,6 +228,7 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
                 onAzureDevOpsPush={handleAzureDevOpsPush}
                 onPushToProjectManager={handlePushToProjectManager}
                 onMarkStoryComplete={handleMarkStoryComplete}
+                onHandleFullScreen={handleFullScreen}
               />
             </div>
           </div>
