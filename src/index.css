@@ -111,6 +111,54 @@
   }
 }
 
+@layer utilities {
+  /* Remove default scrollbar styles */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--ready-txt-clr) / 0.4) hsl(var(--custom-bg));
+  }
+
+  /* Webkit scrollbar styles */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: hsl(var(--custom-bg));
+    border-radius: 3px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: hsl(var(--ready-txt-clr) / 0.4);
+    border-radius: 3px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--ready-txt-clr) / 0.6);
+  }
+
+  /* Style the SyntaxHighlighter scrollbars specifically */
+  .custom-scrollbar pre::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .custom-scrollbar pre::-webkit-scrollbar-track {
+    background: hsl(var(--custom-bg));
+    border-radius: 3px;
+  }
+
+  .custom-scrollbar pre::-webkit-scrollbar-thumb {
+    background: hsl(var(--ready-txt-clr) / 0.4);
+    border-radius: 3px;
+  }
+
+  .custom-scrollbar pre::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--ready-txt-clr) / 0.6);
+  }
+}
+
 @layer components {
   .generate-button-text {
     @apply font-semibold text-sm tracking-wide;
