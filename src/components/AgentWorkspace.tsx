@@ -126,7 +126,7 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between sticky top-0 z-10 bg-background py-4">
+      <div className="flex items-center justify-between py-4">
         <div className="flex items-center space-x-4">
           <Button
             variant="outline"
