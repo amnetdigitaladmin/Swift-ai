@@ -452,7 +452,7 @@ const Index = () => {
 
   if (currentPhase) {
     return (
-      <div className="min-h-screen bg-gray-900">
+      <div className="min-h-screen bg-custom-bg">
         <Header />
         <div className="container mx-auto px-6 py-8">
           <div className="flex items-center justify-between mb-6">

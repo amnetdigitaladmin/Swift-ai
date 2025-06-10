@@ -125,7 +125,7 @@ const InputSection = ({
       <CardContent className="space-y-4">
         {/* Input Mode Toggle for Business Analyst */}
         {isBusinessAnalyst && (
-          <div className="flex items-center space-x-4 p-3 bg-blue-50 rounded-lg border">
+          <div className="flex items-center space-x-4 p-3  rounded-lg border">
             <span className="text-sm font-medium text-blue-900">
               Input Method:
             </span>
@@ -134,6 +134,7 @@ const InputSection = ({
                 variant={inputMode === "type" ? "default" : "outline"}
                 size="sm"
                 onClick={() => setInputMode("type")}
+                className="bg-custom-bg"
               >
                 <FileText className="h-4 w-4 mr-2" />
                 Type Input
@@ -150,8 +151,7 @@ const InputSection = ({
           </div>
         )}
 
-        {/* Conditional Input Based on Mode */}
-        {(!isBusinessAnalyst || inputMode === "type") && (
+        {(isBusinessAnalyst && inputMode === "type") && (
           <Textarea
             placeholder="Enter your project requirements, user stories, technical specifications, or any other relevant information..."
             value={input}
@@ -208,7 +208,7 @@ const InputSection = ({
                     Supported: PDF, DOC, DOCX, TXT, XLSX, XLS
                   </p>
                   <label htmlFor="file-upload">
-                    <Button variant="outline" size="sm" asChild>
+                    <Button variant="outline" size="sm" asChild className="bg-custom-bg">
                       <span className="cursor-pointer">Browse Files</span>
                     </Button>
                   </label>
@@ -245,26 +245,6 @@ const InputSection = ({
           </div>
         )}
 
-        {/* Template Selection */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Template (Optional)</label>
-          <Select value={selectedTemplate} onValueChange={setSelectedTemplate}>
-            <SelectTrigger className="bg-custom-bg">
-              <SelectValue placeholder="Select a template" />
-            </SelectTrigger>
-            <SelectContent>
-              {filteredTemplates.map((template) => (
-                <SelectItem
-                  key={template}
-                  value={template}
-                  className="bg-custom-bg"
-                >
-                  {template}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
 
         {/* Document Upload for Non-Business Analyst */}
         {!isBusinessAnalyst && (
@@ -352,6 +332,7 @@ const InputSection = ({
           </div>
         )}
 
+        {/* Additional Document Upload */}
         <div className="space-y-2">
           <label className="text-sm font-medium">
             Additional Document Upload
@@ -433,6 +414,38 @@ const InputSection = ({
               </Button>
             </div>
           )}
+        </div>
+
+        {/* Conditional Input Based on Mode */}
+        {(!isBusinessAnalyst) && (
+          <Textarea
+            placeholder="Enter your project requirements, user stories, technical specifications, or any other relevant information..."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            className="min-h-[200px] bg-custom-bg"
+          />
+        )}
+
+        
+        {/* Template Selection */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Template (Optional)</label>
+          <Select value={selectedTemplate} onValueChange={setSelectedTemplate}>
+            <SelectTrigger className="bg-custom-bg">
+              <SelectValue placeholder="Select a template" />
+            </SelectTrigger>
+            <SelectContent>
+              {filteredTemplates.map((template) => (
+                <SelectItem
+                  key={template}
+                  value={template}
+                  className="bg-custom-bg"
+                >
+                  {template}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="flex items-center justify-between">
