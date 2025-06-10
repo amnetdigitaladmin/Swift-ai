@@ -9,6 +9,8 @@ import {
   LogOut,
   Plus,
   FolderOpen,
+  MessageSquare,
+  Star,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,6 +29,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {Select,SelectContent,SelectItem,SelectTrigger,SelectValue,} from "@/components/ui/select";
 import { useUser } from "@/contexts/UserContext";
 import { useWorkflow } from "@/contexts/WorkflowContext";
 import { useToast } from "@/hooks/use-toast";
@@ -45,6 +48,136 @@ import DesignPhase from "./DesignPhase";
 import DevelopmentPhase from "./DevelopmentPhase";
 import TestingPhase from "./TestingPhase";
 
+  // Feedback Button Component
+  const FeedbackButton = ({
+    isFeedbackDialogOpen,
+    setIsFeedbackDialogOpen,
+    feedbackType,
+    setFeedbackType,
+    feedbackSubject,
+    setFeedbackSubject,
+    feedbackDescription,
+    setFeedbackDescription,
+    feedbackRating,
+    setFeedbackRating,
+    feedbackEmail,
+    setFeedbackEmail,
+    handleSubmitFeedback
+  }) => (
+    <Dialog open={isFeedbackDialogOpen} onOpenChange={setIsFeedbackDialogOpen}>
+      <DialogTrigger asChild>
+        <Button
+          variant="outline"
+          size="sm"
+          className="bg-custom-bg text-gray-200 hover:bg-gray-800 border-gray-600"
+        >
+          <MessageSquare className="h-4 w-4 mr-2" />
+          Feedback
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="bg-custom-bg border-gray-700 max-w-lg">
+        <DialogHeader>
+          <DialogTitle className="text-gray-200 flex items-center">
+            <MessageSquare className="h-5 w-5 mr-2" />
+            Share Your Feedback
+          </DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div>
+            <label className="text-sm font-medium text-gray-200 mb-2 block">
+              Feedback Type <span className="text-red-400">*</span>
+            </label>
+            <Select value={feedbackType} onValueChange={setFeedbackType}>
+           <SelectTrigger className="bg-custom-bg border-gray-600 text-white focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors">
+            <SelectValue placeholder="Select feedback type" />
+              </SelectTrigger>
+              <SelectContent className="bg-custom-bg border-gray-600">
+                <SelectItem value="bug">Bug Report</SelectItem>
+                <SelectItem value="feature">Feature Request</SelectItem>
+                <SelectItem value="improvement">General Improvement</SelectItem>
+                <SelectItem value="compliment">Compliment</SelectItem>
+                <SelectItem value="other">Other</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <label className="text-sm font-medium text-gray-200 mb-2 block">
+              Subject <span className="text-red-400">*</span>
+            </label>
+            <Input
+              value={feedbackSubject}
+              onChange={(e) => setFeedbackSubject(e.target.value)}
+              placeholder="Brief summary of your feedback..."
+              className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
+            />
+          </div>
+
+          <div>
+            <label className="text-sm font-medium text-gray-200 mb-2 block">
+              Description <span className="text-red-400">*</span>
+            </label>
+            <Textarea
+              value={feedbackDescription}
+              onChange={(e) => setFeedbackDescription(e.target.value)}
+              placeholder="Please provide detailed feedback..."
+              rows={4}
+              className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
+            />
+          </div>
+
+          <div>
+            <label className="text-sm font-medium text-gray-200 mb-2 block">
+              Rating (Optional)
+            </label>
+            <Select value={feedbackRating} onValueChange={setFeedbackRating}>
+              <SelectTrigger className="bg-custom-bg border-gray-600 text-white focus:border-gradient-background-from">
+                <SelectValue placeholder="Rate your experience" />
+              </SelectTrigger>
+              <SelectContent className="bg-custom-bg border-gray-600">
+                <SelectItem value="5">⭐⭐⭐⭐⭐ Excellent</SelectItem>
+                <SelectItem value="4">⭐⭐⭐⭐ Good</SelectItem>
+                <SelectItem value="3">⭐⭐⭐ Average</SelectItem>
+                <SelectItem value="2">⭐⭐ Poor</SelectItem>
+                <SelectItem value="1">⭐ Very Poor</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <label className="text-sm font-medium text-gray-200 mb-2 block">
+              Contact Email (Optional)
+            </label>
+            <Input
+              type="email"
+              value={feedbackEmail}
+              onChange={(e) => setFeedbackEmail(e.target.value)}
+              placeholder="your.email@example.com"
+              className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
+            />
+          </div>
+
+          <div className="flex justify-end space-x-2 pt-4">
+            <Button
+              variant="outline"
+              onClick={() => setIsFeedbackDialogOpen(false)}
+              className="bg-custom-bg text-gray-200 border-gray-600"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSubmitFeedback}
+              className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to"
+            >
+              Submit Feedback
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+
+
 const Index = () => {
   const { user, logout } = useUser();
   const { currentProject, createProject, selectProject, projects } =
@@ -57,6 +190,14 @@ const Index = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [newProjectName, setNewProjectName] = useState("");
   const [newProjectDescription, setNewProjectDescription] = useState("");
+  
+  // Feedback dialog states
+  const [isFeedbackDialogOpen, setIsFeedbackDialogOpen] = useState(false);
+  const [feedbackType, setFeedbackType] = useState("");
+  const [feedbackSubject, setFeedbackSubject] = useState("");
+  const [feedbackDescription, setFeedbackDescription] = useState("");
+  const [feedbackRating, setFeedbackRating] = useState("");
+  const [feedbackEmail, setFeedbackEmail] = useState("");
 
   const allPhases = [
     {
@@ -157,6 +298,42 @@ const Index = () => {
     });
   };
 
+  const handleSubmitFeedback = () => {
+    if (!feedbackType || !feedbackSubject.trim() || !feedbackDescription.trim()) {
+      toast({
+        title: "Error",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Here you would typically send the feedback to your backend
+    // console.log("Feedback submitted:", {
+    //   type: feedbackType,
+    //   subject: feedbackSubject,
+    //   description: feedbackDescription,
+    //   rating: feedbackRating,
+    //   email: feedbackEmail,
+    //   user: user?.username,
+    //   project: currentProject?.name,
+    //   timestamp: new Date().toISOString(),
+    // });
+
+    // Reset form and close dialog
+    setFeedbackType("");
+    setFeedbackSubject("");
+    setFeedbackDescription("");
+    setFeedbackRating("");
+    setFeedbackEmail("");
+    setIsFeedbackDialogOpen(false);
+
+    toast({
+      title: "Feedback Submitted",
+      description: "Thank you for your feedback! We'll review it shortly.",
+    });
+  };
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString();
   };
@@ -190,15 +367,32 @@ const Index = () => {
                 </div>
               </div>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={logout}
-              className="bg-custom-nav-bg text-gray-200 "
-            >
-              <LogOut className="h-4 w-4 mr-2" />
-              Logout
-            </Button>
+            <div className="flex items-center space-x-2">
+              <FeedbackButton 
+              isFeedbackDialogOpen={isFeedbackDialogOpen}
+              setIsFeedbackDialogOpen={setIsFeedbackDialogOpen}
+              feedbackType={feedbackType}
+              setFeedbackType={setFeedbackType}
+              feedbackSubject={feedbackSubject}
+              setFeedbackSubject={setFeedbackSubject}
+              feedbackDescription={feedbackDescription}
+              setFeedbackDescription={setFeedbackDescription}
+              feedbackRating={feedbackRating}
+              setFeedbackRating={setFeedbackRating}
+              feedbackEmail={feedbackEmail}
+              setFeedbackEmail={setFeedbackEmail}
+              handleSubmitFeedback={handleSubmitFeedback}
+              />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={logout}
+                className="bg-custom-nav-bg text-gray-200 "
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                Logout
+              </Button>
+            </div>
           </div>
           <ArchitectWorkspace />
         </div>
@@ -219,15 +413,32 @@ const Index = () => {
                 {getPersonaTitle(user?.persona || "")})
               </span>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={logout}
-              className="border-gray-600 text-gray-200 hover:bg-gray-800"
-            >
-              <LogOut className="h-4 w-4 mr-2" />
-              Logout
-            </Button>
+            <div className="flex items-center space-x-2">
+                 <FeedbackButton 
+              isFeedbackDialogOpen={isFeedbackDialogOpen}
+              setIsFeedbackDialogOpen={setIsFeedbackDialogOpen}
+              feedbackType={feedbackType}
+              setFeedbackType={setFeedbackType}
+              feedbackSubject={feedbackSubject}
+              setFeedbackSubject={setFeedbackSubject}
+              feedbackDescription={feedbackDescription}
+              setFeedbackDescription={setFeedbackDescription}
+              feedbackRating={feedbackRating}
+              setFeedbackRating={setFeedbackRating}
+              feedbackEmail={feedbackEmail}
+              setFeedbackEmail={setFeedbackEmail}
+              handleSubmitFeedback={handleSubmitFeedback}
+              />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={logout}
+                className="border-gray-600 text-gray-200 hover:bg-gray-800"
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                Logout
+              </Button>
+            </div>
           </div>
           <div className="space-y-6">
             <ProjectManagementDashboard />
@@ -256,6 +467,21 @@ const Index = () => {
                 Welcome, {user?.username} (
                 {getPersonaTitle(user?.persona || "")})
               </span>
+              <FeedbackButton 
+                isFeedbackDialogOpen={isFeedbackDialogOpen}
+                setIsFeedbackDialogOpen={setIsFeedbackDialogOpen}
+                feedbackType={feedbackType}
+                setFeedbackType={setFeedbackType}
+                feedbackSubject={feedbackSubject}
+                setFeedbackSubject={setFeedbackSubject}
+                feedbackDescription={feedbackDescription}
+                setFeedbackDescription={setFeedbackDescription}
+                feedbackRating={feedbackRating}
+                setFeedbackRating={setFeedbackRating}
+                feedbackEmail={feedbackEmail}
+                setFeedbackEmail={setFeedbackEmail}
+                handleSubmitFeedback={handleSubmitFeedback}
+              />
               <Button
                 variant="outline"
                 size="sm"
@@ -288,14 +514,31 @@ const Index = () => {
                 Role: {getPersonaTitle(user?.persona || "")}
               </p>
             </div>
+            <div className="flex items-center space-x-2">
+            <FeedbackButton 
+              isFeedbackDialogOpen={isFeedbackDialogOpen}
+              setIsFeedbackDialogOpen={setIsFeedbackDialogOpen}
+              feedbackType={feedbackType}
+              setFeedbackType={setFeedbackType}
+              feedbackSubject={feedbackSubject}
+              setFeedbackSubject={setFeedbackSubject}
+              feedbackDescription={feedbackDescription}
+              setFeedbackDescription={setFeedbackDescription}
+              feedbackRating={feedbackRating}
+              setFeedbackRating={setFeedbackRating}
+              feedbackEmail={feedbackEmail}
+              setFeedbackEmail={setFeedbackEmail}
+              handleSubmitFeedback={handleSubmitFeedback}
+            />
             <Button
-              variant="outline"
-              onClick={logout}
-              className="border-gray-600 text-gray-200 hover:bg-gray-800"
-            >
+                variant="outline"
+                onClick={logout}
+                className="border-gray-600 text-gray-200 hover:bg-gray-800"
+              >
               <LogOut className="h-4 w-4 mr-2" />
-              Logout
+                Logout
             </Button>
+            </div>
           </div>
 
           <div className="max-w-4xl mx-auto">
@@ -321,14 +564,31 @@ const Index = () => {
                 Role: {getPersonaTitle(user?.persona || "")}
               </p>
             </div>
-            <Button
-              variant="outline"
-              onClick={logout}
-              className="border-gray-600 bg-custom-bg text-white hover:bg-gray-800"
-            >
+            <div className="flex items-center space-x-2">
+              <FeedbackButton 
+                isFeedbackDialogOpen={isFeedbackDialogOpen}
+                setIsFeedbackDialogOpen={setIsFeedbackDialogOpen}
+                feedbackType={feedbackType}
+                setFeedbackType={setFeedbackType}
+                feedbackSubject={feedbackSubject}
+                setFeedbackSubject={setFeedbackSubject}
+                feedbackDescription={feedbackDescription}
+                setFeedbackDescription={setFeedbackDescription}
+                feedbackRating={feedbackRating}
+                setFeedbackRating={setFeedbackRating}
+                feedbackEmail={feedbackEmail}
+                setFeedbackEmail={setFeedbackEmail}
+                handleSubmitFeedback={handleSubmitFeedback}
+              />
+              <Button
+                variant="outline"
+                onClick={logout}
+                className="border-gray-600 bg-custom-bg text-white hover:bg-gray-800"
+              >
               <LogOut className="h-4 w-4 mr-2" />
-              Logout
-            </Button>
+                Logout
+              </Button>
+            </div>
           </div>
 
           <div className="max-w-4xl mx-auto space-y-8">
@@ -505,14 +765,31 @@ const Index = () => {
               Role: {getPersonaTitle(user?.persona || "")}
             </p>
           </div>
-          <Button
-            variant="outline"
-            onClick={logout}
-            className="border-gray-600 text-gray-200 hover:bg-gray-800"
-          >
-            <LogOut className="h-4 w-4 mr-2" />
-            Logout
-          </Button>
+          <div className="flex items-center space-x-2">
+              <FeedbackButton 
+              isFeedbackDialogOpen={isFeedbackDialogOpen}
+              setIsFeedbackDialogOpen={setIsFeedbackDialogOpen}
+              feedbackType={feedbackType}
+              setFeedbackType={setFeedbackType}
+              feedbackSubject={feedbackSubject}
+              setFeedbackSubject={setFeedbackSubject}
+              feedbackDescription={feedbackDescription}
+              setFeedbackDescription={setFeedbackDescription}
+              feedbackRating={feedbackRating}
+              setFeedbackRating={setFeedbackRating}
+              feedbackEmail={feedbackEmail}
+              setFeedbackEmail={setFeedbackEmail}
+              handleSubmitFeedback={handleSubmitFeedback}
+              />
+            <Button
+              variant="outline"
+              onClick={logout}
+              className="border-gray-600 text-gray-200 hover:bg-gray-800"
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              Logout
+            </Button>
+          </div>
         </div>
 
         {/* Developer Task View */}
