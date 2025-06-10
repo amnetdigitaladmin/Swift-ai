@@ -417,9 +417,9 @@ export const useAgentWorkspace = (agentName: string) => {
 
   const handlePushToProjectManager = () => {
     toast({
-      title: "Pushed to Project Manager",
+      title: "Pushed to Git",
       description:
-        "Content has been successfully pushed to the project manager.",
+        "Content has been successfully pushed to Git.",
     });
   };
 
