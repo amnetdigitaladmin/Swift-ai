@@ -201,11 +201,10 @@ const OutputSectionWithTabs = ({
                     }`}
                   />
                   <span
-                    className={
+                    className={`${
                       expandedFolders.includes(fullPath)
                         ? "text-white font-medium"
-                        : ""
-                    }
+                        : ""} text-base`}
                   >
                     {cleanName(item.name)}
                   </span>
@@ -234,7 +233,7 @@ const OutputSectionWithTabs = ({
                   cleanName(item.name)
                     ? "text-white font-medium"
                     : ""
-                }`}
+                } text-sm`}
               >
                 {cleanName(item.name)}
               </button>

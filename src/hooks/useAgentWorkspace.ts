@@ -126,6 +126,8 @@ export const useAgentWorkspace = (agentName: string) => {
         if (selectedFile) {
           const reader = new FileReader();
           reader.readAsDataURL(selectedFile);
+
+          let devtype = isSwiftCodeFrontend ? "frontend" : "backend"
     
           reader.onload = async () => {
             try {
@@ -137,7 +139,10 @@ export const useAgentWorkspace = (agentName: string) => {
                   filename: selectedFile.name.replace(/\.[^/.]+$/, ""),
                   content: base64Content,
                   extension: selectedFile.name.split(".").pop(),
-                }
+                },
+                "model_name" : "openai",
+                "dev_type" : devtype,
+                "pages_per_chunk" : 3
               };
               const response = await fetch(config.endpoint, {
                 method: "POST",
@@ -152,9 +157,10 @@ export const useAgentWorkspace = (agentName: string) => {
               }
     
               const apiResult = await response.json();
-              console.log(apiResult.result.result)
+              // console.log(apiResult.result.result)
               // API should return file structure data
-              setOutput(apiResult.result);
+
+              setOutput(isSwiftCodeFrontend ? apiResult.result : apiResult);
               
             } catch (error) {
               // Handle errors
