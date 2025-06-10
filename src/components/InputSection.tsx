@@ -90,16 +90,9 @@ const InputSection = ({
 
   const getFilteredTemplates = () => {
     const allTemplates = [
-      "User Story Template",
-      "API Specification",
-      "Test Cases",
       "Coding Standards",
-      "Architecture Design",
-      "Detailed Requirements",
-      "Risk Assessment",
-      "Business requirement document (BRD) template",
-      "Skills and resources template",
-    ];
+      "Detailed Requirement Template",
+      ];
 
     if (user?.persona === "business-analyst") {
       return [

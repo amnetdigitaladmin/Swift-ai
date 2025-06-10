@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FileText, Users, Target, GitBranch, MessageSquare, Database, Shield, Smartphone, Code, Palette, Monitor, CheckCircle, Zap, AlertTriangle, Globe } from "lucide-react";
+import { FileText, Users, Target, GitBranch, MessageSquare, Database, Shield, Smartphone, Code, Palette, Monitor, CheckCircle, Zap, AlertTriangle, Globe,History } from "lucide-react";
 import AgentCard from "./AgentCard";
 import AgentWorkspace from "./AgentWorkspace";
 
@@ -72,12 +72,12 @@ const ArchitectWorkspace = () => {
       icon: Database,
       features: ["API development", "Database design", "Authentication", "Performance optimization"],
     },
-    // {
-    //   title: "SwiftBuild DevOps Specialist",
-    //   description: "Manages deployment pipelines, infrastructure, and continuous integration workflows.",
-    //   icon: Monitor,
-    //   features: ["CI/CD pipelines", "Cloud deployment", "Monitoring", "Infrastructure as code"],
-    // },
+    {
+    title: "Legacy Code Modernisation",
+    description: "Revamps outdated systems with modern frameworks, improved architecture, and enhanced maintainability.",
+    icon: History, 
+    features: ["Code refactoring", "Tech stack upgrades", "Modular architecture", "Automated testing"],
+  },
     {
       title: "SwiftBuild Mobile Developer",
       description: "Creates native and cross-platform mobile applications for iOS and Android.",
