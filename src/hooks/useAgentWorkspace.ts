@@ -284,7 +284,7 @@ export const useAgentWorkspace = (agentName: string) => {
               description: "Failed to process your request. Please try again.",
               variant: "destructive",
             });
-            setOutput("Error processing request. Please try again.");
+            // setOutput("Error processing request. Please try again.");
           } finally {
             setIsProcessing(false);
             setProgress(100);
