@@ -194,7 +194,7 @@ const OutputSectionWithTabs = ({
                     }`}
                   />
                   <Folder
-                    className={`h-4 w-4 ${
+                    className={`h-3 w-3 ${
                       expandedFolders.includes(fullPath)
                         ? "text-white"
                         : "text-ready-txt"
@@ -279,7 +279,7 @@ const OutputSectionWithTabs = ({
 
             <div className="grid grid-cols-[200px,1fr] gap-4 h-[calc(100vh-200px)]">
               {/* File Tree */}
-              <div className="border-r pr-2 overflow-y-auto">
+              <div className="border-r pr-2 overflow-y-auto custom-scrollbar">
                 {typeof output === "object" &&
                   output !== null &&
                   "result" in output && (
@@ -288,7 +288,7 @@ const OutputSectionWithTabs = ({
               </div>
 
               {/* File Content */}
-              <div className="space-y-4 overflow-y-auto pr-2">
+              <div className="space-y-4 overflow-y-auto pr-2 custom-scrollbar">
                 <div className="flex justify-between flex-row-reverse items-center sticky top-0  py-2 bg-custom-nav_bg">
                   {/* <h3 className="text-lg font-semibold">
                     {flattenedFiles[activeFileIndex]

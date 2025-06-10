@@ -72,12 +72,12 @@ const ArchitectWorkspace = () => {
       icon: Database,
       features: ["API development", "Database design", "Authentication", "Performance optimization"],
     },
-    {
-      title: "SwiftBuild DevOps Specialist",
-      description: "Manages deployment pipelines, infrastructure, and continuous integration workflows.",
-      icon: Monitor,
-      features: ["CI/CD pipelines", "Cloud deployment", "Monitoring", "Infrastructure as code"],
-    },
+    // {
+    //   title: "SwiftBuild DevOps Specialist",
+    //   description: "Manages deployment pipelines, infrastructure, and continuous integration workflows.",
+    //   icon: Monitor,
+    //   features: ["CI/CD pipelines", "Cloud deployment", "Monitoring", "Infrastructure as code"],
+    // },
     {
       title: "SwiftBuild Mobile Developer",
       description: "Creates native and cross-platform mobile applications for iOS and Android.",
@@ -96,18 +96,18 @@ const ArchitectWorkspace = () => {
       icon: Shield,
       features: ["Security audits", "Encryption", "Authentication systems", "Vulnerability scanning"],
     },
-    {
-      title: "SwiftBuild API Architect",
-      description: "Designs and implements RESTful and GraphQL APIs with proper documentation.",
-      icon: GitBranch,
-      features: ["API design", "GraphQL", "Documentation", "Versioning strategies"],
-    },
-    {
-      title: "SwiftBuild Performance Engineer",
-      description: "Optimizes application performance and implements monitoring solutions.",
-      icon: Zap,
-      features: ["Performance optimization", "Monitoring setup", "Profiling", "Caching strategies"],
-    },
+    // {
+    //   title: "SwiftBuild API Architect",
+    //   description: "Designs and implements RESTful and GraphQL APIs with proper documentation.",
+    //   icon: GitBranch,
+    //   features: ["API design", "GraphQL", "Documentation", "Versioning strategies"],
+    // },
+    // {
+    //   title: "SwiftBuild Performance Engineer",
+    //   description: "Optimizes application performance and implements monitoring solutions.",
+    //   icon: Zap,
+    //   features: ["Performance optimization", "Monitoring setup", "Profiling", "Caching strategies"],
+    // },
   ];
 
   const qaAgents = [
