@@ -385,7 +385,7 @@ const OutputSectionWithTabs = ({
                 <div className="flex-1 overflow-hidden">
                   <div className="h-full flex flex-col">
                     {/* Action Bar */}
-                    <div className="flex justify-end items-center gap-2 p-2 ">
+                    {/* <div className="flex justify-end items-center gap-2 p-2 ">
                       <Button
                         variant="outline"
                         size="sm"
@@ -397,7 +397,7 @@ const OutputSectionWithTabs = ({
                           Download
                         </span>
                       </Button>
-                    </div>
+                    </div> */}
 
                     {/* Code Content */}
                     <div className="flex-1 overflow-auto custom-scrollbar">
