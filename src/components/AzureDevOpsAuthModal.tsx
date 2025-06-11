@@ -58,7 +58,7 @@ const AzureDevOpsAuthModal = ({ isOpen, onClose, onSubmit }: AzureDevOpsAuthModa
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md bg-custom-bg">
         <DialogHeader>
           <DialogTitle>Connect to Azure DevOps</DialogTitle>
           <DialogDescription>
@@ -73,6 +73,7 @@ const AzureDevOpsAuthModal = ({ isOpen, onClose, onSubmit }: AzureDevOpsAuthModa
               id="organization"
               type="text"
               placeholder="your-organization"
+              className="bg-custom-bg"
               value={credentials.organization}
               onChange={(e) => setCredentials(prev => ({ ...prev, organization: e.target.value }))}
               disabled={isSubmitting}
@@ -85,6 +86,7 @@ const AzureDevOpsAuthModal = ({ isOpen, onClose, onSubmit }: AzureDevOpsAuthModa
               id="project"
               type="text"
               placeholder="your-project-name"
+              className="bg-custom-bg"
               value={credentials.project}
               onChange={(e) => setCredentials(prev => ({ ...prev, project: e.target.value }))}
               disabled={isSubmitting}
@@ -97,6 +99,7 @@ const AzureDevOpsAuthModal = ({ isOpen, onClose, onSubmit }: AzureDevOpsAuthModa
               id="personalAccessToken"
               type="password"
               placeholder="Enter your PAT"
+              className="bg-custom-bg"
               value={credentials.personalAccessToken}
               onChange={(e) => setCredentials(prev => ({ ...prev, personalAccessToken: e.target.value }))}
               disabled={isSubmitting}
@@ -119,14 +122,14 @@ const AzureDevOpsAuthModal = ({ isOpen, onClose, onSubmit }: AzureDevOpsAuthModa
               variant="outline"
               onClick={handleClose}
               disabled={isSubmitting}
-              className="flex-1"
+              className="flex-1 bg-custom-bg"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1"
+              className="flex-1 "
             >
               {isSubmitting ? "Connecting..." : "Connect"}
             </Button>
