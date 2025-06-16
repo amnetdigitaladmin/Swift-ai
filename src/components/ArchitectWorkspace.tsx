@@ -2,10 +2,12 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FileText, Users, Target, GitBranch, MessageSquare, Database, Shield, Smartphone, Code, Palette, Monitor, CheckCircle, Zap, AlertTriangle, Globe,History } from "lucide-react";
+import { useWorkflow } from "@/contexts/WorkflowContext";
 import AgentCard from "./AgentCard";
 import AgentWorkspace from "./AgentWorkspace";
 
 const ArchitectWorkspace = () => {
+  const { currentProject, createProject, selectProject, projects } = useWorkflow();
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
 
   const requirementsAgents = [
@@ -27,71 +29,71 @@ const ArchitectWorkspace = () => {
       icon: Target,
       features: ["Technical constraints", "Performance requirements", "Integration specs", "Scalability analysis"],
     },
-    {
-      title: "SwiftPlan API Designer",
-      description: "Specifies API endpoints, data models, and integration requirements.",
-      icon: GitBranch,
-      features: ["Endpoint specification", "Data model design", "Authentication flow", "Rate limiting"],
-    },
-    {
-      title: "SwiftPlan Compliance Advisor",
-      description: "Ensures regulatory compliance and security requirements are properly defined.",
-      icon: Shield,
-      features: ["GDPR compliance", "Security requirements", "Audit trails", "Data protection"],
-    },
-    {
-      title: "SwiftPlan Mobile Specialist",
-      description: "Focuses on mobile-specific requirements including platform constraints.",
-      icon: Smartphone,
-      features: ["Platform guidelines", "Performance specs", "Offline capabilities", "App store requirements"],
-    },
-    {
-      title: "SwiftPlan Database Analyst",
-      description: "Defines data storage, retrieval, and management requirements.",
-      icon: Database,
-      features: ["Data modeling", "Query optimization", "Backup strategies", "Migration planning"],
-    },
-    {
-      title: "SwiftPlan Communication Planner",
-      description: "Plans stakeholder communication and documentation requirements.",
-      icon: MessageSquare,
-      features: ["Communication matrix", "Documentation standards", "Review processes", "Sign-off procedures"],
-    },
+    // {
+    //   title: "SwiftPlan API Designer",
+    //   description: "Specifies API endpoints, data models, and integration requirements.",
+    //   icon: GitBranch,
+    //   features: ["Endpoint specification", "Data model design", "Authentication flow", "Rate limiting"],
+    // },
+    // {
+    //   title: "SwiftPlan Compliance Advisor",
+    //   description: "Ensures regulatory compliance and security requirements are properly defined.",
+    //   icon: Shield,
+    //   features: ["GDPR compliance", "Security requirements", "Audit trails", "Data protection"],
+    // },
+    // {
+    //   title: "SwiftPlan Mobile Specialist",
+    //   description: "Focuses on mobile-specific requirements including platform constraints.",
+    //   icon: Smartphone,
+    //   features: ["Platform guidelines", "Performance specs", "Offline capabilities", "App store requirements"],
+    // },
+    // {
+    //   title: "SwiftPlan Database Analyst",
+    //   description: "Defines data storage, retrieval, and management requirements.",
+    //   icon: Database,
+    //   features: ["Data modeling", "Query optimization", "Backup strategies", "Migration planning"],
+    // },
+    // {
+    //   title: "SwiftPlan Communication Planner",
+    //   description: "Plans stakeholder communication and documentation requirements.",
+    //   icon: MessageSquare,
+    //   features: ["Communication matrix", "Documentation standards", "Review processes", "Sign-off procedures"],
+    // },
   ];
 
   const developmentAgents = [
     {
-      title: "SwiftBuild Frontend Developer",
+      title: "SwiftBuild Frontend",
       description: "Builds responsive user interfaces with modern frameworks and best practices.",
       icon: Code,
       features: ["React/Vue development", "Responsive design", "Component libraries", "State management"],
     },
     {
-      title: "SwiftBuild Backend Engineer",
+      title: "SwiftBuild Backend",
       description: "Develops robust server-side applications and APIs with scalable architecture.",
       icon: Database,
       features: ["API development", "Database design", "Authentication", "Performance optimization"],
     },
     {
-    title: "Legacy Code Modernisation",
+    title: "Code Modernisation",
     description: "Revamps outdated systems with modern frameworks, improved architecture, and enhanced maintainability.",
     icon: History, 
     features: ["Code refactoring", "Tech stack upgrades", "Modular architecture", "Automated testing"],
   },
     {
-      title: "SwiftBuild Mobile Developer",
+      title: "SwiftBuild Mobile",
       description: "Creates native and cross-platform mobile applications for iOS and Android.",
       icon: Smartphone,
       features: ["React Native", "Native development", "App store deployment", "Mobile optimization"],
     },
     {
-      title: "SwiftBuild Full-Stack Engineer",
+      title: "SwiftBuild Full-Stack",
       description: "Handles end-to-end development from database to user interface.",
       icon: Palette,
       features: ["Full-stack development", "System integration", "Database management", "Frontend frameworks"],
     },
     {
-      title: "SwiftBuild Security Engineer",
+      title: "SwiftBuild Security",
       description: "Implements security best practices and vulnerability assessments.",
       icon: Shield,
       features: ["Security audits", "Encryption", "Authentication systems", "Vulnerability scanning"],
@@ -118,43 +120,43 @@ const ArchitectWorkspace = () => {
       features: ["Unit test generation", "Integration tests", "E2E test scripts", "Test coverage analysis"],
     },
     {
-      title: "SwiftTest Security Specialist",
+      title: "SwiftTest Security",
       description: "Performs security audits, vulnerability scanning, and penetration testing.",
       icon: Shield,
       features: ["Vulnerability scanning", "Security audits", "Penetration testing", "Compliance checks"],
     },
     {
-      title: "SwiftTest Mobile Expert",
+      title: "SwiftTest Mobile",
       description: "Specializes in mobile app testing across different devices and platforms.",
       icon: Smartphone,
       features: ["Device compatibility", "Platform testing", "Performance testing", "User interaction"],
     },
     {
-      title: "SwiftTest Browser Tester",
+      title: "SwiftTest Browser",
       description: "Ensures web applications work consistently across all major browsers.",
       icon: Globe,
       features: ["Browser compatibility", "Responsive testing", "Feature detection", "Polyfill suggestions"],
     },
+    // {
+    //   title: "SwiftTest UAT Coordinator",
+    //   description: "Designs UAT processes and manages stakeholder testing workflows.",
+    //   icon: Users,
+    //   features: ["UAT scenarios", "Test case management", "Stakeholder coordination", "Feedback collection"],
+    // },
     {
-      title: "SwiftTest UAT Coordinator",
-      description: "Designs UAT processes and manages stakeholder testing workflows.",
-      icon: Users,
-      features: ["UAT scenarios", "Test case management", "Stakeholder coordination", "Feedback collection"],
-    },
-    {
-      title: "SwiftTest Performance Engineer",
+      title: "SwiftTest Performance",
       description: "Conducts load testing, stress testing, and performance optimization.",
       icon: Zap,
       features: ["Load testing", "Stress testing", "Performance profiling", "Bottleneck identification"],
     },
     {
-      title: "SwiftTest API Specialist",
+      title: "SwiftTest API",
       description: "Tests API endpoints, data validation, and service integrations.",
       icon: Target,
       features: ["API endpoint testing", "Data validation", "Integration testing", "Service mocking"],
     },
     {
-      title: "SwiftTest Bug Hunter",
+      title: "SwiftTest SQL",
       description: "Identifies, categorizes, and prioritizes bugs with detailed analysis.",
       icon: AlertTriangle,
       features: ["Bug identification", "Issue classification", "Priority assessment", "Reproduction steps"],
@@ -168,7 +170,7 @@ const ArchitectWorkspace = () => {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h1 className="text-3xl font-bold text-white mb-4">Architect Workspace</h1>
+        <h1 className="text-3xl font-bold text-white mb-4">{currentProject.name} Workspace</h1>
         <p className="text-lg text-gray-600 max-w-3xl mx-auto">
           Access all AI-powered agents across requirements, development, and QA phases. 
           Select a tab to explore agents in each category.
@@ -177,14 +179,14 @@ const ArchitectWorkspace = () => {
 
       <Tabs defaultValue="plan" className="space-y-6">
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="plan">SwiftPlan</TabsTrigger>
-          <TabsTrigger value="build">SwiftBuild</TabsTrigger>
-          <TabsTrigger value="test">SwiftTest</TabsTrigger>
+          <TabsTrigger value="plan" className="text-lg">SwiftPlan</TabsTrigger>
+          <TabsTrigger value="build" className="text-lg">SwiftBuild</TabsTrigger>
+          <TabsTrigger value="test" className="text-lg">SwiftTest</TabsTrigger>
         </TabsList>
 
         <TabsContent value="plan" className="space-y-4">
           <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-white mb-2">Plan Agents</h2>
+            <h2 className="text-2xl font-bold text-white mb-2">SwiftPlan Agents</h2>
             <p className="text-gray-600">Agents specialized in gathering and analyzing business requirements</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -203,7 +205,7 @@ const ArchitectWorkspace = () => {
 
         <TabsContent value="build" className="space-y-4">
           <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-white mb-2">Development Agents</h2>
+            <h2 className="text-2xl font-bold text-white mb-2">SwiftBuild Agents</h2>
             <p className="text-gray-600">Agents focused on building and implementing solutions</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -222,7 +224,7 @@ const ArchitectWorkspace = () => {
 
         <TabsContent value="test" className="space-y-4">
           <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-white mb-2">QA Agents</h2>
+            <h2 className="text-2xl font-bold text-white mb-2">SwiftTest Agents</h2>
             <p className="text-gray-600">Agents dedicated to testing and quality assurance</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

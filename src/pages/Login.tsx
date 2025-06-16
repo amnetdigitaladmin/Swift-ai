@@ -25,10 +25,23 @@ interface LoginProps {
 const Login = ({ onLogin }: LoginProps) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [persona, setPersona] = useState("business-analyst");
+  const [persona, setPersona] = useState("admin");
   const [error, setError] = useState("");
 
   const personas = [
+    {
+      id: "admin",
+      title: "Administrator",
+      description:
+        "Full system access with all agents and administrative capabilities",
+      phases: ["requirements", "design", "development", "testing"],
+    },
+    {
+    id: "architect",
+    title: "Architect",
+    description: "System architecture and cross-team coordination",
+    phases: ["requirements", "development", "testing"],
+    },
     {
       id: "business-analyst",
       title: "Business Analyst",
@@ -37,28 +50,10 @@ const Login = ({ onLogin }: LoginProps) => {
       phases: ["requirements"],
     },
     {
-      id: "designer",
-      title: "UI/UX Designer",
-      description: "Specialized in design and user experience workflows",
-      phases: ["design"],
-    },
-    {
       id: "developer",
       title: "Developer",
       description: "Full-stack development and implementation focus",
       phases: ["development"],
-    },
-    {
-      id: "qa-engineer",
-      title: "QA Engineer",
-      description: "Testing, quality assurance, and validation expertise",
-      phases: ["testing"],
-    },
-    {
-      id: "architect",
-      title: "Architect",
-      description: "System architecture and cross-team coordination",
-      phases: ["requirements", "development", "testing"],
     },
     {
       id: "project-manager",
@@ -67,11 +62,16 @@ const Login = ({ onLogin }: LoginProps) => {
       phases: ["requirements", "design", "development", "testing"],
     },
     {
-      id: "admin",
-      title: "Administrator",
-      description:
-        "Full system access with all agents and administrative capabilities",
-      phases: ["requirements", "design", "development", "testing"],
+      id: "qa-engineer",
+      title: "QA Engineer",
+      description: "Testing, quality assurance, and validation expertise",
+      phases: ["testing"],
+    },
+    {
+      id: "designer",
+      title: "UI/UX Designer",
+      description: "Specialized in design and user experience workflows",
+      phases: ["design"],
     },
   ];
 

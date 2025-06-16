@@ -29,7 +29,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {Select,SelectContent,SelectItem,SelectTrigger,SelectValue,} from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useUser } from "@/contexts/UserContext";
 import { useWorkflow } from "@/contexts/WorkflowContext";
 import { useToast } from "@/hooks/use-toast";
@@ -48,138 +54,8 @@ import DesignPhase from "./DesignPhase";
 import DevelopmentPhase from "./DevelopmentPhase";
 import TestingPhase from "./TestingPhase";
 
-  // Feedback Button Component
-  const FeedbackButton = ({
-    isFeedbackDialogOpen,
-    setIsFeedbackDialogOpen,
-    feedbackType,
-    setFeedbackType,
-    feedbackSubject,
-    setFeedbackSubject,
-    feedbackDescription,
-    setFeedbackDescription,
-    feedbackRating,
-    setFeedbackRating,
-    feedbackEmail,
-    setFeedbackEmail,
-    handleSubmitFeedback
-  }) => (
-    <Dialog open={isFeedbackDialogOpen} onOpenChange={setIsFeedbackDialogOpen}>
-      <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          className="bg-custom-bg text-gray-200 hover:bg-gray-800 border-gray-600"
-        >
-          <MessageSquare className="h-4 w-4 mr-2" />
-          Feedback
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="bg-custom-bg border-gray-700 max-w-lg">
-        <DialogHeader>
-          <DialogTitle className="text-gray-200 flex items-center">
-            <MessageSquare className="h-5 w-5 mr-2" />
-            Share Your Feedback
-          </DialogTitle>
-        </DialogHeader>
-        <div className="space-y-4">
-          <div>
-            <label className="text-sm font-medium text-gray-200 mb-2 block">
-              Feedback Type <span className="text-red-400">*</span>
-            </label>
-            <Select value={feedbackType} onValueChange={setFeedbackType}>
-           <SelectTrigger className="bg-custom-bg border-gray-600 text-white focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors">
-            <SelectValue placeholder="Select feedback type" />
-              </SelectTrigger>
-              <SelectContent className="bg-custom-bg border-gray-600">
-                <SelectItem value="bug">Bug Report</SelectItem>
-                <SelectItem value="feature">Feature Request</SelectItem>
-                <SelectItem value="improvement">General Improvement</SelectItem>
-                <SelectItem value="compliment">Compliment</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div>
-            <label className="text-sm font-medium text-gray-200 mb-2 block">
-              Subject <span className="text-red-400">*</span>
-            </label>
-            <Input
-              value={feedbackSubject}
-              onChange={(e) => setFeedbackSubject(e.target.value)}
-              placeholder="Brief summary of your feedback..."
-              className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
-            />
-          </div>
-
-          <div>
-            <label className="text-sm font-medium text-gray-200 mb-2 block">
-              Description <span className="text-red-400">*</span>
-            </label>
-            <Textarea
-              value={feedbackDescription}
-              onChange={(e) => setFeedbackDescription(e.target.value)}
-              placeholder="Please provide detailed feedback..."
-              rows={4}
-              className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
-            />
-          </div>
-
-          <div>
-            <label className="text-sm font-medium text-gray-200 mb-2 block">
-              Rating (Optional)
-            </label>
-            <Select value={feedbackRating} onValueChange={setFeedbackRating}>
-              <SelectTrigger className="bg-custom-bg border-gray-600 text-white focus:border-gradient-background-from">
-                <SelectValue placeholder="Rate your experience" />
-              </SelectTrigger>
-              <SelectContent className="bg-custom-bg border-gray-600">
-                <SelectItem value="5">⭐⭐⭐⭐⭐ Excellent</SelectItem>
-                <SelectItem value="4">⭐⭐⭐⭐ Good</SelectItem>
-                <SelectItem value="3">⭐⭐⭐ Average</SelectItem>
-                <SelectItem value="2">⭐⭐ Poor</SelectItem>
-                <SelectItem value="1">⭐ Very Poor</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div>
-            <label className="text-sm font-medium text-gray-200 mb-2 block">
-              Contact Email (Optional)
-            </label>
-            <Input
-              type="email"
-              value={feedbackEmail}
-              onChange={(e) => setFeedbackEmail(e.target.value)}
-              placeholder="your.email@example.com"
-              className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
-            />
-          </div>
-
-          <div className="flex justify-end space-x-2 pt-4">
-            <Button
-              variant="outline"
-              onClick={() => setIsFeedbackDialogOpen(false)}
-              className="bg-custom-bg text-gray-200 border-gray-600"
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleSubmitFeedback}
-              className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to"
-            >
-              Submit Feedback
-            </Button>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
-
-
 const Index = () => {
-  const { user, logout } = useUser();
+  const { user } = useUser();
   const { currentProject, createProject, selectProject, projects } =
     useWorkflow();
   const { toast } = useToast();
@@ -190,7 +66,21 @@ const Index = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [newProjectName, setNewProjectName] = useState("");
   const [newProjectDescription, setNewProjectDescription] = useState("");
-  
+
+  // create Project fields
+  const [newProjectCode, setNewProjectCode] = useState("");
+  const [startDate, setStartDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
+  const [endDate, setEndDate] = useState("");
+  const [currentFormPage, setCurrentFormPage] = useState(1);
+  const [projectType, setProjectType] = useState("");
+  const [projectPriority, setProjectPriority] = useState("");
+  const [projectStatus, setProjectStatus] = useState("planning");
+  const [projectManager, setProjectManager] = useState("");
+  const [projectBudget, setProjectBudget] = useState("");
+  const [projectLocation, setProjectLocation] = useState("");
+
   // Feedback dialog states
   const [isFeedbackDialogOpen, setIsFeedbackDialogOpen] = useState(false);
   const [feedbackType, setFeedbackType] = useState("");
@@ -277,12 +167,33 @@ const Index = () => {
     const project = createProject(
       newProjectName,
       newProjectDescription,
-      user.persona
+      user.persona,
+      {
+        projectCode: newProjectCode,
+        startDate,
+        endDate,
+        projectType,
+        projectPriority,
+        projectStatus,
+        projectManager,
+        projectBudget,
+        projectLocation,
+      }
     );
     selectProject(project);
     setIsCreateDialogOpen(false);
     setNewProjectName("");
     setNewProjectDescription("");
+    setNewProjectCode("");
+    setStartDate(new Date().toISOString().split("T")[0]);
+    setEndDate("");
+    setProjectType("");
+    setProjectPriority("");
+    setProjectStatus("planning");
+    setProjectManager("");
+    setProjectBudget("");
+    setProjectLocation("");
+    setCurrentFormPage(1);
 
     toast({
       title: "Project Created",
@@ -299,7 +210,11 @@ const Index = () => {
   };
 
   const handleSubmitFeedback = () => {
-    if (!feedbackType || !feedbackSubject.trim() || !feedbackDescription.trim()) {
+    if (
+      !feedbackType ||
+      !feedbackSubject.trim() ||
+      !feedbackDescription.trim()
+    ) {
       toast({
         title: "Error",
         description: "Please fill in all required fields.",
@@ -354,7 +269,8 @@ const Index = () => {
               >
                 ← Back to Projects
               </Button>
-              <div className="text-left">
+
+              {/* <div className="text-left">
                 <span className="text-sm text-gray-300">
                   Welcome, {user?.username} (
                   {getPersonaTitle(user?.persona || "")})
@@ -365,33 +281,18 @@ const Index = () => {
                     {currentProject.name}
                   </span>
                 </div>
+              </div> */}
+
+              <div className="flex justify-between items-center ">
+                <div className="text-left">
+                  <h1 className="text-2xl font-bold text-white bg-clip-text text-transparent">
+                    Welcome {user?.username}
+                  </h1>
+                  <p className="text-white/50">
+                    Role: {getPersonaTitle(user?.persona || "")}
+                  </p>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center space-x-2">
-              <FeedbackButton 
-              isFeedbackDialogOpen={isFeedbackDialogOpen}
-              setIsFeedbackDialogOpen={setIsFeedbackDialogOpen}
-              feedbackType={feedbackType}
-              setFeedbackType={setFeedbackType}
-              feedbackSubject={feedbackSubject}
-              setFeedbackSubject={setFeedbackSubject}
-              feedbackDescription={feedbackDescription}
-              setFeedbackDescription={setFeedbackDescription}
-              feedbackRating={feedbackRating}
-              setFeedbackRating={setFeedbackRating}
-              feedbackEmail={feedbackEmail}
-              setFeedbackEmail={setFeedbackEmail}
-              handleSubmitFeedback={handleSubmitFeedback}
-              />
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={logout}
-                className="bg-custom-nav-bg text-gray-200 "
-              >
-                <LogOut className="h-4 w-4 mr-2" />
-                Logout
-              </Button>
             </div>
           </div>
           <ArchitectWorkspace />
@@ -412,32 +313,6 @@ const Index = () => {
                 Welcome, {user?.username} (
                 {getPersonaTitle(user?.persona || "")})
               </span>
-            </div>
-            <div className="flex items-center space-x-2">
-                 <FeedbackButton 
-              isFeedbackDialogOpen={isFeedbackDialogOpen}
-              setIsFeedbackDialogOpen={setIsFeedbackDialogOpen}
-              feedbackType={feedbackType}
-              setFeedbackType={setFeedbackType}
-              feedbackSubject={feedbackSubject}
-              setFeedbackSubject={setFeedbackSubject}
-              feedbackDescription={feedbackDescription}
-              setFeedbackDescription={setFeedbackDescription}
-              feedbackRating={feedbackRating}
-              setFeedbackRating={setFeedbackRating}
-              feedbackEmail={feedbackEmail}
-              setFeedbackEmail={setFeedbackEmail}
-              handleSubmitFeedback={handleSubmitFeedback}
-              />
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={logout}
-                className="border-gray-600 text-gray-200 hover:bg-gray-800"
-              >
-                <LogOut className="h-4 w-4 mr-2" />
-                Logout
-              </Button>
             </div>
           </div>
           <div className="space-y-6">
@@ -467,30 +342,6 @@ const Index = () => {
                 Welcome, {user?.username} (
                 {getPersonaTitle(user?.persona || "")})
               </span>
-              <FeedbackButton 
-                isFeedbackDialogOpen={isFeedbackDialogOpen}
-                setIsFeedbackDialogOpen={setIsFeedbackDialogOpen}
-                feedbackType={feedbackType}
-                setFeedbackType={setFeedbackType}
-                feedbackSubject={feedbackSubject}
-                setFeedbackSubject={setFeedbackSubject}
-                feedbackDescription={feedbackDescription}
-                setFeedbackDescription={setFeedbackDescription}
-                feedbackRating={feedbackRating}
-                setFeedbackRating={setFeedbackRating}
-                feedbackEmail={feedbackEmail}
-                setFeedbackEmail={setFeedbackEmail}
-                handleSubmitFeedback={handleSubmitFeedback}
-              />
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={logout}
-                className="border-gray-600 text-gray-200 hover:bg-gray-800"
-              >
-                <LogOut className="h-4 w-4 mr-2" />
-                Logout
-              </Button>
             </div>
           </div>
           {renderPhaseContent()}
@@ -502,42 +353,17 @@ const Index = () => {
   // Show project selector if no project is selected (for all roles except architect)
   if (!currentProject && user?.persona !== "architect") {
     return (
-      <div className="min-h-screen bg-gray-900">
+      <div className="min-h-screen bg-custom-bg">
         <Header />
         <div className="container mx-auto px-6 py-16">
           <div className="flex justify-between items-center mb-8">
             <div className="text-left">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
-                Welcome, {user?.username}
+              <h1 className="text-2xl font-bold text-white bg-clip-text text-transparent">
+                Welcome {user?.username}
               </h1>
               <p className="text-gray-300">
                 Role: {getPersonaTitle(user?.persona || "")}
               </p>
-            </div>
-            <div className="flex items-center space-x-2">
-            <FeedbackButton 
-              isFeedbackDialogOpen={isFeedbackDialogOpen}
-              setIsFeedbackDialogOpen={setIsFeedbackDialogOpen}
-              feedbackType={feedbackType}
-              setFeedbackType={setFeedbackType}
-              feedbackSubject={feedbackSubject}
-              setFeedbackSubject={setFeedbackSubject}
-              feedbackDescription={feedbackDescription}
-              setFeedbackDescription={setFeedbackDescription}
-              feedbackRating={feedbackRating}
-              setFeedbackRating={setFeedbackRating}
-              feedbackEmail={feedbackEmail}
-              setFeedbackEmail={setFeedbackEmail}
-              handleSubmitFeedback={handleSubmitFeedback}
-            />
-            <Button
-                variant="outline"
-                onClick={logout}
-                className="border-gray-600 text-gray-200 hover:bg-gray-800"
-              >
-              <LogOut className="h-4 w-4 mr-2" />
-                Logout
-            </Button>
             </div>
           </div>
 
@@ -558,53 +384,31 @@ const Index = () => {
           <div className="flex justify-between items-center mb-8">
             <div className="text-left">
               <h1 className="text-2xl font-bold text-white bg-clip-text text-transparent">
-                Welcome, {user?.username}
+                Welcome {user?.username}
               </h1>
               <p className="text-white/50">
                 Role: {getPersonaTitle(user?.persona || "")}
               </p>
             </div>
-            <div className="flex items-center space-x-2">
-              <FeedbackButton 
-                isFeedbackDialogOpen={isFeedbackDialogOpen}
-                setIsFeedbackDialogOpen={setIsFeedbackDialogOpen}
-                feedbackType={feedbackType}
-                setFeedbackType={setFeedbackType}
-                feedbackSubject={feedbackSubject}
-                setFeedbackSubject={setFeedbackSubject}
-                feedbackDescription={feedbackDescription}
-                setFeedbackDescription={setFeedbackDescription}
-                feedbackRating={feedbackRating}
-                setFeedbackRating={setFeedbackRating}
-                feedbackEmail={feedbackEmail}
-                setFeedbackEmail={setFeedbackEmail}
-                handleSubmitFeedback={handleSubmitFeedback}
-              />
-              <Button
-                variant="outline"
-                onClick={logout}
-                className="border-gray-600 bg-custom-bg text-white hover:bg-gray-800"
-              >
-              <LogOut className="h-4 w-4 mr-2" />
-                Logout
-              </Button>
-            </div>
           </div>
 
           <div className="max-w-4xl mx-auto space-y-8">
             <div className="text-center">
-              <h2 className="text-3xl font-bold text-gray-200 mb-4">
-                Select or Create Architecture Project
+              <h2 className="text-3xl font-bold text-b mb-4 bg-gradient-to-r from-gradient-background-from to-gradient-background-to bg-clip-text text-transparent">
+                Swift AI Project Hub
               </h2>
               <p className="text-lg text-gray-400 mb-8">
-                Access all AI agents across requirements, development, and QA
-                phases. Choose an existing project or create a new one to get
-                started.
+                Accelerate projects with AI-powered Swift Agents that plan,
+                build, and deliver in unison.
               </p>
             </div>
 
             {/* Always show Create New Project button */}
-            <div className="flex justify-center mb-8">
+            <div className="flex justify-between mb-8 space-x-6">
+              <h3 className="text-xl font-semibold text-gray-200 flex items-center justify-center">
+                <FolderOpen className="h-5 w-5 mr-2 text-ready-txt" />
+                Projects ({projects.length})
+              </h3>
               <Dialog
                 open={isCreateDialogOpen}
                 onOpenChange={setIsCreateDialogOpen}
@@ -621,52 +425,260 @@ const Index = () => {
                 <DialogContent className="bg-custom-bg border-gray-700">
                   <DialogHeader>
                     <DialogTitle className="text-gray-200">
-                      Create Architecture Project
+                      Create Project - Page {currentFormPage}
                     </DialogTitle>
                   </DialogHeader>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-sm font-medium text-gray-200">
-                        Project Name
-                      </label>
-                      <Input
-                        value={newProjectName}
-                        onChange={(e) => setNewProjectName(e.target.value)}
-                        placeholder="Enter project name..."
-                        className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
-                      />
+                  {currentFormPage === 1 ? (
+                    <div className="space-y-4">
+                      <div>
+                        <label className="text-sm font-medium text-gray-200 flex items-center">
+                          Project Name
+                          <span className="ml-1 text-red-500">*</span>
+                          <div className="group relative ml-2">
+                            {/* <MessageSquare className="h-4 w-4 text-gray-400 cursor-help" /> */}
+                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                              Enter a unique, human-readable project name.
+                            </div>
+                          </div>
+                        </label>
+                        <Input
+                          value={newProjectName}
+                          onChange={(e) => setNewProjectName(e.target.value)}
+                          placeholder="Enter project name..."
+                          className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-sm font-medium text-gray-200 flex items-center">
+                          Project Code
+                          <div className="group relative ml-2">
+                            {/* <MessageSquare className="h-4 w-4 text-gray-400 cursor-help" /> */}
+                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                              Alphanumeric code used for automation references;
+                              must be unique.
+                            </div>
+                          </div>
+                        </label>
+                        <Input
+                          value={newProjectCode}
+                          onChange={(e) => setNewProjectCode(e.target.value)}
+                          placeholder="PRJ001"
+                          className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-sm font-medium text-gray-200 flex items-center">
+                          Description
+                          <div className="group relative ml-2">
+                            {/* <MessageSquare className="h-4 w-4 text-gray-400 cursor-help" /> */}
+                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                              Briefly describe the project's purpose and goals.
+                            </div>
+                          </div>
+                        </label>
+                        <Textarea
+                          value={newProjectDescription}
+                          onChange={(e) =>
+                            setNewProjectDescription(e.target.value)
+                          }
+                          placeholder="Describe your project..."
+                          rows={3}
+                          className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="text-sm font-medium text-gray-200 flex items-center">
+                            Start Date
+                            <div className="group relative ml-2">
+                              {/* <MessageSquare className="h-4 w-4 text-gray-400 cursor-help" /> */}
+                              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                                Select the project kickoff date.
+                              </div>
+                            </div>
+                          </label>
+                          <Input
+                            type="date"
+                            value={startDate}
+                            onChange={(e) => setStartDate(e.target.value)}
+                            className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="text-sm font-medium text-gray-200 flex items-center">
+                            End Date
+                            <div className="group relative ml-2">
+                              {/* <MessageSquare className="h-4 w-4 text-gray-400 cursor-help" /> */}
+                              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                                Optionally set a target completion date.
+                              </div>
+                            </div>
+                          </label>
+                          <Input
+                            type="date"
+                            value={endDate}
+                            onChange={(e) => setEndDate(e.target.value)}
+                            className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex justify-end space-x-2 pt-4">
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            setIsCreateDialogOpen(false);
+                            setCurrentFormPage(1);
+                          }}
+                          className="bg-custom-bg text-gray-200"
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          onClick={() => setCurrentFormPage(2)}
+                          disabled={!newProjectName.trim()}
+                          className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to"
+                        >
+                          Next Page
+                        </Button>
+                      </div>
                     </div>
-                    <div>
-                      <label className="text-sm font-medium text-gray-200">
-                        Description
-                      </label>
-                      <Textarea
-                        value={newProjectDescription}
-                        onChange={(e) =>
-                          setNewProjectDescription(e.target.value)
-                        }
-                        placeholder="Describe your architecture project..."
-                        rows={3}
-                        className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
-                      />
+                  ) : (
+                    <div className="space-y-4">
+                      <div>
+                        <label className="text-sm font-medium text-gray-200 flex items-center">
+                          Project Type
+                          <div className="group relative ml-2">
+                            <MessageSquare className="h-4 w-4 text-gray-400 cursor-help" />
+                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                              Select the type of project (e.g., Software
+                              Development, Infrastructure, etc.)
+                            </div>
+                          </div>
+                        </label>
+                        <Select
+                          value={projectType}
+                          onValueChange={setProjectType}
+                        >
+                          <SelectTrigger className="bg-custom-bg border-gray-600 text-white">
+                            <SelectValue placeholder="Select project type" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-gray-800 border-gray-700">
+                            <SelectItem value="software">
+                              Software Development
+                            </SelectItem>
+                            <SelectItem value="infrastructure">
+                              Infrastructure
+                            </SelectItem>
+                            <SelectItem value="research">Research</SelectItem>
+                            <SelectItem value="maintenance">
+                              Maintenance
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div>
+                        <label className="text-sm font-medium text-gray-200 flex items-center">
+                          Project Priority
+                          <div className="group relative ml-2">
+                            <MessageSquare className="h-4 w-4 text-gray-400 cursor-help" />
+                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                              Set the priority level for this project
+                            </div>
+                          </div>
+                        </label>
+                        <Select
+                          value={projectPriority}
+                          onValueChange={setProjectPriority}
+                        >
+                          <SelectTrigger className="bg-custom-bg border-gray-600 text-white">
+                            <SelectValue placeholder="Select priority" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-gray-800 border-gray-700">
+                            <SelectItem value="high">High</SelectItem>
+                            <SelectItem value="medium">Medium</SelectItem>
+                            <SelectItem value="low">Low</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div>
+                        <label className="text-sm font-medium text-gray-200 flex items-center">
+                          Project Manager
+                          <div className="group relative ml-2">
+                            <MessageSquare className="h-4 w-4 text-gray-400 cursor-help" />
+                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                              Assign a project manager to oversee the project
+                            </div>
+                          </div>
+                        </label>
+                        <Input
+                          value={projectManager}
+                          onChange={(e) => setProjectManager(e.target.value)}
+                          placeholder="Enter project manager name..."
+                          className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-sm font-medium text-gray-200 flex items-center">
+                          Project Budget
+                          <div className="group relative ml-2">
+                            <MessageSquare className="h-4 w-4 text-gray-400 cursor-help" />
+                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                              Enter the allocated budget for the project
+                            </div>
+                          </div>
+                        </label>
+                        <Input
+                          value={projectBudget}
+                          onChange={(e) => setProjectBudget(e.target.value)}
+                          placeholder="Enter budget amount..."
+                          className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-sm font-medium text-gray-200 flex items-center">
+                          Project Location
+                          <div className="group relative ml-2">
+                            <MessageSquare className="h-4 w-4 text-gray-400 cursor-help" />
+                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                              Specify the primary location for the project
+                            </div>
+                          </div>
+                        </label>
+                        <Input
+                          value={projectLocation}
+                          onChange={(e) => setProjectLocation(e.target.value)}
+                          placeholder="Enter project location..."
+                          className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
+                        />
+                      </div>
+
+                      <div className="flex justify-end space-x-2 pt-4">
+                        <Button
+                          variant="outline"
+                          onClick={() => setCurrentFormPage(1)}
+                          className="bg-custom-bg text-gray-200"
+                        >
+                          Previous Page
+                        </Button>
+                        <Button
+                          onClick={handleCreateProject}
+                          disabled={!newProjectName.trim()}
+                          className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to"
+                        >
+                          Create Project
+                        </Button>
+                      </div>
                     </div>
-                    <div className="flex justify-end space-x-2">
-                      <Button
-                        variant="outline"
-                        onClick={() => setIsCreateDialogOpen(false)}
-                        className="bg-custom-bg text-gray-200 "
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        onClick={handleCreateProject}
-                        disabled={!newProjectName.trim()}
-                        className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to"
-                      >
-                        Create Project
-                      </Button>
-                    </div>
-                  </div>
+                  )}
                 </DialogContent>
               </Dialog>
             </div>
@@ -674,10 +686,6 @@ const Index = () => {
             {/* Show existing projects if any */}
             {projects.length > 0 && (
               <div>
-                <h3 className="text-xl font-semibold text-gray-200 mb-6 flex items-center justify-center">
-                  <FolderOpen className="h-5 w-5 mr-2 text-ready-txt" />
-                  Existing Projects ({projects.length})
-                </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {projects.map((project) => (
                     <Card
@@ -712,7 +720,8 @@ const Index = () => {
             )}
 
             {/* Capability overview */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+            {/* requirements ,development and testing */}
+            {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
               <div className="bg-custom-bg border border-gray-700 rounded-lg p-6">
                 <FileText className="h-8 w-8 text-ready-txt mb-3" />
                 <h3 className="text-lg font-semibold text-gray-200 mb-2">
@@ -743,7 +752,7 @@ const Index = () => {
                   quality assurance
                 </p>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -764,31 +773,6 @@ const Index = () => {
             <p className="text-gray-300">
               Role: {getPersonaTitle(user?.persona || "")}
             </p>
-          </div>
-          <div className="flex items-center space-x-2">
-              <FeedbackButton 
-              isFeedbackDialogOpen={isFeedbackDialogOpen}
-              setIsFeedbackDialogOpen={setIsFeedbackDialogOpen}
-              feedbackType={feedbackType}
-              setFeedbackType={setFeedbackType}
-              feedbackSubject={feedbackSubject}
-              setFeedbackSubject={setFeedbackSubject}
-              feedbackDescription={feedbackDescription}
-              setFeedbackDescription={setFeedbackDescription}
-              feedbackRating={feedbackRating}
-              setFeedbackRating={setFeedbackRating}
-              feedbackEmail={feedbackEmail}
-              setFeedbackEmail={setFeedbackEmail}
-              handleSubmitFeedback={handleSubmitFeedback}
-              />
-            <Button
-              variant="outline"
-              onClick={logout}
-              className="border-gray-600 text-gray-200 hover:bg-gray-800"
-            >
-              <LogOut className="h-4 w-4 mr-2" />
-              Logout
-            </Button>
           </div>
         </div>
 

@@ -89,10 +89,7 @@ const InputSection = ({
   };
 
   const getFilteredTemplates = () => {
-    const allTemplates = [
-      "Coding Standards",
-      "Detailed Requirement Template",
-      ];
+    const allTemplates = ["Coding Standards", "Detailed Requirement Template"];
 
     if (user?.persona === "business-analyst") {
       return [
@@ -145,7 +142,7 @@ const InputSection = ({
           </div>
         )}
 
-        {(isBusinessAnalyst && inputMode === "type") && (
+        {isBusinessAnalyst && inputMode === "type" && (
           <Textarea
             placeholder="Enter your project requirements, user stories, technical specifications, or any other relevant information..."
             value={input}
@@ -202,7 +199,12 @@ const InputSection = ({
                     Supported: PDF, DOC, DOCX, TXT, XLSX, XLS
                   </p>
                   <label htmlFor="file-upload">
-                    <Button variant="outline" size="sm" asChild className="bg-custom-bg">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      asChild
+                      className="bg-custom-bg"
+                    >
                       <span className="cursor-pointer">Browse Files</span>
                     </Button>
                   </label>
@@ -238,7 +240,6 @@ const InputSection = ({
             )}
           </div>
         )}
-
 
         {/* Document Upload for Non-Business Analyst */}
         {!isBusinessAnalyst && (
@@ -411,7 +412,7 @@ const InputSection = ({
         </div>
 
         {/* Conditional Input Based on Mode */}
-        {(!isBusinessAnalyst) && (
+        {!isBusinessAnalyst && (
           <Textarea
             placeholder="Enter your project requirements, user stories, technical specifications, or any other relevant information..."
             value={input}
@@ -420,7 +421,6 @@ const InputSection = ({
           />
         )}
 
-        
         {/* Template Selection */}
         <div className="space-y-2">
           <label className="text-sm font-medium">Template (Optional)</label>
@@ -459,7 +459,11 @@ const InputSection = ({
               <>
                 {/* <RefreshCw className="h-4 w-4 mr-2 animate-spin" /> */}
                 {/* <img src="/workflow_loader.gif" alt="Loading" className="h-4 w-4 mx-auto"/> */}
-                <span className="generate-button-text">{agentName == "SwiftTest Automated Generator" ? "Generating Testing Artifacts" : "Generating with AI"}</span>
+                <span className="generate-button-text">
+                  {agentName == "SwiftTest Automated Generator"
+                    ? "Generating Testing Artifacts"
+                    : "Generating with AI"}
+                </span>
               </>
             ) : (
               <>
