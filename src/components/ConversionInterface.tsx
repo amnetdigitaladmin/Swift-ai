@@ -69,40 +69,32 @@ const ConversionInterface: React.FC = () => {
             {/* Left panel - Input */}
             <div className="flex-1">
               <div className="mb-2 flex justify-between items-center">
-                <h2 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                <h2 className={`text-lg font-semibold text-gray-800}`}>
                   {isPostgresToSqlServer ? 'PostgreSQL Function' : 'SQL Server Stored Procedure'}
                 </h2>
                 <div className="flex gap-2">
                   <button
                     onClick={() => setIsPostgresToSqlServer(prev => !prev)}
-                    className={`flex items-center text-sm px-3 py-1 rounded ${
-                      isDarkMode 
-                        ? 'bg-gray-700 hover:bg-gray-600 text-gray-200' 
-                        : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
-                    }`}
+                    className={`flex items-center text-sm px-3 py-1 rounded bg-gray-700 hover:bg-gray-600 text-gray-200`}
                   >
                     <ArrowLeftRight className="mr-1 h-4 w-4" />
                     {isPostgresToSqlServer ? 'PostgreSQL → SQL Server' : 'SQL Server → PostgreSQL'}
                   </button>
-                  <button
+                  {/* <button
                     onClick={toggleExamplesPanel}
-                    className={`flex items-center text-sm px-3 py-1 rounded ${
-                      isDarkMode 
-                        ? 'bg-gray-700 hover:bg-gray-600 text-gray-200' 
-                        : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
-                    }`}
+                    className={`flex items-center text-sm px-3 py-1 rounded bg-gray-700 hover:bg-gray-600 text-gray-200`}
                   >
                     Examples {isExamplesPanelOpen ? <ChevronUp className="ml-1 h-4 w-4" /> : <ChevronDown className="ml-1 h-4 w-4" />}
-                  </button>
+                  </button> */}
                 </div>
               </div>
               
-              {isExamplesPanelOpen && (
+              {/* {isExamplesPanelOpen && (
                 <ExamplesPanel 
                   onSelectExample={(example) => setSqlInput(example)} 
                   conversionMode={isPostgresToSqlServer ? 'postgres-to-sqlserver' : 'sqlserver-to-postgres'}
                 />
-              )}
+              )} */}
               
               <CodeEditor
                 value={sqlInput}
