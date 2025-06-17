@@ -53,6 +53,7 @@ import RequirementsPhase from "./RequirementsPhase";
 import DesignPhase from "./DesignPhase";
 import DevelopmentPhase from "./DevelopmentPhase";
 import TestingPhase from "./TestingPhase";
+import Footer from "@/components/Footer";
 
 const Index = () => {
   const { user } = useUser();
@@ -296,6 +297,7 @@ const Index = () => {
             </div>
           </div>
           <ArchitectWorkspace />
+          <Footer />
         </div>
       </div>
     );
@@ -321,6 +323,7 @@ const Index = () => {
             <UserStoryAssignment />
           </div>
         </div>
+        <Footer />
       </div>
     );
   }
@@ -346,6 +349,7 @@ const Index = () => {
           </div>
           {renderPhaseContent()}
         </div>
+        <Footer />
       </div>
     );
   }
@@ -371,6 +375,7 @@ const Index = () => {
             <ProjectSelector onProjectSelected={() => {}} />
           </div>
         </div>
+        <Footer />
       </div>
     );
   }
@@ -378,7 +383,7 @@ const Index = () => {
   // Enhanced project selection interface for architects
   if (!currentProject && user?.persona === "architect") {
     return (
-      <div className="min-h-screen bg-custom-bg">
+      <div className="min-h-screen bg-custom-bg relative">
         <Header />
         <div className="container mx-auto px-6 py-4">
           <div className="flex justify-between items-center mb-8">
@@ -718,43 +723,9 @@ const Index = () => {
                 </div>
               </div>
             )}
-
-            {/* Capability overview */}
-            {/* requirements ,development and testing */}
-            {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
-              <div className="bg-custom-bg border border-gray-700 rounded-lg p-6">
-                <FileText className="h-8 w-8 text-ready-txt mb-3" />
-                <h3 className="text-lg font-semibold text-gray-200 mb-2">
-                  Requirements
-                </h3>
-                <p className="text-gray-400 text-sm">
-                  8 specialized agents for business analysis, stakeholder
-                  mapping, and requirement gathering
-                </p>
-              </div>
-              <div className="bg-custom-bg border border-gray-700 rounded-lg p-6">
-                <Code className="h-8 w-8 text-green-400 mb-3" />
-                <h3 className="text-lg font-semibold text-gray-200 mb-2">
-                  Development
-                </h3>
-                <p className="text-gray-400 text-sm">
-                  8 development agents covering frontend, backend, DevOps, and
-                  security implementation
-                </p>
-              </div>
-              <div className="bg-custom-bg border border-gray-700 rounded-lg p-6">
-                <CheckCircle className="h-8 w-8 text-ready-txt mb-3" />
-                <h3 className="text-lg font-semibold text-gray-200 mb-2">
-                  Testing
-                </h3>
-                <p className="text-gray-400 text-sm">
-                  8 testing agents for automated testing, security audits, and
-                  quality assurance
-                </p>
-              </div>
-            </div> */}
           </div>
         </div>
+        <Footer  className="absolute bottom-0 left-0 right-0" />
       </div>
     );
   }
@@ -858,6 +829,7 @@ const Index = () => {
           )}
         </section>
       </div>
+      <Footer />
     </div>
   );
 };

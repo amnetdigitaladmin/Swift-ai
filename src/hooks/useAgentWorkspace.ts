@@ -59,10 +59,10 @@ export const useAgentWorkspace = (agentName: string) => {
     "SwiftPlan Business Analyst": {
       endpoint: "https://sewlzvr57rnjulvehobu2ienvu0ritqy.lambda-url.ap-south-1.on.aws/",
     },
-    "SwiftBuild Frontend Developer": {
+    "SwiftBuild Frontend": {
       endpoint: "https://c3677yvqbobzen7zfwoxy7ybjq0qletv.lambda-url.ap-south-1.on.aws/",
     },
-    "SwiftBuild Backend Engineer": {
+    "SwiftBuild Backend": {
       endpoint: "https://smi25q3swrw3aprk2h3ccr7tri0mdflr.lambda-url.ap-south-1.on.aws/",
     },
     "SwiftTest Automated Generator":{
@@ -105,8 +105,8 @@ export const useAgentWorkspace = (agentName: string) => {
   };
 
 
-  const isSwiftCodeFrontend = agentName?.includes("SwiftBuild Frontend Developer");
-  const isSwiftCodeBackend = agentName?.includes("SwiftBuild Backend Engineer");
+  const isSwiftCodeFrontend = agentName?.includes("SwiftBuild Frontend");
+  const isSwiftCodeBackend = agentName?.includes("SwiftBuild Backend");
 
   const handleProcess = async () => {
     if (!input.trim() && !selectedFile) {

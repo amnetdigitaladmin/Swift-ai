@@ -5,10 +5,12 @@ import { useUser } from "@/contexts/UserContext";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import FeedbackButton from "./FeedbackButton";
+import FeedbackButton from "./FeedBackButton";
+import { useWorkflow } from "@/contexts/WorkflowContext";
 
 const Header = () => {
   const { user, logout } = useUser();
+  const { selectProject } = useWorkflow();
   
   const { toast } = useToast();
   // Feedback dialog states
@@ -60,7 +62,7 @@ const Header = () => {
     <header className="bg-custom-nav_bg to-black text-white shadow-2xl border-b border-gray-700 sticky top-0 z-10">
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3" onClick={() => selectProject(null as any)}>
             <div>
               <img 
               src="/Swift-ai-logo.svg" 
