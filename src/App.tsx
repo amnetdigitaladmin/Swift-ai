@@ -11,7 +11,6 @@ import Index from "./pages/Index";
 import Login from "./pages/Login";
 import SettingsPage from "./pages/Settings";
 import NotFound from "./pages/NotFound";
-import ConversionInterface from "./components/ConversionInterface";
 
 const queryClient = new QueryClient();
 
@@ -27,7 +26,6 @@ const AppContent = () => {
       <Route path="/" element={<Index />} />
       <Route path="/settings" element={<SettingsPage />} />
       <Route path="*" element={<NotFound />} />
-      <Route path="/sql" element={<ConversionInterface/>} />
     </Routes>
   );
 };

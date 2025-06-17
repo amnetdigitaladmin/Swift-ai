@@ -5,6 +5,7 @@ import { FileText, Users, Target, GitBranch, MessageSquare, Database, Shield, Sm
 import { useWorkflow } from "@/contexts/WorkflowContext";
 import AgentCard from "./AgentCard";
 import AgentWorkspace from "./AgentWorkspace";
+import ConversionInterface from "./ConversionInterface";
 
 const ArchitectWorkspace = () => {
   const { currentProject, createProject, selectProject, projects } = useWorkflow();
@@ -164,6 +165,9 @@ const ArchitectWorkspace = () => {
   ];
 
   if (selectedAgent) {
+    if(selectedAgent == "Code Modernisation") {
+      return <ConversionInterface agentName={selectedAgent} onBack={() => setSelectedAgent(null)} />
+    }
     return <AgentWorkspace agentName={selectedAgent} onBack={() => setSelectedAgent(null)} />;
   }
 

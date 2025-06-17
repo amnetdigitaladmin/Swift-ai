@@ -54,11 +54,8 @@ const OptimizationPanel: React.FC = () => {
         <div className="relative">
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg ${
-              isDarkMode 
-                ? 'bg-gray-700 hover:bg-gray-600 text-gray-200' 
-                : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
-            }`}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg bg-custom-bg hover:bg-gray-600  border boder-gray text-gray-200' 
+`}
           >
             <span className="font-medium">
               {sqlType === 'postgresql' ? 'PostgreSQL' : 'SQL Server'}
@@ -138,10 +135,8 @@ const OptimizationPanel: React.FC = () => {
           {optimizedOutput && (
             <button 
               onClick={handleCopyOutput}
-              className={`mt-2 flex items-center gap-1 px-3 py-1 rounded text-sm ${
-                isDarkMode 
-                  ? 'bg-gray-700 hover:bg-gray-600 text-gray-200' 
-                  : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+              className={`mt-2 flex items-center gap-1 px-3 py-1 rounded text-sm
+              bg-custom-bg text-gray-200
               }`}
             >
               <Clipboard className="h-4 w-4" /> Copy to Clipboard
@@ -162,19 +157,17 @@ const OptimizationPanel: React.FC = () => {
           disabled={isOptimizing || !sqlInput.trim()}
           className={`
             flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all transform hover:scale-105
-            ${isOptimizing ? 'opacity-70 cursor-not-allowed' : ''}
-            ${isDarkMode 
-              ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-              : 'bg-blue-600 hover:bg-blue-700 text-white'
-            }
-          `}
+            bg-gradient-to-r from-gradient-background-from to-gradient-background-to
+            generate-button-text
+            text-black
+            ${isOptimizing ? 'opacity-70 cursor-not-allowed' : ''}`}
         >
           <Zap className="h-5 w-5" />
           {isOptimizing ? 'Optimizing...' : 'Optimize SQL'}
         </button>
       </div>
 
-      <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-800/50' : 'bg-gray-50'}`}>
+      <div className={`p-4 rounded-lg bg-custom-bg border border-gray-600}`}>
         <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
           The optimizer will suggest improvements for:
           {sqlType === 'postgresql' ? (

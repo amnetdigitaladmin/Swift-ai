@@ -4,7 +4,7 @@ export interface HistoryItem {
   postgres: string;
   timestamp: Date;
   isOptimized?: boolean;
-  conversionDirection?: 'sqlserver-to-postgres' | 'postgres-to-sqlserver';
+  conversionDirection: string;
 }
 
 export interface Example {
