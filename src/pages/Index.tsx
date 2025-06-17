@@ -725,7 +725,7 @@ const Index = () => {
             )}
           </div>
         </div>
-        <Footer  className="absolute bottom-0 left-0 right-0" />
+        {/* <Footer  className="absolute bottom-0 left-0 right-0" /> */}
       </div>
     );
   }
