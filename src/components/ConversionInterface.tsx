@@ -90,8 +90,8 @@ const ConversionInterface: React.FC<AgentWorkspaceProps> = ({ agentName, onBack 
           <div className="flex flex-col md:flex-row gap-6">
             {/* Left panel - Input */}
             <div className="flex-1">
-              <div className="mb-2 flex justify-between items-center">
-                <div className="flex items-center gap-2 px-4 py-2">
+              <div className="mb-6 flex justify-between items-center">
+                <div className="flex items-center gap-2 px-4">
                   <select
                     value={sourceType}
                     onChange={(e) => setSourceType(e.target.value)}
