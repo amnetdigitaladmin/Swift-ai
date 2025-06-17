@@ -275,7 +275,7 @@ const OutputSectionWithTabs = ({
             </div>
           </div>
         ) : (
-          <div className="flex flex-col h-[calc(100vh-200px)]">
+          <div className="flex flex-col h-[45rem]">
             {/* <CardHeader className="px-0 pt-0 pb-4">
               <CardTitle>{outputTitle}</CardTitle>
               <CardDescription>{outputDescription}</CardDescription>

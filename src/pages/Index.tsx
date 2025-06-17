@@ -382,8 +382,9 @@ const Index = () => {
 
   // Enhanced project selection interface for architects
   if (!currentProject && user?.persona === "architect") {
-    return (
+    return (<>
       <div className="min-h-screen bg-custom-bg relative">
+        <div>
         <Header />
         <div className="container mx-auto px-6 py-4">
           <div className="flex justify-between items-center mb-8">
@@ -725,8 +726,11 @@ const Index = () => {
             )}
           </div>
         </div>
-        <Footer  className="absolute bottom-0 left-0 right-0" />
+
+        </div>
+      <Footer  className="bg-custom-bg" />
       </div>
+    </>
     );
   }
 
