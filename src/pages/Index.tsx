@@ -383,10 +383,10 @@ const Index = () => {
   // Enhanced project selection interface for architects
   if (!currentProject && user?.persona === "architect") {
     return (<>
-      <div className="min-h-screen bg-custom-bg relative flex flex-col">
+      <div className=" min-h-screen bg-custom-bg relative flex flex-col text-xs">
         <div>
         <Header />
-        <div className="container mx-auto px-6 py-4">
+        <div className="container mx-auto px-6 py-3.5">
           <div className="flex justify-between items-center mb-8">
             <div className="text-left">
               <h1 className="text-2xl font-bold text-white bg-clip-text text-transparent">
@@ -403,7 +403,7 @@ const Index = () => {
               <h2 className="text-3xl font-bold text-b mb-4 bg-gradient-to-r from-gradient-background-from to-gradient-background-to bg-clip-text text-transparent">
                 Swift AI Project Hub
               </h2>
-              <p className="text-lg text-gray-400 mb-8">
+              <p className="text-lg text-gray-400 mb-4">
                 Accelerate projects with AI-powered Swift Agents that plan,
                 build, and deliver in unison.
               </p>
@@ -728,7 +728,7 @@ const Index = () => {
         </div>
 
         </div>
-      <Footer  className="bg-custom-bg mt-auto" />
+        <Footer  className="bg-custom-bg mt-auto" />
       </div>
     </>
     );

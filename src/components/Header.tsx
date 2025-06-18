@@ -60,7 +60,7 @@ const Header = () => {
 
   return (
     <header className="bg-custom-nav_bg to-black text-white shadow-2xl border-b border-gray-700 sticky top-0 z-10">
-      <div className="container mx-auto px-6 py-4">
+      <div className="container mx-auto px-6 py-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3" onClick={() => selectProject(null as any)}>
             <div>
