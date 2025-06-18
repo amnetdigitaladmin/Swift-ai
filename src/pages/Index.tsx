@@ -54,6 +54,7 @@ import DesignPhase from "./DesignPhase";
 import DevelopmentPhase from "./DevelopmentPhase";
 import TestingPhase from "./TestingPhase";
 import Footer from "@/components/Footer";
+import CreateProjectStepper from "@/components/CreateProjectStepper";
 
 const Index = () => {
   const { user } = useUser();
@@ -162,43 +163,30 @@ const Index = () => {
     }
   };
 
-  const handleCreateProject = () => {
-    if (!newProjectName.trim() || !user) return;
+  const handleCreateProject = (formData: any) => {
+    if (!formData.projectName.trim() || !user) return;
 
     const project = createProject(
-      newProjectName,
-      newProjectDescription,
+      formData.projectName,
+      formData.description,
       user.persona,
       {
-        projectCode: newProjectCode,
-        startDate,
-        endDate,
-        projectType,
-        projectPriority,
-        projectStatus,
-        projectManager,
-        projectBudget,
-        projectLocation,
+        projectCode: formData.projectCode,
+        startDate: formData.startDate,
+        endDate: formData.endDate,
+        projectType: formData.projectType,
+        projectPriority: formData.projectPriority,
+        projectStatus: "planning",
+        projectManager: formData.projectManager,
+        projectBudget: formData.projectBudget,
+        projectLocation: formData.projectLocation,
       }
     );
     selectProject(project);
-    setIsCreateDialogOpen(false);
-    setNewProjectName("");
-    setNewProjectDescription("");
-    setNewProjectCode("");
-    setStartDate(new Date().toISOString().split("T")[0]);
-    setEndDate("");
-    setProjectType("");
-    setProjectPriority("");
-    setProjectStatus("planning");
-    setProjectManager("");
-    setProjectBudget("");
-    setProjectLocation("");
-    setCurrentFormPage(1);
 
     toast({
       title: "Project Created",
-      description: `${newProjectName} has been created successfully.`,
+      description: `${formData.projectName} has been created successfully.`,
     });
   };
 
@@ -382,355 +370,110 @@ const Index = () => {
 
   // Enhanced project selection interface for architects
   if (!currentProject && user?.persona === "architect") {
-    return (<>
-      <div className="min-h-screen bg-custom-bg relative flex flex-col">
-        <div>
-        <Header />
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex justify-between items-center mb-8">
-            <div className="text-left">
-              <h1 className="text-2xl font-bold text-white bg-clip-text text-transparent">
-                Welcome {user?.username}
-              </h1>
-              <p className="text-white/50">
-                Role: {getPersonaTitle(user?.persona || "")}
-              </p>
-            </div>
-          </div>
-
-          <div className="max-w-4xl mx-auto space-y-8">
-            <div className="text-center">
-              <h2 className="text-3xl font-bold text-b mb-4 bg-gradient-to-r from-gradient-background-from to-gradient-background-to bg-clip-text text-transparent">
-                Swift AI Project Hub
-              </h2>
-              <p className="text-lg text-gray-400 mb-8">
-                Accelerate projects with AI-powered Swift Agents that plan,
-                build, and deliver in unison.
-              </p>
-            </div>
-
-            {/* Always show Create New Project button */}
-            <div className="flex justify-between mb-8 space-x-6">
-              <h3 className="text-xl font-semibold text-gray-200 flex items-center justify-center">
-                <FolderOpen className="h-5 w-5 mr-2 text-ready-txt" />
-                Projects ({projects.length})
-              </h3>
-              <Dialog
-                open={isCreateDialogOpen}
-                onOpenChange={setIsCreateDialogOpen}
-              >
-                <DialogTrigger asChild>
-                  <Button
-                    size="lg"
-                    className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to  text-lg px-8 py-4"
-                  >
-                    <Plus className="h-5 w-5 mr-2" />
-                    Create New Project
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="bg-custom-bg border-gray-700">
-                  <DialogHeader>
-                    <DialogTitle className="text-gray-200">
-                      Create Project - Page {currentFormPage}
-                    </DialogTitle>
-                  </DialogHeader>
-                  {currentFormPage === 1 ? (
-                    <div className="space-y-4">
-                      <div>
-                        <label className="text-sm font-medium text-gray-200 flex items-center">
-                          Project Name
-                          <span className="ml-1 text-red-500">*</span>
-                          <div className="group relative ml-2">
-                            {/* <MessageSquare className="h-4 w-4 text-gray-400 cursor-help" /> */}
-                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                              Enter a unique, human-readable project name.
-                            </div>
-                          </div>
-                        </label>
-                        <Input
-                          value={newProjectName}
-                          onChange={(e) => setNewProjectName(e.target.value)}
-                          placeholder="Enter project name..."
-                          className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="text-sm font-medium text-gray-200 flex items-center">
-                          Project Code
-                          <div className="group relative ml-2">
-                            {/* <MessageSquare className="h-4 w-4 text-gray-400 cursor-help" /> */}
-                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                              Alphanumeric code used for automation references;
-                              must be unique.
-                            </div>
-                          </div>
-                        </label>
-                        <Input
-                          value={newProjectCode}
-                          onChange={(e) => setNewProjectCode(e.target.value)}
-                          placeholder="PRJ001"
-                          className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="text-sm font-medium text-gray-200 flex items-center">
-                          Description
-                          <div className="group relative ml-2">
-                            {/* <MessageSquare className="h-4 w-4 text-gray-400 cursor-help" /> */}
-                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                              Briefly describe the project's purpose and goals.
-                            </div>
-                          </div>
-                        </label>
-                        <Textarea
-                          value={newProjectDescription}
-                          onChange={(e) =>
-                            setNewProjectDescription(e.target.value)
-                          }
-                          placeholder="Describe your project..."
-                          rows={3}
-                          className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
-                        />
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="text-sm font-medium text-gray-200 flex items-center">
-                            Start Date
-                            <div className="group relative ml-2">
-                              {/* <MessageSquare className="h-4 w-4 text-gray-400 cursor-help" /> */}
-                              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                                Select the project kickoff date.
-                              </div>
-                            </div>
-                          </label>
-                          <Input
-                            type="date"
-                            value={startDate}
-                            onChange={(e) => setStartDate(e.target.value)}
-                            className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="text-sm font-medium text-gray-200 flex items-center">
-                            End Date
-                            <div className="group relative ml-2">
-                              {/* <MessageSquare className="h-4 w-4 text-gray-400 cursor-help" /> */}
-                              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                                Optionally set a target completion date.
-                              </div>
-                            </div>
-                          </label>
-                          <Input
-                            type="date"
-                            value={endDate}
-                            onChange={(e) => setEndDate(e.target.value)}
-                            className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="flex justify-end space-x-2 pt-4">
-                        <Button
-                          variant="outline"
-                          onClick={() => {
-                            setIsCreateDialogOpen(false);
-                            setCurrentFormPage(1);
-                          }}
-                          className="bg-custom-bg text-gray-200"
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          onClick={() => setCurrentFormPage(2)}
-                          disabled={!newProjectName.trim()}
-                          className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to"
-                        >
-                          Next Page
-                        </Button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      <div>
-                        <label className="text-sm font-medium text-gray-200 flex items-center">
-                          Project Type
-                          <div className="group relative ml-2">
-                            <MessageSquare className="h-4 w-4 text-gray-400 cursor-help" />
-                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                              Select the type of project (e.g., Software
-                              Development, Infrastructure, etc.)
-                            </div>
-                          </div>
-                        </label>
-                        <Select
-                          value={projectType}
-                          onValueChange={setProjectType}
-                        >
-                          <SelectTrigger className="bg-custom-bg border-gray-600 text-white">
-                            <SelectValue placeholder="Select project type" />
-                          </SelectTrigger>
-                          <SelectContent className="bg-gray-800 border-gray-700">
-                            <SelectItem value="software">
-                              Software Development
-                            </SelectItem>
-                            <SelectItem value="infrastructure">
-                              Infrastructure
-                            </SelectItem>
-                            <SelectItem value="research">Research</SelectItem>
-                            <SelectItem value="maintenance">
-                              Maintenance
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div>
-                        <label className="text-sm font-medium text-gray-200 flex items-center">
-                          Project Priority
-                          <div className="group relative ml-2">
-                            <MessageSquare className="h-4 w-4 text-gray-400 cursor-help" />
-                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                              Set the priority level for this project
-                            </div>
-                          </div>
-                        </label>
-                        <Select
-                          value={projectPriority}
-                          onValueChange={setProjectPriority}
-                        >
-                          <SelectTrigger className="bg-custom-bg border-gray-600 text-white">
-                            <SelectValue placeholder="Select priority" />
-                          </SelectTrigger>
-                          <SelectContent className="bg-gray-800 border-gray-700">
-                            <SelectItem value="high">High</SelectItem>
-                            <SelectItem value="medium">Medium</SelectItem>
-                            <SelectItem value="low">Low</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div>
-                        <label className="text-sm font-medium text-gray-200 flex items-center">
-                          Project Manager
-                          <div className="group relative ml-2">
-                            <MessageSquare className="h-4 w-4 text-gray-400 cursor-help" />
-                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                              Assign a project manager to oversee the project
-                            </div>
-                          </div>
-                        </label>
-                        <Input
-                          value={projectManager}
-                          onChange={(e) => setProjectManager(e.target.value)}
-                          placeholder="Enter project manager name..."
-                          className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="text-sm font-medium text-gray-200 flex items-center">
-                          Project Budget
-                          <div className="group relative ml-2">
-                            <MessageSquare className="h-4 w-4 text-gray-400 cursor-help" />
-                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                              Enter the allocated budget for the project
-                            </div>
-                          </div>
-                        </label>
-                        <Input
-                          value={projectBudget}
-                          onChange={(e) => setProjectBudget(e.target.value)}
-                          placeholder="Enter budget amount..."
-                          className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="text-sm font-medium text-gray-200 flex items-center">
-                          Project Location
-                          <div className="group relative ml-2">
-                            <MessageSquare className="h-4 w-4 text-gray-400 cursor-help" />
-                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                              Specify the primary location for the project
-                            </div>
-                          </div>
-                        </label>
-                        <Input
-                          value={projectLocation}
-                          onChange={(e) => setProjectLocation(e.target.value)}
-                          placeholder="Enter project location..."
-                          className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
-                        />
-                      </div>
-
-                      <div className="flex justify-end space-x-2 pt-4">
-                        <Button
-                          variant="outline"
-                          onClick={() => setCurrentFormPage(1)}
-                          className="bg-custom-bg text-gray-200"
-                        >
-                          Previous Page
-                        </Button>
-                        <Button
-                          onClick={handleCreateProject}
-                          disabled={!newProjectName.trim()}
-                          className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to"
-                        >
-                          Create Project
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                </DialogContent>
-              </Dialog>
-            </div>
-
-            {/* Show existing projects if any */}
-            {projects.length > 0 && (
-              <div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {projects.map((project) => (
-                    <Card
-                      key={project.id}
-                      className="cursor-pointer hover:shadow-lg transition-all bg-custom-bg border-gray-700 hover:border-gray-600"
-                      onClick={() => handleSelectProject(project)}
-                    >
-                      <CardHeader className="pb-3">
-                        <CardTitle className="text-lg text-gray-200">
-                          {project.name}
-                        </CardTitle>
-                        <CardDescription className="line-clamp-2 text-gray-400">
-                          {project.description}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-2">
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm font-normal text-gray-500">
-                              Created {formatDate(project.createdAt)}
-                            </span>
-                            <span className="text-sm underline relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0.5 after:w-full after:h-px after:bg-gradient-to-r after:from-gradient-background-from after:to-gradient-background-to bg-gradient-to-r from-gradient-background-from to-gradient-background-to bg-clip-text text-transparent hover:opacity-90 transition-colors">
-                              Click to open
-                            </span>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+    return (
+      <>
+        <div className="min-h-screen bg-custom-bg relative flex flex-col">
+          <div>
+            <Header />
+            <div className="container mx-auto px-6 py-4">
+              <div className="flex justify-between items-center mb-8">
+                <div className="text-left">
+                  <h1 className="text-2xl font-bold text-white bg-clip-text text-transparent">
+                    Welcome {user?.username}
+                  </h1>
+                  <p className="text-white/50">
+                    Role: {getPersonaTitle(user?.persona || "")}
+                  </p>
                 </div>
               </div>
-            )}
-          </div>
-        </div>
 
+              <div className="max-w-4xl mx-auto space-y-8">
+                <div className="text-center">
+                  <h2 className="text-3xl font-bold text-b mb-4 bg-gradient-to-r from-gradient-background-from to-gradient-background-to bg-clip-text text-transparent">
+                    Swift AI Project Hub
+                  </h2>
+                  <p className="text-lg text-gray-400 mb-8">
+                    Accelerate projects with AI-powered Swift Agents that plan,
+                    build, and deliver in unison.
+                  </p>
+                </div>
+
+                {/* Always show Create New Project button */}
+                <div className="flex justify-between mb-8 space-x-6">
+                  <h3 className="text-xl font-semibold text-gray-200 flex items-center justify-center">
+                    <FolderOpen className="h-5 w-5 mr-2 text-ready-txt" />
+                    Projects ({projects.length})
+                  </h3>
+                  <Dialog
+                    open={isCreateDialogOpen}
+                    onOpenChange={setIsCreateDialogOpen}
+                  >
+                    <DialogTrigger asChild>
+                      <Button
+                        size="lg"
+                        className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to  text-lg px-8 py-4"
+                      >
+                        <Plus className="h-5 w-5 mr-2" />
+                        Create New Project
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="bg-custom-bg py-8 pb-6 border-gray-700 left-[50%] max-h-[90vh] overflow-y-auto max-w-4xl w-[40vw]">
+                      <CreateProjectStepper
+                        isOpen={isCreateDialogOpen}
+                        onClose={() => {
+                          setIsCreateDialogOpen(false);
+                          setCurrentFormPage(1);
+                        }}
+                        onSubmit={(data) => {
+                          handleCreateProject(data);
+                          setIsCreateDialogOpen(false);
+                        }}
+                      />
+                    </DialogContent>
+                  </Dialog>
+                </div>
+
+                {/* Show existing projects if any */}
+                {projects.length > 0 && (
+                  <div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {projects.map((project) => (
+                        <Card
+                          key={project.id}
+                          className="cursor-pointer hover:shadow-lg transition-all bg-custom-bg border-gray-700 hover:border-gray-600"
+                          onClick={() => handleSelectProject(project)}
+                        >
+                          <CardHeader className="pb-3">
+                            <CardTitle className="text-lg text-gray-200">
+                              {project.name}
+                            </CardTitle>
+                            <CardDescription className="line-clamp-2 text-gray-400">
+                              {project.description}
+                            </CardDescription>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="space-y-2">
+                              <div className="flex items-center justify-between">
+                                <span className="text-sm font-normal text-gray-500">
+                                  Created {formatDate(project.createdAt)}
+                                </span>
+                                <span className="text-sm underline relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0.5 after:w-full after:h-px after:bg-gradient-to-r after:from-gradient-background-from after:to-gradient-background-to bg-gradient-to-r from-gradient-background-from to-gradient-background-to bg-clip-text text-transparent hover:opacity-90 transition-colors">
+                                  Click to open
+                                </span>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+          <Footer className="bg-custom-bg mt-auto" />
         </div>
-        <Footer  className="bg-custom-bg mt-auto" />
-      </div>
-    </>
+      </>
     );
   }
 
