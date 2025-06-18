@@ -1,21 +1,36 @@
-import React, { useState } from 'react';
-import CodeEditor from './CodeEditor';
-import { optimizeSqlCode } from '../services/conversionService';
-import { Zap, Clipboard, ChevronDown } from 'lucide-react';
-import { useTheme } from '../contexts/ThemeContext';
+import React, { useState } from "react";
+import CodeEditor from "./CodeEditor";
+import { optimizeSqlCode } from "../services/conversionService";
+import { Zap, Clipboard, ChevronDown } from "lucide-react";
+import { useTheme } from "../contexts/ThemeContext";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+
+const DATABASE_TYPES = [
+  { id: "sqlserver", label: "SQL Server" },
+  { id: "postgresql", label: "PostgreSQL" },
+];
 
 const OptimizationPanel: React.FC = () => {
   const { isDarkMode } = useTheme();
-  const [sqlInput, setSqlInput] = useState('');
-  const [optimizedOutput, setOptimizedOutput] = useState('');
+  const [sqlInput, setSqlInput] = useState("");
+  const [optimizedOutput, setOptimizedOutput] = useState("");
   const [isOptimizing, setIsOptimizing] = useState(false);
-  const [optimizationError, setOptimizationError] = useState<string | null>(null);
-  const [sqlType, setSqlType] = useState<'postgresql' | 'sqlserver'>('sqlserver');
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [optimizationError, setOptimizationError] = useState<string | null>(
+    null
+  );
+  const [sqlType, setSqlType] = useState<"postgresql" | "sqlserver">(
+    "sqlserver"
+  );
 
   const handleOptimize = async () => {
     if (!sqlInput.trim()) {
-      setOptimizationError('Please provide SQL code to optimize.');
+      setOptimizationError("Please provide SQL code to optimize.");
       return;
     }
 
@@ -25,8 +40,8 @@ const OptimizationPanel: React.FC = () => {
       const result = await optimizeSqlCode(sqlInput, sqlType);
       setOptimizedOutput(result);
     } catch (error) {
-      console.error('Optimization error:', error);
-      setOptimizationError('Failed to optimize SQL code. Please try again.');
+      console.error("Optimization error:", error);
+      setOptimizationError("Failed to optimize SQL code. Please try again.");
     } finally {
       setIsOptimizing(false);
     }
@@ -36,93 +51,75 @@ const OptimizationPanel: React.FC = () => {
     navigator.clipboard.writeText(optimizedOutput);
   };
 
-  const handleSqlTypeChange = (type: 'postgresql' | 'sqlserver') => {
-    setSqlType(type);
-    setIsDropdownOpen(false);
-    // Clear input and output when changing SQL type
-    setSqlInput('');
-    setOptimizedOutput('');
-    setOptimizationError(null);
-  };
-
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+        <h2
+          className={`text-lg font-semibold text-white `}
+        >
           SQL Optimization
         </h2>
-        <div className="relative">
-          <button
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg bg-custom-bg hover:bg-gray-600  border boder-gray text-gray-200' 
-`}
+        <div className="flex items-center gap-2">
+          <Select
+            value={sqlType}
+            onValueChange={(value: "postgresql" | "sqlserver") => {
+              setSqlType(value);
+              // Clear input and output when changing SQL type
+              setSqlInput("");
+              setOptimizedOutput("");
+              setOptimizationError(null);
+            }}
           >
-            <span className="font-medium">
-              {sqlType === 'postgresql' ? 'PostgreSQL' : 'SQL Server'}
-            </span>
-            <ChevronDown className={`h-4 w-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
-          </button>
-          
-          {isDropdownOpen && (
-            <div className={`absolute right-0 mt-2 w-48 rounded-lg shadow-lg z-10 ${
-              isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'
-            }`}>
-              <div className="py-1">
-                <button
-                  onClick={() => handleSqlTypeChange('sqlserver')}
-                  className={`w-full text-left px-4 py-2 text-sm ${
-                    sqlType === 'sqlserver'
-                      ? isDarkMode 
-                        ? 'bg-gray-700 text-white' 
-                        : 'bg-gray-100 text-gray-900'
-                      : isDarkMode
-                        ? 'text-gray-200 hover:bg-gray-700'
-                        : 'text-gray-700 hover:bg-gray-100'
-                  }`}
+            <SelectTrigger className="bg-custom-bg">
+              <SelectValue placeholder="Select database type" />
+            </SelectTrigger>
+            <SelectContent>
+              {DATABASE_TYPES.map((type) => (
+                <SelectItem
+                  key={type.id}
+                  value={type.id}
+                  className="bg-custom-bg"
                 >
-                  SQL Server
-                </button>
-                <button
-                  onClick={() => handleSqlTypeChange('postgresql')}
-                  className={`w-full text-left px-4 py-2 text-sm ${
-                    sqlType === 'postgresql'
-                      ? isDarkMode 
-                        ? 'bg-gray-700 text-white' 
-                        : 'bg-gray-100 text-gray-900'
-                      : isDarkMode
-                        ? 'text-gray-200 hover:bg-gray-700'
-                        : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  PostgreSQL
-                </button>
-              </div>
-            </div>
-          )}
+                  {type.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
       <div className="flex flex-col md:flex-row gap-6">
         {/* Left panel - Input */}
         <div className="flex-1">
-          <h3 className={`mb-2 text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-            {sqlType === 'postgresql' ? 'PostgreSQL Function' : 'SQL Server Stored Procedure'}
+          <h3
+            className={`mb-2 text-sm font-medium text-gray-300`}
+          >
+            {sqlType === "postgresql"
+              ? "PostgreSQL Function"
+              : "SQL Server Stored Procedure"}
           </h3>
           <CodeEditor
             value={sqlInput}
             onChange={setSqlInput}
             language="sql"
-            placeholder={sqlType === 'postgresql' 
-              ? "Paste your PostgreSQL function to optimize..." 
-              : "Paste your SQL Server stored procedure to optimize..."}
+            placeholder={
+              sqlType === "postgresql"
+                ? "Paste your PostgreSQL function to optimize..."
+                : "Paste your SQL Server stored procedure to optimize..."
+            }
             isDarkMode={isDarkMode}
           />
         </div>
 
         {/* Right panel - Output */}
         <div className="flex-1">
-          <h3 className={`mb-2 text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-            Optimized {sqlType === 'postgresql' ? 'PostgreSQL Function' : 'SQL Server Stored Procedure'}
+          <h3
+            className={`mb-2 text-sm font-medium text-gray-300`}
+          >
+            Optimized{" "}
+            {sqlType === "postgresql"
+              ? "PostgreSQL Function"
+              : "SQL Server Stored Procedure"}
           </h3>
           <CodeEditor
             value={optimizedOutput}
@@ -133,7 +130,7 @@ const OptimizationPanel: React.FC = () => {
             isReadOnly={true}
           />
           {optimizedOutput && (
-            <button 
+            <button
               onClick={handleCopyOutput}
               className={`mt-2 flex items-center gap-1 px-3 py-1 rounded text-sm
               bg-custom-bg text-gray-200
@@ -146,7 +143,13 @@ const OptimizationPanel: React.FC = () => {
       </div>
 
       {optimizationError && (
-        <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-red-900/50 text-red-200' : 'bg-red-100 text-red-700'}`}>
+        <div
+          className={`p-4 rounded-lg ${
+            isDarkMode
+              ? "bg-red-900/50 text-red-200"
+              : "bg-red-100 text-red-700"
+          }`}
+        >
           {optimizationError}
         </div>
       )}
@@ -160,17 +163,19 @@ const OptimizationPanel: React.FC = () => {
             bg-gradient-to-r from-gradient-background-from to-gradient-background-to
             generate-button-text
             text-black
-            ${isOptimizing ? 'opacity-70 cursor-not-allowed' : ''}`}
+            ${isOptimizing ? "opacity-70 cursor-not-allowed" : ""}`}
         >
           <Zap className="h-5 w-5" />
-          {isOptimizing ? 'Optimizing...' : 'Optimize SQL'}
+          {isOptimizing ? "Optimizing..." : "Optimize SQL"}
         </button>
       </div>
 
       <div className={`p-4 rounded-lg bg-custom-bg border border-gray-600}`}>
-        <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+        <p
+          className={`text-sm text-gray-300`}
+        >
           The optimizer will suggest improvements for:
-          {sqlType === 'postgresql' ? (
+          {sqlType === "postgresql" ? (
             <ul className="list-disc list-inside mt-2 space-y-1">
               <li>Query performance and execution plans</li>
               <li>Index usage and table access methods</li>
@@ -193,4 +198,4 @@ const OptimizationPanel: React.FC = () => {
   );
 };
 
-export default OptimizationPanel; 
+export default OptimizationPanel;

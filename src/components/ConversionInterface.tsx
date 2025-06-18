@@ -1,11 +1,7 @@
 import React, { useState } from "react";
 import CodeEditor from "./CodeEditor";
 import ExamplesPanel from "./ExamplesPanel";
-import {
-  processConversion,
-  processReverseConversion,
-  sqlConversion,
-} from "../services/conversionService";
+import { sqlConversion } from "../services/conversionService";
 import {
   ChevronDown,
   ChevronUp,
@@ -22,7 +18,13 @@ import OptimizationPanel from "./OptimizationPanel";
 import { HistoryItem } from "../types";
 import { Button } from "@/components/ui/button";
 import { useAgentWorkspace } from "@/hooks/useAgentWorkspace";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 const DATABASE_TYPES = [
   { id: "sqlserver", label: "SQL Server" },
   { id: "postgres", label: "PostgreSQL" },
@@ -175,7 +177,7 @@ const ConversionInterface: React.FC<AgentWorkspaceProps> = ({
             {/* Left panel - Input */}
             <div className="flex-1">
               <div className="mb-6 flex justify-between items-center">
-                <div className="flex items-center gap-2 ">
+                {/* <div className="flex items-center gap-2 ">
                   <select
                     value={sourceType}
                     onChange={(e) => setSourceType(e.target.value)}
@@ -193,7 +195,27 @@ const ConversionInterface: React.FC<AgentWorkspaceProps> = ({
                       </option>
                     ))}
                   </select>
+                </div> */}
+
+                <div className="flex items-center gap-2">
+                  <Select value={sourceType} onValueChange={setSourceType}>
+                    <SelectTrigger className="bg-custom-bg">
+                      <SelectValue placeholder="Select source database" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {DATABASE_TYPES.map((type) => (
+                        <SelectItem
+                          key={type.id}
+                          value={type.id}
+                          className="bg-custom-bg"
+                        >
+                          {type.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
+
                 {/* <button
                   onClick={toggleExamplesPanel}
                   className={`flex items-center text-sm px-3 py-2 rounded bg-custom-bg border border-gray-600 text-gray-200`}
@@ -225,17 +247,10 @@ const ConversionInterface: React.FC<AgentWorkspaceProps> = ({
 
             {/* Right panel - Output */}
             <div className="flex-1 ">
-              {/* <h2
-                className={`mb-2 text-lg font-semibold ${
-                  isDarkMode ? "text-white" : "text-gray-800"
-                }`}
-              >
-                {targetType.toUpperCase()} Function
-              </h2> */}
-              <div className="flex items-center gap-4 mb-6">
+              {/* <div className="flex items-center gap-4 mb-6">
                 <select
                       value={targetType}
-                      onChange={(e) => setSourceType(e.target.value)}
+                      onChange={(e) => setTargetType(e.target.value)}
                       className={`px-3 py-1.5 rounded bg-custom-bg hover:bg-gray-600 text-gray-200 border border-gray-600 focus:outline-none appearance-none pr-8 relative cursor-pointer`}
                       style={{
                         backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%239CA3AF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
@@ -250,6 +265,27 @@ const ConversionInterface: React.FC<AgentWorkspaceProps> = ({
                         </option>
                       ))}
                 </select>
+              </div> */}
+
+              <div className="mb-6 flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <Select value={targetType} onValueChange={setTargetType}>
+                    <SelectTrigger className="bg-custom-bg">
+                      <SelectValue placeholder="Select source database" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {DATABASE_TYPES.map((type) => (
+                        <SelectItem
+                          key={type.id}
+                          value={type.id}
+                          className="bg-custom-bg"
+                        >
+                          {type.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
               <CodeEditor
                 value={postgresOutput}
