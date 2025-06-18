@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FileText, Users, Target, GitBranch, MessageSquare, Database, Shield, Smartphone, Code, Palette, Monitor, CheckCircle, Zap, AlertTriangle, Globe,History } from "lucide-react";
+import { FileText, Users, Target, GitBranch, MessageSquare, Database, Shield, Smartphone, Code, Palette, Monitor, CheckCircle, Zap, AlertTriangle, Globe,History, Network, Bug, Table } from "lucide-react";
 import { useWorkflow } from "@/contexts/WorkflowContext";
 import AgentCard from "./AgentCard";
 import AgentWorkspace from "./AgentWorkspace";
@@ -153,15 +153,15 @@ const ArchitectWorkspace = () => {
     {
       title: "SwiftTest API",
       description: "Tests API endpoints, data validation, and service integrations.",
-      icon: Target,
+      icon: Network,
       features: ["API endpoint testing", "Data validation", "Integration testing", "Service mocking"],
     },
     {
       title: "SwiftTest SQL",
       description: "Identifies, categorizes, and prioritizes bugs with detailed analysis.",
-      icon: AlertTriangle,
+      icon: Table,
       features: ["Bug identification", "Issue classification", "Priority assessment", "Reproduction steps"],
-    },
+    }
   ];
 
   if (selectedAgent) {
