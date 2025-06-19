@@ -97,7 +97,10 @@ const Header = () => {
             />
             <Button
               variant="outline"
-              onClick={logout}
+              onClick={()=>{
+                selectProject(null as any);
+                logout();
+              }}
               className="border-gray-600 bg-custom-bg text-white hover:bg-gray-800"
             >
             <LogOut className="h-4 w-4 mr-2" />
