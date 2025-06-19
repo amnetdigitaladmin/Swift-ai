@@ -10,8 +10,8 @@ import {
 export default function Footer({className=""}) {
   return (
     <footer className={`border border-t-1 border-l-0 border-r-0 border-b-0 mt-6 ${className}`}>
-      <div className="container mx-auto px-4 py-4 md:flex md:justify-between lg:block">
-        <div className="flex flex-col lg:flex-row justify-between pb-6 md:flex-1">
+      <div className="container mx-auto px-4 py-2 md:flex md:justify-between lg:block">
+        <div className="flex flex-col lg:flex-row justify-between pb-3 md:flex-1">
           {/* Contact Info */}
           <div className="mb-6 lg:mb-0">
             <h3 className="text-lg font-semibold text-white mb-2 bg-gradient-to-r from-gradient-background-from to-gradient-background-to bg-clip-text text-transparent">
@@ -87,7 +87,7 @@ export default function Footer({className=""}) {
         </div>
 
         {/* Bottom Section */}
-        <div className="pt-6 flex flex-wrap justify-between md:justify-center lg:justify-between items-center md:flex-col lg:flex-row">
+        <div className="flex flex-wrap justify-between md:justify-center lg:justify-between items-center md:flex-col lg:flex-row">
           <div className="text-gray-400 text-sm mb-4 sm:mb-0 md:mb-8 lg:mb-0">
             © 2024 Amnet Digital. All rights reserved.
           </div>

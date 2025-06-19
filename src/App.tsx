@@ -23,7 +23,7 @@ const AppContent = () => {
 
   return (
     <Routes>
-      <Route path="/" element={<Index />} />
+      <Route path="*" element={<Index />} />
       <Route path="/settings" element={<SettingsPage />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
