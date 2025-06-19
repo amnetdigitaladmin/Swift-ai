@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/select";
 const DATABASE_TYPES = [
   { id: "sqlserver", label: "SQL Server" },
-  { id: "postgres", label: "PostgreSQL" },
+  { id: "postgresql", label: "PostgreSQL" },
   { id: "mysql", label: "MySQL" },
   // { id: "oracle", label: "Oracle" },
 ];
@@ -91,7 +91,7 @@ const ConversionInterface: React.FC<AgentWorkspaceProps> = ({
   const [conversionHistory, setConversionHistory] = useState<HistoryItem[]>([]);
   const [showHistory, setShowHistory] = useState(false);
   const [sourceType, setSourceType] = useState("sqlserver");
-  const [targetType, setTargetType] = useState("postgres");
+  const [targetType, setTargetType] = useState("postgresql");
 
   const handleConvert = async () => {
     if (!sqlInput.trim()) return;
@@ -99,13 +99,13 @@ const ConversionInterface: React.FC<AgentWorkspaceProps> = ({
     setIsConverting(true);
 
     let converstionType = "";
-    if (sourceType === "postgres" && targetType === "sqlserver") {
+    if (sourceType === "postgresql" && targetType === "sqlserver") {
       converstionType = "convert_to_sqlserver";
-    } else if (sourceType === "sqlserver" && targetType === "postgres") {
+    } else if (sourceType === "sqlserver" && targetType === "postgresql") {
       converstionType = "convert_to_postgresql";
     }
     try {
-      const result = await sqlConversion(sqlInput, converstionType);
+      const result = await sqlConversion(sqlInput, sourceType,targetType);
 
       setPostgresOutput(result);
 

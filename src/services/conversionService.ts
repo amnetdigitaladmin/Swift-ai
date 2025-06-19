@@ -32,11 +32,12 @@ export const processReverseConversion = async (postgresCode: string): Promise<st
   }
 };
 
-export const sqlConversion = async (Query: string,conversion_type): Promise<string> => {
+export const sqlConversion = async (Query: string,sourceType:any,targetType:any): Promise<string> => {
   try {
     const response = await axios.post(`${API_URL}`, {
-      code: Query,
-      function_type : conversion_type
+      source_code: Query,
+      source_type:sourceType,
+      target_type:targetType
     });
     
     return response.data;
@@ -56,8 +57,7 @@ export const optimizeSqlCode = async (sqlCode: string, sqlType: any): Promise<st
 
     // }
     const response = await axios.post(`${API_URL}`, {
-      code: sqlCode,
-      "function_type" : "optimize_sql_function",
+      sql_code: sqlCode,
       sql_type: sqlType,
     });
     
