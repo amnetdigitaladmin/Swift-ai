@@ -10,7 +10,7 @@
     --custom-bg: 220 20% 6%;
     --custom-nav-bg: 218, 17%, 9%;
     --tab-bg: 222, 16%, 16%;
-    --tab-border:222, 8%, 24%;
+    --tab-border: 222, 8%, 24%;
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
 
@@ -93,12 +93,56 @@
   }
 
   input:-webkit-autofill {
-  background-color: rgba(55, 65, 81, 0.5) !important; /* Matches bg-gray-700/50 */
-  -webkit-box-shadow: 0 0 0 1000px rgba(55, 65, 81, 0.5) inset !important;
-  -webkit-text-fill-color: #fff !important;
-  transition: background-color 5000s ease-in-out 0s;
-}
+    background-color: rgba(
+      55,
+      65,
+      81,
+      0.5
+    ) !important; /* Matches bg-gray-700/50 */
+    -webkit-box-shadow: 0 0 0 1000px rgba(55, 65, 81, 0.5) inset !important;
+    -webkit-text-fill-color: #fff !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
 
+  /* Date input styling for dark theme */
+  input[type="date"] {
+    color-scheme: dark;
+    position: relative;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(1.5) contrast(1.2);
+    cursor: pointer;
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+  }
+
+  input[type="date"]::-webkit-datetime-edit {
+    color: white;
+  }
+
+  input[type="date"]::-webkit-datetime-edit-fields-wrapper {
+    color: white;
+  }
+
+  input[type="date"]::-webkit-datetime-edit-text {
+    color: white;
+  }
+
+  input[type="date"]::-webkit-datetime-edit-month-field,
+  input[type="date"]::-webkit-datetime-edit-day-field,
+  input[type="date"]::-webkit-datetime-edit-year-field {
+    color: white;
+  }
+
+  input[type="date"]::-webkit-inner-spin-button,
+  input[type="date"]::-webkit-outer-spin-button {
+    display: none;
+  }
 }
 
 @layer base {

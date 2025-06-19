@@ -1,5 +1,11 @@
 import { Info } from "lucide-react";
-import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+} from "@/components/ui/tooltip";
+import { Portal } from "@radix-ui/react-portal";
 
 export function InfoTooltip({ message }: { message: string }) {
   return (
@@ -10,9 +16,11 @@ export function InfoTooltip({ message }: { message: string }) {
             <Info className="w-4 h-4" />
           </span>
         </TooltipTrigger>
-        <TooltipContent className="ml-12">
-          <p>{message}</p>
-        </TooltipContent>
+        <Portal>
+          <TooltipContent side="top" className="max-w-xs z-[9999]">
+            <p>{message}</p>
+          </TooltipContent>
+        </Portal>
       </Tooltip>
     </TooltipProvider>
   );

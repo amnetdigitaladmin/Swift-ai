@@ -26,11 +26,6 @@ const projectSchema = z.object({
   description: z.string().min(1, "Description is required"),
   startDate: z.string().min(1, "Start date is required"),
   endDate: z.string().optional(),
-  projectType: z.string().min(1, "Project type is required"),
-  projectPriority: z.string().min(1, "Project priority is required"),
-  projectManager: z.string().min(1, "Project manager is required"),
-  projectBudget: z.string().min(1, "Project budget is required"),
-  projectLocation: z.string().min(1, "Project location is required"),
 
   // Tech Stack
   languages: z.array(z.string()),
@@ -46,12 +41,14 @@ const projectSchema = z.object({
   // CI/CD
   cicdTool: z.string(),
   testCoverage: z.string(),
+  testCoverageThreshold: z.string().optional(),
   loadTestProfile: z.string(),
   securityScanFrequency: z.string(),
 
   // Security
   complianceStandards: z.array(z.string()),
   staticAnalysis: z.string(),
+  staticAnalysisTool: z.string().optional(),
   dependencyScanSchedule: z.string(),
 
   // Notifications
@@ -86,11 +83,7 @@ const CreateProjectStepper = ({
       description: "",
       startDate: new Date().toISOString().split("T")[0],
       endDate: "",
-      projectType: "",
-      projectPriority: "",
-      projectManager: "",
-      projectBudget: "",
-      projectLocation: "",
+
       // Tech Stack Step
       languages: [],
       frameworks: [],
@@ -103,11 +96,13 @@ const CreateProjectStepper = ({
       // CI/CD Step
       cicdTool: "",
       testCoverage: "medium",
+      testCoverageThreshold: "",
       loadTestProfile: "basic",
       securityScanFrequency: "weekly",
       // Security Step
       complianceStandards: [],
       staticAnalysis: "enabled",
+      staticAnalysisTool: "",
       dependencyScanSchedule: "weekly",
       // Notifications Step
       notificationChannels: [],
@@ -152,18 +147,9 @@ const CreateProjectStepper = ({
       case 3:
         return ["targetEnvironments", "cloudProvider", "iacTool"];
       case 4:
-        return [
-          "cicdTool",
-          "testCoverageThreshold",
-          "loadTestProfile",
-          "securityScanFrequency",
-        ];
+        return ["cicdTool", "loadTestProfile", "securityScanFrequency"];
       case 5:
-        return [
-          "complianceStandards",
-          "staticAnalysisTool",
-          "dependencyScanSchedule",
-        ];
+        return ["complianceStandards", "dependencyScanSchedule"];
       case 6:
         return [
           "notificationChannels",
@@ -205,7 +191,7 @@ const CreateProjectStepper = ({
           {/* <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
             Enter a unique, human-readable project name.
           </div> */}
-        <InfoTooltip message="Enter a unique, human-readable project name." />
+          <InfoTooltip message="Enter a unique, human-readable project name." />
         </label>
         <Controller
           name="projectName"
@@ -231,7 +217,7 @@ const CreateProjectStepper = ({
           {/* <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
             Alphanumeric code used for automation references; must be unique.
           </div> */}
-            <InfoTooltip message="Alphanumeric code used for automation references; must be unique." />
+          <InfoTooltip message="Alphanumeric code used for automation references; must be unique." />
         </label>
         <Controller
           name="projectCode"
@@ -254,9 +240,7 @@ const CreateProjectStepper = ({
       <div>
         <label className="text-sm font-medium text-gray-200 group relative inline-flex items-center">
           Description
-          <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-            Briefly describe the project's purpose and goals.
-          </div>
+          <InfoTooltip message="Briefly describe the project's purpose and goals." />
         </label>
         <Controller
           name="description"
@@ -281,9 +265,7 @@ const CreateProjectStepper = ({
         <div>
           <label className="text-sm font-medium text-gray-200 group relative inline-flex items-center">
             Start Date
-            <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-              Select the project kickoff date.
-            </div>
+            <InfoTooltip message="Select the project kickoff date." />
           </label>
           <Controller
             name="startDate"
@@ -292,7 +274,7 @@ const CreateProjectStepper = ({
               <Input
                 {...field}
                 type="date"
-                className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
+                className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors pr-10"
               />
             )}
           />
@@ -306,9 +288,7 @@ const CreateProjectStepper = ({
         <div>
           <label className="text-sm font-medium text-gray-200 group relative inline-flex items-center">
             End Date
-            <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-              Optionally set a target completion date.
-            </div>
+            <InfoTooltip message="Optionally set a target completion date." />
           </label>
           <Controller
             name="endDate"
@@ -317,7 +297,7 @@ const CreateProjectStepper = ({
               <Input
                 {...field}
                 type="date"
-                className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors"
+                className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors pr-10"
               />
             )}
           />
@@ -342,9 +322,7 @@ const CreateProjectStepper = ({
           <div>
             <label className="text-sm font-medium text-gray-200 group relative inline-flex items-center">
               Language(s)
-              <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                Choose primary development languages.
-              </div>
+              <InfoTooltip message="Choose primary development languages." />
             </label>
             <Controller
               name="languages"
@@ -379,9 +357,7 @@ const CreateProjectStepper = ({
           <div>
             <label className="text-sm font-medium text-gray-200 group relative inline-flex items-center">
               Framework(s)
-              <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                Select frameworks used (e.g. React, Spring).
-              </div>
+              <InfoTooltip message="Select frameworks used (e.g. React, Spring)." />
             </label>
             <Controller
               name="frameworks"
@@ -401,7 +377,7 @@ const CreateProjectStepper = ({
                     <SelectItem value="react">React</SelectItem>
                     <SelectItem value="express">Vue</SelectItem>
                     <SelectItem value="django">Spring</SelectItem>
-                    <SelectItem value="express">Express</SelectItem>        
+                    <SelectItem value="express">Express</SelectItem>
                     <SelectItem value="django">Django</SelectItem>
                     <SelectItem value="spring">FastAPI</SelectItem>
                   </SelectContent>
@@ -414,9 +390,7 @@ const CreateProjectStepper = ({
           <div>
             <label className="text-sm font-medium text-gray-200 group relative inline-flex items-center">
               Database(s)
-              <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                Pick one or more database technologies.
-              </div>
+              <InfoTooltip message="Pick one or more database technologies." />
             </label>
             <Controller
               name="databases"
@@ -451,9 +425,7 @@ const CreateProjectStepper = ({
           <div>
             <label className="text-sm font-medium text-gray-200 group relative inline-flex items-center">
               Container Platform
-              <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                Select containerization platform, if any.
-              </div>
+              <InfoTooltip message="Select containerization platform, if any." />
             </label>
             <Controller
               name="containerPlatform"
@@ -500,9 +472,7 @@ const CreateProjectStepper = ({
           <div>
             <label className="text-sm font-medium text-gray-200 group relative inline-flex items-center">
               Target Environments
-              <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                Environments to provision: Dev, QA, Staging, Prod.
-              </div>
+              <InfoTooltip message="Environments to provision: Dev, QA, Staging, Prod." />
             </label>
             <Controller
               name="targetEnvironments"
@@ -542,9 +512,7 @@ const CreateProjectStepper = ({
           <div>
             <label className="text-sm font-medium text-gray-200 group relative inline-flex items-center">
               Cloud Provider
-              <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                Choose your primary cloud or on-prem provider.
-              </div>
+              <InfoTooltip message="Choose your primary cloud or on-prem provider." />
             </label>
             <Controller
               name="cloudProvider"
@@ -574,9 +542,7 @@ const CreateProjectStepper = ({
           <div>
             <label className="text-sm font-medium text-gray-200 group relative inline-flex items-center">
               IaC Tool
-              <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                Select Infrastructure-as-Code tooling.
-              </div>
+              <InfoTooltip message="Select Infrastructure-as-Code tooling." />
             </label>
             <Controller
               name="iacTool"
@@ -617,9 +583,7 @@ const CreateProjectStepper = ({
           <div>
             <label className="text-sm font-medium text-gray-200 group relative inline-flex items-center">
               CI/CD Tool
-              <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                Choose your continuous integration/ delivery tool.
-              </div>
+              <InfoTooltip message="Choose your continuous integration/ delivery tool." />
             </label>
             <Controller
               name="cicdTool"
@@ -650,9 +614,7 @@ const CreateProjectStepper = ({
           <div>
             <label className="text-sm font-medium text-gray-200 group relative inline-flex items-center">
               Test Coverage Threshold
-              <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                Minimum acceptable code coverage percentage.
-              </div>
+              <InfoTooltip message="Minimum acceptable code coverage percentage." />
             </label>
             <Controller
               name="testCoverageThreshold"
@@ -678,9 +640,7 @@ const CreateProjectStepper = ({
           <div>
             <label className="text-sm font-medium text-gray-200 group relative inline-flex items-center">
               Load Test Profile
-              <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                Select intensity of load tests: Light, Medium, Heavy.
-              </div>
+              <InfoTooltip message="Select intensity of load tests: Light, Medium, Heavy." />
             </label>
             <Controller
               name="loadTestProfile"
@@ -708,9 +668,7 @@ const CreateProjectStepper = ({
           <div>
             <label className="text-sm font-medium text-gray-200 group relative inline-flex items-center">
               Security Scan Frequency
-              <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                How often to run automated security scans.
-              </div>
+              <InfoTooltip message="How often to run automated security scans." />
             </label>
             <Controller
               name="securityScanFrequency"
@@ -764,9 +722,7 @@ const CreateProjectStepper = ({
           <div>
             <label className="text-sm font-medium text-gray-200 group relative inline-flex items-center">
               Compliance Standards
-              <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                Select regulations to enforce (e.g. GDPR, PCI, ISO 27001).
-              </div>
+              <InfoTooltip message="Select regulations to enforce (e.g. GDPR, PCI, ISO 27001)." />
             </label>
             <Controller
               name="complianceStandards"
@@ -795,9 +751,7 @@ const CreateProjectStepper = ({
           <div>
             <label className="text-sm font-medium text-gray-200 group relative inline-flex items-center">
               Static Analysis Tool
-              <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                Tool for static code analysis (SAST).
-              </div>
+              <InfoTooltip message="Tool for static code analysis (SAST)." />
             </label>
             <Controller
               name="staticAnalysisTool"
@@ -827,9 +781,7 @@ const CreateProjectStepper = ({
           <div>
             <label className="text-sm font-medium text-gray-200 group relative inline-flex items-center">
               Dependency Scan Schedule
-              <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                When to run dependency vulnerability checks.
-              </div>
+              <InfoTooltip message="When to run dependency vulnerability checks." />
             </label>
             <Controller
               name="dependencyScanSchedule"
@@ -883,9 +835,7 @@ const CreateProjectStepper = ({
           <div>
             <label className="text-sm font-medium text-gray-200 group relative inline-flex items-center">
               Notification Channels
-              <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                Where to send project alerts: Email, Slack, Teams.
-              </div>
+              <InfoTooltip message="Where to send project alerts: Email, Slack, Teams." />
             </label>
             <Controller
               name="notificationChannels"
@@ -920,9 +870,7 @@ const CreateProjectStepper = ({
           <div>
             <label className="text-sm font-medium text-gray-200 group relative inline-flex items-center">
               Alert Thresholds
-              <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                Define alert thresholds for key events.
-              </div>
+              <InfoTooltip message="Define alert thresholds for key events." />
             </label>
             <Controller
               name="alertThresholds"
@@ -945,9 +893,7 @@ const CreateProjectStepper = ({
           <div>
             <label className="text-sm font-medium text-gray-200 group relative inline-flex items-center">
               Custom Templates
-              <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                Upload or select custom docs (reqs, test plans).
-              </div>
+              <InfoTooltip message="Upload or select custom docs (reqs, test plans)." />
             </label>
             <Controller
               name="customTemplates"
@@ -969,9 +915,7 @@ const CreateProjectStepper = ({
           <div>
             <label className="text-sm font-medium text-gray-200 group relative inline-flex items-center">
               Feature Flags
-              <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                Toggle experimental features on/off.
-              </div>
+              <InfoTooltip message="Toggle experimental features on/off." />
             </label>
             <Controller
               name="featureFlags"
@@ -1019,9 +963,7 @@ const CreateProjectStepper = ({
           <div>
             <label className="text-sm font-medium text-gray-200 group relative inline-flex items-center">
               Environment Variables
-              <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                Define secrets & configs injected during build/deploy.
-              </div>
+              <InfoTooltip message="Define secrets & configs injected during build/deploy." />
             </label>
             <Controller
               name="environmentVariables"
