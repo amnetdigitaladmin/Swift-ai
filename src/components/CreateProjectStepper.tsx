@@ -5,7 +5,7 @@ import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, Calendar } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -91,7 +91,7 @@ const CreateProjectStepper = ({
       containerPlatform: "none",
       // Infrastructure Step
       targetEnvironments: [],
-      cloudProvider: "",
+      cloudProvider: "basic",
       iacTool: "",
       // CI/CD Step
       cicdTool: "",
@@ -187,7 +187,7 @@ const CreateProjectStepper = ({
       <div>
         <label className="text-sm font-medium text-gray-200 group relative inline-flex items-center">
           Project Name
-          <span className="ml-1 text-red-500">*</span>
+          {/* <span className="ml-1 text-red-500">*</span> */}
           {/* <div className="absolute bottom-full left-0 mb-2 w-64 p-2 bg-gray-800 text-gray-200 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
             Enter a unique, human-readable project name.
           </div> */}
@@ -267,17 +267,28 @@ const CreateProjectStepper = ({
             Start Date
             <InfoTooltip message="Select the project kickoff date." />
           </label>
-          <Controller
-            name="startDate"
-            control={control}
-            render={({ field }) => (
-              <Input
-                {...field}
-                type="date"
-                className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors pr-10"
-              />
-            )}
-          />
+          <div className="relative">
+            <Controller
+              name="startDate"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  type="date"
+                  className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors pr-10 appearance-none cursor-pointer"
+                  onClick={(e) => {
+                    // Trigger the native date picker
+                    const input = e.target as HTMLInputElement;
+                    input.showPicker?.();
+                  }}
+                />
+              )}
+            />
+            <Calendar
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"
+              size={16}
+            />
+          </div>
           {errors.startDate && (
             <p className="text-red-500 text-sm mt-1">
               {errors.startDate.message}
@@ -290,17 +301,28 @@ const CreateProjectStepper = ({
             End Date
             <InfoTooltip message="Optionally set a target completion date." />
           </label>
-          <Controller
-            name="endDate"
-            control={control}
-            render={({ field }) => (
-              <Input
-                {...field}
-                type="date"
-                className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors pr-10"
-              />
-            )}
-          />
+          <div className="relative">
+            <Controller
+              name="endDate"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  type="date"
+                  className="bg-custom-bg border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors pr-10 appearance-none cursor-pointer"
+                  onClick={(e) => {
+                    // Trigger the native date picker
+                    const input = e.target as HTMLInputElement;
+                    input.showPicker?.();
+                  }}
+                />
+              )}
+            />
+            <Calendar
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"
+              size={16}
+            />
+          </div>
           {errors.endDate && (
             <p className="text-red-500 text-sm mt-1">
               {errors.endDate.message}
@@ -337,7 +359,7 @@ const CreateProjectStepper = ({
                   <SelectTrigger className="bg-custom-bg border-gray-600 text-white">
                     <SelectValue placeholder="Select languages" />
                   </SelectTrigger>
-                  <SelectContent className="bg-gray-800 border-gray-700">
+                  <SelectContent className="bg-custom-bg border-gray-700">
                     <SelectItem value="python">Python</SelectItem>
                     <SelectItem value="javascript">Java</SelectItem>
                     {/* <SelectItem value="java">Java</SelectItem>
@@ -372,7 +394,7 @@ const CreateProjectStepper = ({
                   <SelectTrigger className="bg-custom-bg border-gray-600 text-white">
                     <SelectValue placeholder="Select frameworks" />
                   </SelectTrigger>
-                  <SelectContent className="bg-gray-800 border-gray-700">
+                  <SelectContent className="bg-custom-bg border-gray-700">
                     <SelectItem value="django">Angular</SelectItem>
                     <SelectItem value="react">React</SelectItem>
                     <SelectItem value="express">Vue</SelectItem>
@@ -405,7 +427,7 @@ const CreateProjectStepper = ({
                   <SelectTrigger className="bg-custom-bg border-gray-600 text-white">
                     <SelectValue placeholder="Select databases" />
                   </SelectTrigger>
-                  <SelectContent className="bg-gray-800 border-gray-700">
+                  <SelectContent className="bg-custom-bg border-gray-700">
                     <SelectItem value="postgresql">PostgreSQL</SelectItem>
                     <SelectItem value="mysql">MySQL</SelectItem>
                     <SelectItem value="mongodb">MongoDB</SelectItem>
@@ -518,11 +540,22 @@ const CreateProjectStepper = ({
               name="cloudProvider"
               control={control}
               render={({ field }) => (
-                <Select onValueChange={field.onChange} value={field.value}>
+                <Select
+                  // onValueChange={(val) => {
+                  //   console.log("Cloud provider selected:", val);
+                  //   field.onChange(val);
+                  // }}
+                  // value={field.value}
+
+                  onValueChange={field.onChange} value={field.value}
+                >
                   <SelectTrigger className="bg-custom-bg border-gray-600 text-white">
-                    <SelectValue placeholder="Select cloud provider" />
+                    {/* <SelectValue>
+                      {field.value ? field.value : "Select cloud provider"}
+                    </SelectValue> */}
+                       <SelectValue placeholder="Select load test profile" />
                   </SelectTrigger>
-                  <SelectContent className="bg-gray-800 border-gray-700">
+                  <SelectContent className="bg-custom-bg border-gray-700">
                     <SelectItem value="aws">AWS</SelectItem>
                     <SelectItem value="azure">Azure</SelectItem>
                     <SelectItem value="gcp">GCP</SelectItem>
@@ -550,9 +583,11 @@ const CreateProjectStepper = ({
               render={({ field }) => (
                 <Select onValueChange={field.onChange} value={field.value}>
                   <SelectTrigger className="bg-custom-bg border-gray-600 text-white">
-                    <SelectValue placeholder="Select IaC tool" />
+                    <SelectValue>
+                      {field.value ? field.value : "Select IaC tool"}
+                    </SelectValue>
                   </SelectTrigger>
-                  <SelectContent className="bg-gray-800 border-gray-700">
+                  <SelectContent className="bg-custom-bg border-gray-700">
                     <SelectItem value="terraform">Terraform</SelectItem>
                     <SelectItem value="cloudformation">
                       CloudFormation
@@ -591,9 +626,11 @@ const CreateProjectStepper = ({
               render={({ field }) => (
                 <Select onValueChange={field.onChange} value={field.value}>
                   <SelectTrigger className="bg-custom-bg border-gray-600 text-white">
-                    <SelectValue placeholder="Select CI/CD tool" />
+                    <SelectValue>
+                      {field.value ? field.value : "Select CI/CD tool"}
+                    </SelectValue>
                   </SelectTrigger>
-                  <SelectContent className="bg-gray-800 border-gray-700">
+                  <SelectContent className="bg-custom-bg border-gray-700">
                     <SelectItem value="github-actions">
                       GitHub Actions
                     </SelectItem>
@@ -650,7 +687,7 @@ const CreateProjectStepper = ({
                   <SelectTrigger className="bg-custom-bg border-gray-600 text-white">
                     <SelectValue placeholder="Select load test profile" />
                   </SelectTrigger>
-                  <SelectContent className="bg-gray-800 border-gray-700">
+                  <SelectContent className="bg-custom-bg border-gray-700">
                     <SelectItem value="light">Light</SelectItem>
                     <SelectItem value="medium">Medium</SelectItem>
                     <SelectItem value="heavy">Heavy</SelectItem>
@@ -737,7 +774,7 @@ const CreateProjectStepper = ({
                   <SelectTrigger className="bg-custom-bg border-gray-600 text-white">
                     <SelectValue placeholder="Select compliance standards" />
                   </SelectTrigger>
-                  <SelectContent className="bg-gray-800 border-gray-700">
+                  <SelectContent className="bg-custom-bg border-gray-700">
                     <SelectItem value="gdpr">GDPR</SelectItem>
                     <SelectItem value="pci">PCI DSS</SelectItem>
                     <SelectItem value="iso27001">ISO 27001</SelectItem>
@@ -758,10 +795,14 @@ const CreateProjectStepper = ({
               control={control}
               render={({ field }) => (
                 <Select onValueChange={field.onChange} value={field.value}>
-                  <SelectTrigger className="bg-custom-bg border-gray-600 text-white">
-                    <SelectValue placeholder="Select static analysis tool" />
+                  <SelectTrigger className="bg-custom-bg border-gray-600 text-white text-start">
+                    <SelectValue>
+                      {field.value
+                        ? field.value
+                        : "Select static analysis tool"}
+                    </SelectValue>
                   </SelectTrigger>
-                  <SelectContent className="bg-gray-800 border-gray-700">
+                  <SelectContent className="bg-custom-bg border-gray-700">
                     <SelectItem value="sonarqube">SonarQube</SelectItem>
                     <SelectItem value="fortify">Fortify</SelectItem>
                     <SelectItem value="veracode">Veracode</SelectItem>
@@ -901,9 +942,11 @@ const CreateProjectStepper = ({
               render={({ field }) => (
                 <Select onValueChange={field.onChange} value={field.value}>
                   <SelectTrigger className="bg-custom-bg border-gray-600 text-white">
-                    <SelectValue placeholder="Select templates" />
+                    <SelectValue>
+                      {field.value ? field.value : "Select templates"}
+                    </SelectValue>
                   </SelectTrigger>
-                  <SelectContent className="bg-gray-800 border-gray-700">
+                  <SelectContent className="bg-custom-bg border-gray-700">
                     <SelectItem value="built-in">Built-in templates</SelectItem>
                     <SelectItem value="custom">Custom templates</SelectItem>
                   </SelectContent>
@@ -1026,7 +1069,7 @@ const CreateProjectStepper = ({
             </div>
             <div className="text-sm text-gray-300">
               {currentStep === 1
-                ? "Project Data"
+                ? "Project Details"
                 : currentStep === 2
                 ? "Tech Stack"
                 : currentStep === 3

@@ -55,6 +55,7 @@ import DevelopmentPhase from "./DevelopmentPhase";
 import TestingPhase from "./TestingPhase";
 import Footer from "@/components/Footer";
 import CreateProjectStepper from "@/components/CreateProjectStepper";
+import CreateProjectStepperSimple from "@/components/CreateProjectStepperSimple";
 
 const Index = () => {
   const { user } = useUser();
@@ -165,24 +166,19 @@ const Index = () => {
 
   const handleCreateProject = (formData: any) => {
     if (!formData.projectName.trim() || !user) return;
+    // console.log(formData);
+    // const project = createProject(
+    //   formData.projectName,
+    //   formData.description,
+    //   user.persona,
+    //   {
+    //     projectCode: formData.projectCode,
+    //     startDate: formData.startDate,
+    //     endDate: formData.endDate,
 
-    const project = createProject(
-      formData.projectName,
-      formData.description,
-      user.persona,
-      {
-        projectCode: formData.projectCode,
-        startDate: formData.startDate,
-        endDate: formData.endDate,
-        projectType: formData.projectType,
-        projectPriority: formData.projectPriority,
-        projectStatus: "planning",
-        projectManager: formData.projectManager,
-        projectBudget: formData.projectBudget,
-        projectLocation: formData.projectLocation,
-      }
-    );
-    selectProject(project);
+    //   }
+    // );
+    // selectProject(project);
 
     toast({
       title: "Project Created",
@@ -406,7 +402,10 @@ const Index = () => {
                   </h3>
                   <Dialog
                     open={isCreateDialogOpen}
-                    onOpenChange={setIsCreateDialogOpen}
+                    onOpenChange={(open) => {
+                      // console.log("Dialog onOpenChange called with:", open);
+                      setIsCreateDialogOpen(open);
+                    }}
                   >
                     <DialogTrigger asChild>
                       <Button
@@ -417,8 +416,8 @@ const Index = () => {
                         Create New Project
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="bg-custom-bg py-8 pb-6 border-gray-700 left-[50%] max-h-[90vh] overflow-y-auto max-w-4xl w-[40vw]">
-                      <CreateProjectStepper
+                    <DialogContent className="bg-custom-bg py-8 pb-6 border-gray-700 left-[50%] max-h-[90vh] overflow-y-auto w-[40vw] max-w-4xl ">
+                      <CreateProjectStepperSimple
                         isOpen={isCreateDialogOpen}
                         onClose={() => {
                           setIsCreateDialogOpen(false);
