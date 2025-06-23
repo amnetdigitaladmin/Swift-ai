@@ -57,12 +57,7 @@ interface WorkflowContextType {
       projectCode?: string;
       startDate?: string;
       endDate?: string;
-      projectType?: string;
-      projectPriority?: string;
-      projectStatus?: string;
-      projectManager?: string;
-      projectBudget?: string;
-      projectLocation?: string;
+     
     }
   ) => Project;
   selectProject: (project: Project) => void;
