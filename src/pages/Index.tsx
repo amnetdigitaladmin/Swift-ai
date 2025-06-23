@@ -167,18 +167,18 @@ const Index = () => {
   const handleCreateProject = (formData: any) => {
     if (!formData.projectName.trim() || !user) return;
     // console.log(formData);
-    // const project = createProject(
-    //   formData.projectName,
-    //   formData.description,
-    //   user.persona,
-    //   {
-    //     projectCode: formData.projectCode,
-    //     startDate: formData.startDate,
-    //     endDate: formData.endDate,
+    const project = createProject(
+      formData.projectName,
+      formData.description,
+      user.persona,
+      {
+        projectCode: formData.projectCode,
+        startDate: formData.startDate,
+        endDate: formData.endDate,
 
-    //   }
-    // );
-    // selectProject(project);
+      }
+    );
+    selectProject(project);
 
     toast({
       title: "Project Created",
