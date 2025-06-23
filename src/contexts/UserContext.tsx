@@ -44,7 +44,7 @@ const validateCredentials = (username: string, password: string, persona: string
   "business-analyst": { "username": "analyst", "password": "analyst2025" },
   "project-manager": { "username": "manager", "password": "manager2025" },
   "developer": { "username": "dev1", "password": "dev2025" },
-  "architect": { "username": "user1", "password": "arch2025" }
+  "architect": { "username": "Archie Hall", "password": "arch2025" }
   };
 
   // For specific personas, validate exact credentials
