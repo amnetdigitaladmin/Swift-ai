@@ -371,8 +371,8 @@ const Index = () => {
         <div className="min-h-screen bg-custom-bg relative flex flex-col">
           <div>
             <Header />
-            <div className="container mx-auto px-6 py-4">
-              <div className="flex justify-between items-center mb-8">
+            <div className="container mx-auto px-6 py-2">
+              <div className="flex justify-between items-center mb-0">
                 <div className="text-left">
                   <h1 className="text-2xl font-bold text-white bg-clip-text text-transparent">
                     Welcome {user?.username}
