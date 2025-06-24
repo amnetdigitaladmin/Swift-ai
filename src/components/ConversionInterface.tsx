@@ -11,6 +11,7 @@ import {
   Badge,
   ArrowLeft,
   FolderOpen,
+  Check,
 } from "lucide-react";
 import { useTheme } from "../contexts/ThemeContext";
 import ConversionHistory from "./ConversionHistory";
@@ -25,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
 const DATABASE_TYPES = [
   { id: "sqlserver", label: "SQL Server" },
   { id: "postgresql", label: "PostgreSQL" },
@@ -83,6 +85,7 @@ const ConversionInterface: React.FC<AgentWorkspaceProps> = ({
     formatFileSize,
     handleIsProcessing,
   } = useAgentWorkspace(agentName);
+   const { toast } = useToast();
   const { isDarkMode } = useTheme();
   const [sqlInput, setSqlInput] = useState("");
   const [postgresOutput, setPostgresOutput] = useState("");
@@ -92,7 +95,8 @@ const ConversionInterface: React.FC<AgentWorkspaceProps> = ({
   const [showHistory, setShowHistory] = useState(false);
   const [sourceType, setSourceType] = useState("sqlserver");
   const [targetType, setTargetType] = useState("postgresql");
-
+  const [isCopied, setIsCopied] = useState(false);
+  
   const handleConvert = async () => {
     if (!sqlInput.trim()) return;
 
@@ -127,8 +131,30 @@ const ConversionInterface: React.FC<AgentWorkspaceProps> = ({
     }
   };
 
-  const handleCopyOutput = () => {
-    navigator.clipboard.writeText(postgresOutput);
+  const handleCopyOutput =async  () => {
+    
+    try {
+      await navigator.clipboard.writeText(postgresOutput);
+      setIsCopied(true);
+
+      // Show toast notification
+      toast({
+        title: "Sql Copied!",
+        description: "The converted sql has been copied to your clipboard.",
+      });
+
+      // Reset the copied state after 2 seconds
+      setTimeout(() => {
+        setIsCopied(false);
+      }, 2000);
+    } catch (error) {
+      console.error("Failed to copy to clipboard:", error);
+      toast({
+        title: "Copy Failed",
+        description: "Failed to copy sql to clipboard. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const loadFromHistory = (item: HistoryItem) => {
@@ -198,7 +224,11 @@ const ConversionInterface: React.FC<AgentWorkspaceProps> = ({
                 </div> */}
 
                 <div className="flex items-center gap-2">
-                  <Select value={sourceType} onValueChange={setSourceType}>
+                  <Select value={sourceType} onValueChange={(value:string)=>{
+                    setSourceType(value);
+                    setSqlInput('');
+                    setPostgresOutput('');
+                    }}>
                     <SelectTrigger className="bg-custom-bg">
                       <SelectValue placeholder="Select source database" />
                     </SelectTrigger>
@@ -298,10 +328,22 @@ const ConversionInterface: React.FC<AgentWorkspaceProps> = ({
               {postgresOutput && (
                 <button
                   onClick={handleCopyOutput}
-                  className={`mt-2 flex items-center gap-1 px-3 py-1 rounded text-sm
-                  bg-custom-bg text-white border }`}
+                  className={`mt-2 flex items-center gap-1 px-3 py-1 rounded text-sm transition-all duration-200
+                  ${
+                    isCopied
+                      ? "bg-green-600 text-white border-green-600"
+                      : "bg-custom-bg text-white border hover:bg-gray-700"
+                  }`}
                 >
-                  <Clipboard className="h-4 w-4" /> Copy to Clipboard
+                  {isCopied ? (
+                    <>
+                      <Check className="h-4 w-4" /> Copied!
+                    </>
+                  ) : (
+                    <>
+                      <Clipboard className="h-4 w-4" /> Copy to Clipboard
+                    </>
+                  )}
                 </button>
               )}
             </div>

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import CodeEditor from "./CodeEditor";
 import { optimizeSqlCode } from "../services/conversionService";
-import { Zap, Clipboard, ChevronDown } from "lucide-react";
+import { Zap, Clipboard, ChevronDown,Check } from "lucide-react";
 import { useTheme } from "../contexts/ThemeContext";
+import { useToast } from "@/hooks/use-toast";
 import {
   Select,
   SelectContent,
@@ -24,6 +25,8 @@ const OptimizationPanel: React.FC = () => {
   const [optimizationError, setOptimizationError] = useState<string | null>(
     null
   );
+  const { toast } = useToast();
+  const [isCopied, setIsCopied] = useState(false);
   const [sqlType, setSqlType] = useState<"postgresql" | "sqlserver">(
     "sqlserver"
   );
@@ -47,8 +50,29 @@ const OptimizationPanel: React.FC = () => {
     }
   };
 
-  const handleCopyOutput = () => {
-    navigator.clipboard.writeText(optimizedOutput);
+  const handleCopyOutput = async () => {
+    try {
+      navigator.clipboard.writeText(optimizedOutput);
+      setIsCopied(true);
+
+      // Show toast notification
+      toast({
+        title: "SQL Copied!",
+        description: "The converted sql has been copied to your clipboard.",
+      });
+
+      // Reset the copied state after 2 seconds
+      setTimeout(() => {
+        setIsCopied(false);
+      }, 2000);
+    } catch (error) {
+      console.error("Failed to copy to clipboard:", error);
+      toast({
+        title: "Copy Failed",
+        description: "Failed to copy sql to clipboard. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -130,13 +154,22 @@ const OptimizationPanel: React.FC = () => {
             isReadOnly={true}
           />
           {optimizedOutput && (
-            <button
+           <button
               onClick={handleCopyOutput}
-              className={`mt-2 flex items-center gap-1 px-3 py-1 rounded text-sm
-              bg-custom-bg text-gray-200
-              }`}
-            >
-              <Clipboard className="h-4 w-4" /> Copy to Clipboard
+              className={`mt-2 flex items-center gap-1 px-3 py-1 rounded text-sm transition-all duration-200
+              ${isCopied
+                ? "bg-green-600 text-white border-green-600"
+                : "bg-custom-bg text-white border hover:bg-gray-700"
+              }`}>
+              {isCopied ? (
+                <>
+                  <Check className="h-4 w-4" /> Copied!
+                </>
+              ) : (
+                <>
+                  <Clipboard className="h-4 w-4" /> Copy to Clipboard
+                </>
+              )}
             </button>
           )}
         </div>
