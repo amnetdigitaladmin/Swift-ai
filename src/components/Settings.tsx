@@ -78,7 +78,7 @@ const Settings = () => {
     <div className="space-y-6">
       <Card className="bg-custom-bg">
         <CardHeader>
-          <CardTitle className="text-white">Architect Settings</CardTitle>
+          <CardTitle className="text-white">Model Settings</CardTitle>
           <CardDescription className="text-gray-600">Configure LLM assignments for different SDLC phases</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
