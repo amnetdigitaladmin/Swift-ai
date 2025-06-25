@@ -112,6 +112,19 @@ export const useAgentWorkspace = (agentName: string) => {
     });
   };
 
+  const getFirstURLFromApiResult: (apiResult: Record<string, any>) => string[] | null = (apiResult) => {
+  const urls: string[] = [];
+  if (!apiResult || typeof apiResult !== 'object') return urls;
+
+  for (const [key, value] of Object.entries(apiResult)) {
+    if (key.toLowerCase().includes('url') && typeof value === 'string') {
+      urls.push(value);
+    }
+  }
+
+  return urls;
+} 
+
   const isSwiftCodeFrontend = agentName?.includes("SwiftBuild Frontend");
   const isSwiftCodeBackend = agentName?.includes("SwiftBuild Backend");
   const isSwiftPlanTechnicalEngineer = agentName?.includes(
@@ -300,14 +313,9 @@ export const useAgentWorkspace = (agentName: string) => {
               setIsAlertOpen(true);
             }
 
-            // The Lambda function should return a URL in the response
-            if (
-              apiResult &&
-              (apiResult.docx_download_url || apiResult.excel_download_url)
-            ) {
-              let downloadedFileURL = apiResult.docx_download_url
-                ? apiResult.docx_download_url
-                : apiResult.excel_download_url;
+            const downloadedFileURL = getFirstURLFromApiResult(apiResult);
+
+            if (downloadedFileURL.length > 0) {
               setOutput(downloadedFileURL);
               toast({
                 title: "Processing Complete",
@@ -316,6 +324,8 @@ export const useAgentWorkspace = (agentName: string) => {
             } else {
               throw new Error("Invalid response format");
             }
+
+          
           } catch (error) {
             console.error("API error:", error);
             toast({
