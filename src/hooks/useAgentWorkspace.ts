@@ -57,18 +57,26 @@ export const useAgentWorkspace = (agentName: string) => {
 
   const agentConfigs: Record<string, { endpoint: string }> = {
     "SwiftPlan Business Analyst": {
-      endpoint: "https://sewlzvr57rnjulvehobu2ienvu0ritqy.lambda-url.ap-south-1.on.aws/",
+      endpoint:
+        "https://sewlzvr57rnjulvehobu2ienvu0ritqy.lambda-url.ap-south-1.on.aws/",
     },
     "SwiftBuild Frontend": {
-      endpoint: "https://c3677yvqbobzen7zfwoxy7ybjq0qletv.lambda-url.ap-south-1.on.aws/",
+      endpoint:
+        "https://c3677yvqbobzen7zfwoxy7ybjq0qletv.lambda-url.ap-south-1.on.aws/",
     },
     "SwiftBuild Backend": {
-      endpoint: "https://smi25q3swrw3aprk2h3ccr7tri0mdflr.lambda-url.ap-south-1.on.aws/",
+      endpoint:
+        "https://smi25q3swrw3aprk2h3ccr7tri0mdflr.lambda-url.ap-south-1.on.aws/",
     },
-    "SwiftTest Automated Generator":{
-      endpoint: "https://jfvhzql6k7pcrl3vrlmyk26g2a0jqwzy.lambda-url.ap-south-1.on.aws/",
-    }
-};
+    "SwiftTest Automated Generator": {
+      endpoint:
+        "https://jfvhzql6k7pcrl3vrlmyk26g2a0jqwzy.lambda-url.ap-south-1.on.aws/",
+    },
+    "SwiftPlan Technical Engineer": {
+      endpoint:
+        "https://xnerzmxfx2i4mdklh2b4jzfwsm0arbze.lambda-url.ap-south-1.on.aws/",
+    },
+  };
   const isBusinessAnalyst = user?.persona === "business-analyst";
 
   const assignedStories = currentProject
@@ -104,9 +112,11 @@ export const useAgentWorkspace = (agentName: string) => {
     });
   };
 
-
   const isSwiftCodeFrontend = agentName?.includes("SwiftBuild Frontend");
   const isSwiftCodeBackend = agentName?.includes("SwiftBuild Backend");
+  const isSwiftPlanTechnicalEngineer = agentName?.includes(
+    "SwiftPlan Technical Engineer"
+  );
 
   const handleProcess = async () => {
     if (!input.trim() && !selectedFile) {
@@ -127,8 +137,8 @@ export const useAgentWorkspace = (agentName: string) => {
           const reader = new FileReader();
           reader.readAsDataURL(selectedFile);
 
-          let devtype = isSwiftCodeFrontend ? "frontend" : "backend"
-    
+          let devtype = isSwiftCodeFrontend ? "frontend" : "backend";
+
           reader.onload = async () => {
             try {
               const fileResult = reader.result as string;
@@ -140,9 +150,9 @@ export const useAgentWorkspace = (agentName: string) => {
                   content: base64Content,
                   extension: selectedFile.name.split(".").pop(),
                 },
-                "model_name" : "openai",
-                "dev_type" : devtype,
-                "pages_per_chunk" : 3
+                model_name: "openai",
+                dev_type: devtype,
+                pages_per_chunk: 3,
               };
               const response = await fetch(config.endpoint, {
                 method: "POST",
@@ -161,8 +171,7 @@ export const useAgentWorkspace = (agentName: string) => {
               // API should return file structure data
 
               setOutput(isSwiftCodeFrontend ? apiResult.result : apiResult);
-              setShowOutput(true)
-              
+              setShowOutput(true);
             } catch (error) {
               // Handle errors
               console.error("API error:", error);
@@ -193,6 +202,156 @@ export const useAgentWorkspace = (agentName: string) => {
       } catch (error) {
         // Handle any other errors
       }
+    } else if (isSwiftPlanTechnicalEngineer) {
+      try {
+        if (!selectedFile) {
+          throw new Error("No file selected");
+        }
+
+        const reader = new FileReader();
+        reader.readAsDataURL(selectedFile);
+
+        reader.onload = async () => {
+          try {
+            const fileResult = reader.result as string;
+            const base64Content = fileResult.split(",")[1];
+
+            // Define the type for the payload
+            interface FilePayload {
+              filename: string;
+              content: string;
+              extension: string | undefined;
+            }
+
+            interface Payload {
+              file: FilePayload;
+              template?: FilePayload; // Make template optional
+              fe?: FilePayload; // Add dummy file 1
+              be?: FilePayload; // Add dummy file 2
+            }
+
+            const payload: Payload = {
+              file: {
+                filename: selectedFile.name.replace(/\.[^/.]+$/, ""),
+                content: base64Content,
+                extension: selectedFile.name.split(".").pop(),
+              },
+            };
+
+            // If there's a secondary file, add it to the payload
+            if (secondaryFile) {
+              const secondaryReader = new FileReader();
+              secondaryReader.readAsDataURL(secondaryFile);
+
+              // Convert the secondary file reading to a Promise
+              const secondaryBase64Content = await new Promise<string>(
+                (resolve, reject) => {
+                  secondaryReader.onload = () => {
+                    const secondaryResult = secondaryReader.result as string;
+                    resolve(secondaryResult.split(",")[1]);
+                  };
+                  secondaryReader.onerror = reject;
+                }
+              );
+
+              // Add the secondary file to the payload
+              payload.template = {
+                filename: secondaryFile.name.replace(/\.[^/.]+$/, ""),
+                content: secondaryBase64Content,
+                extension: secondaryFile.name.split(".").pop(),
+              };
+            }
+
+            // Add two dummy files to the payload
+            const dummyFile1Content = btoa(""); // Empty content
+            const dummyFile2Content = btoa(""); // Empty content
+
+            payload.fe = {
+              filename: "dummy_file_1",
+              content: dummyFile1Content,
+              extension: "docx",
+            };
+
+            payload.be = {
+              filename: "dummy_file_2",
+              content: dummyFile2Content,
+              extension: "docx",
+            };
+
+            const response = await fetch(config.endpoint, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+              throw new Error("Processing failed");
+            }
+
+            const apiResult = await response.json();
+
+            if (
+              apiResult.sensitive_info_status &&
+              apiResult.sensitive_info_status !== ""
+            ) {
+              setAlertContent(apiResult.sensitive_info_status);
+              setIsAlertOpen(true);
+            }
+
+            // The Lambda function should return a URL in the response
+            if (
+              apiResult &&
+              (apiResult.docx_download_url || apiResult.excel_download_url)
+            ) {
+              let downloadedFileURL = apiResult.docx_download_url
+                ? apiResult.docx_download_url
+                : apiResult.excel_download_url;
+              setOutput(downloadedFileURL);
+              toast({
+                title: "Processing Complete",
+                description: "Your request has been processed successfully.",
+              });
+            } else {
+              throw new Error("Invalid response format");
+            }
+          } catch (error) {
+            console.error("API error:", error);
+            toast({
+              title: "Processing Failed",
+              description: "Failed to process your request. Please try again.",
+              variant: "destructive",
+            });
+            // setOutput("Error processing request. Please try again.");
+          } finally {
+            setIsProcessing(false);
+            setProgress(100);
+          }
+        };
+
+        reader.onerror = () => {
+          console.error("File reading error:", reader.error);
+          toast({
+            title: "File Reading Failed",
+            description: "Failed to read the file. Please try again.",
+            variant: "destructive",
+          });
+          setIsProcessing(false);
+          setProgress(0);
+          setOutput("Error reading file. Please try again.");
+        };
+      } catch (error) {
+        console.error("Process error:", error);
+        toast({
+          title: "Processing Failed",
+          description: "Failed to process your request. Please try again.",
+          variant: "destructive",
+        });
+        setIsProcessing(false);
+        setProgress(0);
+        setOutput("Error processing request. Please try again.");
+      }
     } else {
       try {
         if (!selectedFile) {
@@ -219,13 +378,13 @@ export const useAgentWorkspace = (agentName: string) => {
               template?: FilePayload; // Make template optional
             }
 
-          const payload: Payload = {
+            const payload: Payload = {
               file: {
                 filename: selectedFile.name.replace(/\.[^/.]+$/, ""),
                 content: base64Content,
                 extension: selectedFile.name.split(".").pop(),
               },
-          };
+            };
 
             // If there's a secondary file, add it to the payload
             if (secondaryFile) {
@@ -251,16 +410,13 @@ export const useAgentWorkspace = (agentName: string) => {
               };
             }
 
-            const response = await fetch(
-              config.endpoint,
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(payload),
-              }
-            );
+            const response = await fetch(config.endpoint, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(payload),
+            });
 
             if (!response.ok) {
               throw new Error("Processing failed");
@@ -274,12 +430,16 @@ export const useAgentWorkspace = (agentName: string) => {
             ) {
               setAlertContent(apiResult.sensitive_info_status);
               setIsAlertOpen(true);
-            
             }
 
             // The Lambda function should return a URL in the response
-            if (apiResult && (apiResult.docx_download_url || apiResult.excel_download_url)) {
-              let downloadedFileURL = apiResult.docx_download_url ? apiResult.docx_download_url : apiResult.excel_download_url
+            if (
+              apiResult &&
+              (apiResult.docx_download_url || apiResult.excel_download_url)
+            ) {
+              let downloadedFileURL = apiResult.docx_download_url
+                ? apiResult.docx_download_url
+                : apiResult.excel_download_url;
               setOutput(downloadedFileURL);
               toast({
                 title: "Processing Complete",
@@ -425,8 +585,7 @@ export const useAgentWorkspace = (agentName: string) => {
   const handlePushToProjectManager = () => {
     toast({
       title: "Pushed to Git",
-      description:
-        "Content has been successfully pushed to Git.",
+      description: "Content has been successfully pushed to Git.",
     });
   };
 
@@ -435,7 +594,7 @@ export const useAgentWorkspace = (agentName: string) => {
   };
 
   const handleFullScreen = () => {
-    setShowOutput(prev => !prev);
+    setShowOutput((prev) => !prev);
   };
 
   return {
