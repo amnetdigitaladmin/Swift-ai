@@ -19,17 +19,18 @@ const ArchitectWorkspace = () => {
       features: ["Stakeholder mapping", "Business process analysis", "Functional requirements", "Success metrics"],
     },
     {
-      title: "SwiftPlan Story Generator",
-      description: "Creates comprehensive user stories with acceptance criteria and personas.",
-      icon: Users,
-      features: ["User persona creation", "Epic breakdown", "Acceptance criteria", "Story prioritization"],
-    },
-    {
       title: "SwiftPlan Technical Engineer",
       description: "Defines technical specifications, architecture constraints, and system requirements.",
       icon: Target,
       features: ["Technical constraints", "Performance requirements", "Integration specs", "Scalability analysis"],
     },
+    {
+      title: "SwiftPlan Story Generator",
+      description: "Creates comprehensive user stories with acceptance criteria and personas.",
+      icon: Users,
+      features: ["User persona creation", "Epic breakdown", "Acceptance criteria", "Story prioritization"],
+    },
+
     // {
     //   title: "SwiftPlan API Designer",
     //   description: "Specifies API endpoints, data models, and integration requirements.",
