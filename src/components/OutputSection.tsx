@@ -32,32 +32,30 @@ interface OutputSectionProps {
   onMarkStoryComplete: () => void;
 }
 
-const getS3UrlFromOutput = (output: string | object): string | null => {
+const getS3UrlFromOutput = (output: string | object): string[] => {
+  const urls: string[] = [];
+
   // If output is a string and looks like an S3 URL
   if (
     typeof output === "string" &&
     (output.includes("s3.amazonaws.com") || output.includes("lambda-url"))
   ) {
-    return output;
+    urls.push(output);
   }
 
   // If output is an object with url property (from Lambda)
-  if (typeof output === "object" && output !== null && "url" in output) {
-    const url = (output as any).url;
-    return typeof url === "string" ? url : null;
+  if (typeof output === "object" && output !== null) {
+    if (Array.isArray(output)) {
+      // Handle array of URLs
+      output.forEach((u: any) => {
+        if (typeof u === "string") {
+          urls.push(u);
+        }
+      });
+    }
   }
 
-  // If output is an object with docx_download_url property
-  if (
-    typeof output === "object" &&
-    output !== null &&
-    "docx_download_url" in output
-  ) {
-    const url = (output as any).docx_download_url;
-    return typeof url === "string" ? url.replace(/\\\//g, "/") : null;
-  }
-
-  return null;
+ return urls;
 };
 
 const OutputSection = ({
@@ -73,7 +71,7 @@ const OutputSection = ({
   onPushToProjectManager,
   onMarkStoryComplete,
 }: OutputSectionProps) => {
-  let s3Url = getS3UrlFromOutput(output);
+  let s3Urls = getS3UrlFromOutput(output);
   const isRequirementsAgent = agentName?.toLowerCase().includes("swiftplan");
   const outputTitle = isRequirementsAgent
     ? "Generated Output"
@@ -92,7 +90,11 @@ const OutputSection = ({
           <div className="h-[600px] flex flex-col items-center justify-center">
             <div className="text-center py-8">
               {/* <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4 text-ready-txt" /> */}
-              <img src="/workflow_loader.gif" alt="Loading" className="h-16 w-16 mx-auto"/>
+              <img
+                src="/workflow_loader.gif"
+                alt="Loading"
+                className="h-16 w-16 mx-auto"
+              />
               <p className="text-gray-600">{processingMessage}</p>
               {progress > 0 && (
                 <div className="w-64 mt-4">
@@ -101,17 +103,25 @@ const OutputSection = ({
               )}
             </div>
           </div>
-        ) : s3Url ? (
+        ) : s3Urls.length > 0 ? (
           <div className="h-[600px] flex flex-col items-center justify-center">
-            <div className="text-center py-8">
-              <Button
-                onClick={() => onS3Download(s3Url!)}
-                className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to text-black generate-button-text text-base"
-                size="lg"
-              >
-                <Download className="h-5 w-5 mr-2" />
-                Download Generated File
-              </Button>
+            <div className="text-center py-8 space-y-4">
+              <h3 className="text-lg font-semibold text-gray-200 mb-4">
+                Generated Files ({s3Urls.length})
+              </h3>
+              <div className="space-y-3">
+                {s3Urls.map((url, index) => (
+                  <Button
+                    key={index}
+                    onClick={() => onS3Download(url)}
+                    className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to text-black generate-button-text text-base w-full max-w-md"
+                    size="lg"
+                  >
+                    <Download className="h-5 w-5 mr-2" />
+                    Download File {index + 1}
+                  </Button>
+                ))}
+              </div>
             </div>
           </div>
         ) : (
@@ -132,7 +142,12 @@ const OutputSection = ({
             />
             {output && (
               <div className="flex flex-wrap gap-2 mt-4">
-                <Button variant="outline" size="sm" onClick={onCopy} className="bg-custom-bg">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={onCopy}
+                  className="bg-custom-bg"
+                >
                   <Copy className="h-4 w-4 mr-2 text-ready-txt" />
                   <span>Copy</span>
                 </Button>
@@ -143,11 +158,16 @@ const OutputSection = ({
                   className="text-white bg-custom-bg"
                 >
                   <Download className="h-4 w-4 mr-2 text-ready-txt" />
-                   <span>Download</span> 
+                  <span>Download</span>
                 </Button>
-                <Button variant="outline" size="sm" onClick={onAzureDevOpsPush} className="bg-custom-bg">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={onAzureDevOpsPush}
+                  className="bg-custom-bg"
+                >
                   <Cloud className="h-4 w-4 mr-2 text-ready-txt" />
-                   <span>Push to Azure DevOps</span>
+                  <span>Push to Azure DevOps</span>
                 </Button>
                 <Button
                   variant="outline"
@@ -156,7 +176,7 @@ const OutputSection = ({
                   className="bg-custom-bg"
                 >
                   <GitBranch className="h-4 w-4 mr-2 text-ready-txt" />
-                   <span>Push to git</span>
+                  <span>Push to git</span>
                 </Button>
                 {selectedStory && selectedStory.status !== "completed" && (
                   <Button

@@ -51,18 +51,6 @@ const ArchitectWorkspace = () => {
       ],
     },
     {
-      title: "SwiftPlan Story Generator",
-      description:
-        "Creates comprehensive user stories with acceptance criteria and personas.",
-      icon: Users,
-      features: [
-        "User persona creation",
-        "Epic breakdown",
-        "Acceptance criteria",
-        "Story prioritization",
-      ],
-    },
-    {
       title: "SwiftPlan Technical Engineer",
       description:
         "Defines technical specifications, architecture constraints, and system requirements.",
@@ -74,6 +62,13 @@ const ArchitectWorkspace = () => {
         "Scalability analysis",
       ],
     },
+    {
+      title: "SwiftPlan Story Generator",
+      description: "Creates comprehensive user stories with acceptance criteria and personas.",
+      icon: Users,
+      features: ["User persona creation", "Epic breakdown", "Acceptance criteria", "Story prioritization"],
+    },
+
     // {
     //   title: "SwiftPlan API Designer",
     //   description: "Specifies API endpoints, data models, and integration requirements.",
