@@ -45,14 +45,21 @@ const getS3UrlFromOutput = (output: string | object): string[] => {
 
   // If output is an object with url property (from Lambda)
   if (typeof output === "object" && output !== null) {
-    if (Array.isArray(output)) {
-      // Handle array of URLs
-      output.forEach((u: any) => {
-        if (typeof u === "string") {
-          urls.push(u);
-        }
-      });
+     
+    for (const [key, value] of Object.entries(output)) {
+      if (typeof value === "string") {
+        urls.push(value);
+      }
     }
+
+    // if (Array.isArray(output)) {
+    //   // Handle array of URLs
+    //   output.forEach((u: any) => {
+    //     if (typeof u === "string") {
+    //       urls.push(u);
+    //     }
+    //   });
+    // }
   }
 
   return urls;
@@ -71,7 +78,7 @@ const OutputSection = ({
   onPushToProjectManager,
   onMarkStoryComplete,
 }: OutputSectionProps) => {
-  let s3Urls = getS3UrlFromOutput(output);
+  // let s3Urls = getS3UrlFromOutput(output);
   const isRequirementsAgent = agentName?.toLowerCase().includes("swiftplan");
   const outputTitle = isRequirementsAgent
     ? "Generated Output"
@@ -103,24 +110,24 @@ const OutputSection = ({
               )}
             </div>
           </div>
-        ) : s3Urls.length > 0 ? (
+        ) : Object.keys(output).length > 0 ? (
           <div className="h-[600px] flex flex-col items-center justify-center">
             <div className="text-center py-8 space-y-4">
               <h3 className="text-lg font-semibold text-gray-200 mb-4">
-                Generated Files ({s3Urls.length})
+                Generated Files ({Object.keys(output).length})
               </h3>
               <div className="space-y-3">
-                {s3Urls.map((url, index) => (
-                  <Button
-                    key={index}
-                    onClick={() => onS3Download(url)}
-                    className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to text-black generate-button-text text-base w-full max-w-md"
-                    size="lg"
-                  >
-                    <Download className="h-5 w-5 mr-2" />
-                    Download File {index + 1}
-                  </Button>
-                ))}
+              {Object.entries(output).map(([fileName, url], index) => (
+                <Button
+                  key={fileName}
+                  onClick={() => onS3Download(url)}
+                  className="bg-gradient-to-r from-gradient-background-from to-gradient-background-to text-black generate-button-text text-base w-full max-w-md"
+                  size="lg"
+                >
+                  <Download className="h-5 w-5 mr-2" />
+                  {fileName}
+                </Button>
+              ))}
               </div>
             </div>
           </div>

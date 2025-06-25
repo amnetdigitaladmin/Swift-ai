@@ -63,6 +63,9 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
     showOutput,
     handleFullScreen,
 
+    parallelLLMMode,
+    setParallelLLMMode,
+
     isAlertOpen,
     setIsAlertOpen,
     alertContent,
@@ -212,6 +215,8 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
                   onDrop={handleDrop}
                   formatFileSize={formatFileSize}
                   handleIsProcessing={handleIsProcessing}
+                  parallelLLMMode={parallelLLMMode}
+                  setParallelLLMMode={setParallelLLMMode}
                 />
               )}
 

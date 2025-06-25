@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { Upload, FileText, X, Play, RefreshCw, FileInput } from "lucide-react";
 import { useUser } from "@/contexts/UserContext";
 
@@ -43,6 +44,8 @@ interface InputSectionProps {
   onDrop: (e: React.DragEvent) => void;
   formatFileSize: (bytes: number) => string;
   handleIsProcessing: (processing: boolean) => void;
+  parallelLLMMode: boolean;
+  setParallelLLMMode: (enabled: boolean) => void;
 }
 
 const InputSection = ({
@@ -71,6 +74,8 @@ const InputSection = ({
   onDrop,
   formatFileSize,
   handleIsProcessing,
+  parallelLLMMode,
+  setParallelLLMMode,
 }: InputSectionProps) => {
   const { user } = useUser();
   const isBusinessAnalyst = user?.persona === "business-analyst";
@@ -147,7 +152,7 @@ const InputSection = ({
             placeholder="Enter your project requirements, user stories, technical specifications, or any other relevant information..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            className="min-h-[200px] bg-custom-bg"
+            className="min-h-[100px] bg-custom-bg"
           />
         )}
 
@@ -417,7 +422,7 @@ const InputSection = ({
             placeholder="Enter your project requirements, user stories, technical specifications, or any other relevant information..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            className="min-h-[200px] bg-custom-bg"
+            className="min-h-[100px] bg-custom-bg"
           />
         )}
 
@@ -440,6 +445,17 @@ const InputSection = ({
               ))}
             </SelectContent>
           </Select>
+        </div>
+
+        {/* Parallel LLM Mode Toggle */}
+        <div className="flex items-center space-x-4 p-3  rounded-lg border">
+          <span className="text-sm font-medium text-white">
+            Parallel LLM Mode:
+          </span>
+          <Switch
+            checked={parallelLLMMode}
+            onCheckedChange={setParallelLLMMode}
+          />
         </div>
 
         <div className="flex items-center justify-between">

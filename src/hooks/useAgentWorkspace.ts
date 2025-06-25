@@ -45,6 +45,7 @@ export const useAgentWorkspace = (agentName: string) => {
   const [selectedStoryId, setSelectedStoryId] = useState<string | null>(null);
   const [inputMode, setInputMode] = useState<"type" | "upload">("type");
   const [showOutput, setShowOutput] = useState(false);
+  const [parallelLLMMode, setParallelLLMMode] = useState(false);
 
   const { toast } = useToast();
   const { user } = useUser();
@@ -166,6 +167,7 @@ export const useAgentWorkspace = (agentName: string) => {
                 model_name: "openai",
                 dev_type: devtype,
                 pages_per_chunk: 3,
+                enable_parallel_llm:parallelLLMMode
               };
               const response = await fetch(config.endpoint, {
                 method: "POST",
@@ -313,19 +315,16 @@ export const useAgentWorkspace = (agentName: string) => {
               setIsAlertOpen(true);
             }
 
-            const downloadedFileURL = getFirstURLFromApiResult(apiResult);
-
-            if (downloadedFileURL.length > 0) {
-              setOutput(downloadedFileURL);
+            // const downloadedFileURL = getFirstURLFromApiResult(apiResult.url);ap
+            if(apiResult.url){
+              setOutput(apiResult.url);
               toast({
                 title: "Processing Complete",
                 description: "Your request has been processed successfully.",
               });
             } else {
-              throw new Error("Invalid response format");
+               throw new Error("Invalid response format");
             }
-
-          
           } catch (error) {
             console.error("API error:", error);
             toast({
@@ -450,7 +449,7 @@ export const useAgentWorkspace = (agentName: string) => {
               let downloadedFileURL = apiResult.docx_download_url
                 ? apiResult.docx_download_url
                 : apiResult.excel_download_url;
-              setOutput(downloadedFileURL);
+              setOutput({'Download File':downloadedFileURL});
               toast({
                 title: "Processing Complete",
                 description: "Your request has been processed successfully.",
@@ -632,6 +631,8 @@ export const useAgentWorkspace = (agentName: string) => {
     selectedStory,
     isBusinessAnalyst,
     currentProject,
+    parallelLLMMode,
+    setParallelLLMMode,
 
     isAlertOpen,
     setIsAlertOpen,
