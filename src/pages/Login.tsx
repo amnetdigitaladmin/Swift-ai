@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Card,
   CardContent,
@@ -25,8 +25,47 @@ interface LoginProps {
 const Login = ({ onLogin }: LoginProps) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [persona, setPersona] = useState("admin");
+  const [persona, setPersona] = useState("architect");
   const [error, setError] = useState("");
+
+  // Add refs to track the input elements
+  const usernameRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+
+  // Add useEffect to detect autofill - run only once on mount
+  useEffect(() => {
+    const checkAutofill = () => {
+      if (usernameRef.current && passwordRef.current) {
+        // Check if fields have been autofilled by checking their values
+        if (usernameRef.current.value && !username) {
+          setUsername(usernameRef.current.value);
+        }
+        if (passwordRef.current.value && !password) {
+          setPassword(passwordRef.current.value);
+        }
+      }
+    };
+
+    // Check immediately
+    checkAutofill();
+
+    // Check after a short delay to catch autofill that happens after component mount
+    const timeoutId = setTimeout(checkAutofill, 100);
+
+    // Also listen for animation events that might indicate autofill
+    const handleAnimationStart = (e: AnimationEvent) => {
+      if (e.animationName.includes("autofill")) {
+        checkAutofill();
+      }
+    };
+
+    document.addEventListener("animationstart", handleAnimationStart);
+
+    return () => {
+      clearTimeout(timeoutId);
+      document.removeEventListener("animationstart", handleAnimationStart);
+    };
+  }, []); // Empty dependency array - run only once on mount
 
   const personas = [
     {
@@ -93,7 +132,6 @@ const Login = ({ onLogin }: LoginProps) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center p-6 relative overflow-hidden before:absolute before:w-[800px] before:h-[800px] before:-left-[300px] before:bottom-[-500px] before:rounded-full before:bg-emerald-400/10 before:blur-[120px]">
-    
       <Card className="w-full max-w-md shadow-2xl border border-gray-700 bg-gray-800/90 backdrop-blur-sm before:absolute before:w-[600px] before:h-[200px] before:-left-[200px] before:top-[-200px] before:rounded-full before:bg-emerald-400/10 before:blur-[120px]">
         <CardHeader className="text-center space-y-4 relative">
           <div className="flex justify-center">
@@ -141,6 +179,7 @@ const Login = ({ onLogin }: LoginProps) => {
                   className="pl-10 bg-gray-700/50 border border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors [appearance:textfield]"
                   autoComplete="username"
                   required
+                  ref={usernameRef}
                 />
               </div>
             </div>
@@ -164,6 +203,7 @@ const Login = ({ onLogin }: LoginProps) => {
                   className="pl-10 bg-gray-700/50 border border-gray-600 text-white placeholder:text-gray-400 focus:border-2 focus:border-gradient-background-from focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors [appearance:textfield] [&::-webkit-credentials-auto-fill-button]:hidden [&:-webkit-autofill]:!bg-[#374151]/50 [&:-webkit-autofill]:!shadow-[inset_0_0_0px_1000px_rgb(55,65,81,0.5)] [&:-webkit-autofill]:!text-[#fff] [-webkit-text-fill-color:#fff] [&:-webkit-autofill]:[-webkit-text-fill-color:#fff]"
                   autoComplete="current-password"
                   required
+                  ref={passwordRef}
                 />
               </div>
             </div>

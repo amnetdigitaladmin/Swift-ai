@@ -55,7 +55,7 @@ const getS3UrlFromOutput = (output: string | object): string[] => {
     }
   }
 
- return urls;
+  return urls;
 };
 
 const OutputSection = ({
