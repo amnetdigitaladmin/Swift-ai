@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import CodeEditor from "./CodeEditor";
 import { codeConversion } from "../services/conversionService";
-import { Clipboard, Zap, ArrowLeft, FolderOpen, Check } from "lucide-react";
+import {
+  Clipboard,
+  Zap,
+  ArrowLeft,
+  FolderOpen,
+  Check,
+  Info,
+} from "lucide-react";
 import { useTheme } from "../contexts/ThemeContext";
 import OptimizationPanel from "./OptimizationPanel";
 import { Button } from "@/components/ui/button";
@@ -14,6 +21,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 const PROGRAMMING_LANGUAGES = [
   { id: "javascript", label: "JavaScript" },
@@ -48,22 +62,40 @@ const CodeConversionInterface: React.FC<AgentWorkspaceProps> = ({
   const [targetLanguage, setTargetLanguage] = useState("typescript");
   const [isCopied, setIsCopied] = useState(false);
 
+  // Add state for explanations
+  const [inputExplanation, setInputExplanation] = useState("");
+  const [targetExplanation, setTargetExplanation] = useState("");
+
+  // Validation dialog state
+  const [showValidationDialog, setShowValidationDialog] = useState(false);
+  const [validationMessage, setValidationMessage] = useState("");
+
   const handleConvert = async () => {
     if (!codeInput.trim()) return;
-
     setIsConverting(true);
-
     try {
-      // Using the new code conversion service
       const result = await codeConversion(
         codeInput,
         sourceLanguage,
         targetLanguage
       );
-      setConvertedOutput(result);
+      if (!result.valid_input) {
+        setValidationMessage(
+          result.validation_message || "Invalid input provided."
+        );
+        setShowValidationDialog(true);
+        return;
+      }
+      // Use target_code as the converted result
+      setConvertedOutput(result.target_code || "No converted code found.");
+      // Set explanations
+      setInputExplanation(result.input_code_explanation || "");
+      setTargetExplanation(result.target_code_explanation || "");
     } catch (error) {
       console.error("Conversion error:", error);
       setConvertedOutput("Error converting code. Please try again.");
+      setInputExplanation("");
+      setTargetExplanation("");
     } finally {
       setIsConverting(false);
     }
@@ -138,6 +170,8 @@ const CodeConversionInterface: React.FC<AgentWorkspaceProps> = ({
                       setSourceLanguage(value);
                       setCodeInput("");
                       setConvertedOutput("");
+                      setInputExplanation("");
+                      setTargetExplanation("");
                     }}
                   >
                     <SelectTrigger className="bg-custom-bg">
@@ -165,6 +199,30 @@ const CodeConversionInterface: React.FC<AgentWorkspaceProps> = ({
                 placeholder={`Paste your ${sourceLanguage.toUpperCase()} code here...`}
                 isDarkMode={isDarkMode}
               />
+
+              {/* Input Code Explanation */}
+              {inputExplanation && (
+                <div className="mt-4 p-4 bg-custom-bg rounded-lg border">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Info className="h-4 w-4 text-white " />
+                    <h4 className="font-medium text-white">
+                      Input Code Explanation
+                    </h4>
+                  </div>
+                  <div className="max-h-24 overflow-y-auto
+                    [&::-webkit-scrollbar]:w-1
+                    [&::-webkit-scrollbar-track]:bg-neutral-700
+                    [&::-webkit-scrollbar-thumb]:bg-neutral-500
+                    dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+                    dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500
+                    [&::-webkit-scrollbar-track]:rounded-full
+                    [&::-webkit-scrollbar-thumb]:rounded-full">
+                    <p className="text-sm text-white leading-relaxed">
+                      {inputExplanation}
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Left panel - Output */}
@@ -201,6 +259,31 @@ const CodeConversionInterface: React.FC<AgentWorkspaceProps> = ({
                 isDarkMode={isDarkMode}
                 isReadOnly={true}
               />
+
+              {/* Target Code Explanation */}
+              {targetExplanation && (
+                <div className="mt-4 p-4 bg-custom-bg rounded-lg border">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Info className="h-4 w-4 text-white" />
+                    <h4 className="font-medium text-white">
+                      Converted Code Explanation
+                    </h4>
+                  </div>
+                  <div className="max-h-24 overflow-y-auto
+                    [&::-webkit-scrollbar]:w-1
+                    [&::-webkit-scrollbar-track]:bg-neutral-700
+                    [&::-webkit-scrollbar-thumb]:bg-neutral-500
+                    dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+                    dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500
+                    [&::-webkit-scrollbar-track]:rounded-full
+                    [&::-webkit-scrollbar-thumb]:rounded-full">
+                    <p className="text-sm text-white leading-relaxed">
+                      {targetExplanation}
+                    </p>
+                  </div>
+                </div>
+              )}
+
               {convertedOutput && (
                 <button
                   onClick={handleCopyOutput}
@@ -251,6 +334,21 @@ const CodeConversionInterface: React.FC<AgentWorkspaceProps> = ({
           <OptimizationPanel />
         </div> */}
       </div>
+
+      {/* Validation Dialog */}
+      {showValidationDialog && (
+        <Dialog
+          open={showValidationDialog}
+          onOpenChange={setShowValidationDialog}
+        >
+          <DialogContent className="sm:max-w-[425px] bg-custom-bg ">
+            <DialogHeader>
+              <DialogTitle>Validation Error</DialogTitle>
+              <DialogDescription>{validationMessage}</DialogDescription>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 };

@@ -59,11 +59,19 @@ export const sqlConversion = async (
   }
 };
 
+export type ConversionResult = {
+  input_code_explanation: string | null;
+  target_code: string | null;
+  target_code_explanation: string | null;
+  valid_input: boolean;
+  validation_message?: string;
+};
+
 export const codeConversion = async (
   sourceCode: string,
   sourceLanguage: string,
   targetLanguage: string
-): Promise<string> => {
+): Promise<ConversionResult> => {
   try {
     const response = await axios.post(`${CodeConversion_API_URL}`, {
       "source_language": sourceLanguage,
@@ -71,7 +79,7 @@ export const codeConversion = async (
       "input_code":sourceCode
     });
 
-    return response.data.translated_code;
+    return response.data.translated_code as ConversionResult ;
   } catch (error) {
     console.error("Code conversion error:", error);
     throw new Error("Failed to convert code");

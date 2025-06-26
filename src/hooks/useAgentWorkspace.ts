@@ -113,18 +113,20 @@ export const useAgentWorkspace = (agentName: string) => {
     });
   };
 
-  const getFirstURLFromApiResult: (apiResult: Record<string, any>) => string[] | null = (apiResult) => {
-  const urls: string[] = [];
-  if (!apiResult || typeof apiResult !== 'object') return urls;
+  const getFirstURLFromApiResult: (
+    apiResult: Record<string, any>
+  ) => string[] | null = (apiResult) => {
+    const urls: string[] = [];
+    if (!apiResult || typeof apiResult !== "object") return urls;
 
-  for (const [key, value] of Object.entries(apiResult)) {
-    if (key.toLowerCase().includes('url') && typeof value === 'string') {
-      urls.push(value);
+    for (const [key, value] of Object.entries(apiResult)) {
+      if (key.toLowerCase().includes("url") && typeof value === "string") {
+        urls.push(value);
+      }
     }
-  }
 
-  return urls;
-} 
+    return urls;
+  };
 
   const isSwiftCodeFrontend = agentName?.includes("SwiftBuild Frontend");
   const isSwiftCodeBackend = agentName?.includes("SwiftBuild Backend");
@@ -167,7 +169,7 @@ export const useAgentWorkspace = (agentName: string) => {
                 model_name: "openai",
                 dev_type: devtype,
                 pages_per_chunk: 3,
-                enable_parallel_llm:parallelLLMMode
+                enable_parallel_llm: parallelLLMMode,
               };
               const response = await fetch(config.endpoint, {
                 method: "POST",
@@ -316,14 +318,14 @@ export const useAgentWorkspace = (agentName: string) => {
             }
 
             // const downloadedFileURL = getFirstURLFromApiResult(apiResult.url);ap
-            if(apiResult.url){
+            if (apiResult.url) {
               setOutput(apiResult.url);
               toast({
                 title: "Processing Complete",
                 description: "Your request has been processed successfully.",
               });
             } else {
-               throw new Error("Invalid response format");
+              throw new Error("Invalid response format");
             }
           } catch (error) {
             console.error("API error:", error);
@@ -449,7 +451,7 @@ export const useAgentWorkspace = (agentName: string) => {
               let downloadedFileURL = apiResult.docx_download_url
                 ? apiResult.docx_download_url
                 : apiResult.excel_download_url;
-              setOutput({'Download File':downloadedFileURL});
+              setOutput({ "Download File": downloadedFileURL });
               toast({
                 title: "Processing Complete",
                 description: "Your request has been processed successfully.",

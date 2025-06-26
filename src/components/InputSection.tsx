@@ -448,18 +448,18 @@ const InputSection = ({
         </div>
 
         {/* Parallel LLM Mode Toggle */}
-        {
-         ( agentName === "SwiftBuild Frontend" || agentName === "SwiftBuild Backend" ) &&
-        (<div className="flex items-center space-x-4 p-3  rounded-lg border">
-          <span className="text-sm font-medium text-white">
-            Parallel LLM Mode:
-          </span>
-          <Switch
-            checked={parallelLLMMode}
-            onCheckedChange={setParallelLLMMode}
-          />
-        </div>)
-        }
+        {(agentName === "SwiftBuild Frontend" ||
+          agentName === "SwiftBuild Backend") && (
+          <div className="flex items-center space-x-4 p-3  rounded-lg border">
+            <span className="text-sm font-medium text-white">
+              Parallel LLM Mode:
+            </span>
+            <Switch
+              checked={parallelLLMMode}
+              onCheckedChange={setParallelLLMMode}
+            />
+          </div>
+        )}
 
         <div className="flex items-center justify-between">
           <p className="text-sm text-gray-500">
