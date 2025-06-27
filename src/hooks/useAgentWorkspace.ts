@@ -64,7 +64,7 @@ export const useAgentWorkspace = (agentName: string) => {
     },
     "SwiftBuild Frontend": {
       endpoint:
-        "https://c3677yvqbobzen7zfwoxy7ybjq0qletv.lambda-url.ap-south-1.on.aws/",
+        "https://smi25q3swrw3aprk2h3ccr7tri0mdflr.lambda-url.ap-south-1.on.aws/",
     },
     "SwiftBuild Backend": {
       endpoint:
