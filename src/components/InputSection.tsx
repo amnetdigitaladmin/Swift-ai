@@ -451,28 +451,28 @@ const InputSection = ({
           </Select>
         </div>
 
-        {/* Parallel LLM Mode Toggle */}
+        {/* Toggles Section */}
         {(agentName === "SwiftBuild Frontend" ||
           agentName === "SwiftBuild Backend") && (
-          <div className="flex items-center space-x-4 p-3  rounded-lg border">
-            <span className="text-sm font-medium text-white">
-              Parallel LLM Mode:
-            </span>
-            <Switch
-              checked={parallelLLMMode}
-              onCheckedChange={setParallelLLMMode}
-            />
-          </div>
-        )}
-
-        {/* Unit Test Case Generation Toggle */}
-        {(agentName === "SwiftBuild Frontend" ||
-          agentName === "SwiftBuild Backend") && (
-          <div className="flex items-center space-x-4 p-3  rounded-lg border">
-            <span className="text-sm font-medium text-white">
-              Unit Test Case Generation:
-            </span>
-            <Switch checked={unitTestMode} onCheckedChange={setUnitTestMode} />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-3 rounded-lg border">
+            <div className="flex items-center space-x-4">
+              <span className="text-sm font-medium text-white">
+                Parallel LLM Mode:
+              </span>
+              <Switch
+                checked={parallelLLMMode}
+                onCheckedChange={setParallelLLMMode}
+              />
+            </div>
+            <div className="flex items-center space-x-4 md:ml-auto">
+              <span className="text-sm font-medium text-white">
+                Unit Test Case Generation:
+              </span>
+              <Switch
+                checked={unitTestMode}
+                onCheckedChange={setUnitTestMode}
+              />
+            </div>
           </div>
         )}
 
