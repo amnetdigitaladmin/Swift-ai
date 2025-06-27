@@ -66,6 +66,9 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
     parallelLLMMode,
     setParallelLLMMode,
 
+    unitTestMode,
+    setUnitTestMode,
+
     isAlertOpen,
     setIsAlertOpen,
     alertContent,
@@ -217,6 +220,8 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
                   handleIsProcessing={handleIsProcessing}
                   parallelLLMMode={parallelLLMMode}
                   setParallelLLMMode={setParallelLLMMode}
+                  unitTestMode={unitTestMode}
+                  setUnitTestMode={setUnitTestMode}
                 />
               )}
 

@@ -46,6 +46,8 @@ interface InputSectionProps {
   handleIsProcessing: (processing: boolean) => void;
   parallelLLMMode: boolean;
   setParallelLLMMode: (enabled: boolean) => void;
+  unitTestMode: boolean;
+  setUnitTestMode: (enabled: boolean) => void;
 }
 
 const InputSection = ({
@@ -76,6 +78,8 @@ const InputSection = ({
   handleIsProcessing,
   parallelLLMMode,
   setParallelLLMMode,
+  unitTestMode,
+  setUnitTestMode,
 }: InputSectionProps) => {
   const { user } = useUser();
   const isBusinessAnalyst = user?.persona === "business-analyst";
@@ -458,6 +462,17 @@ const InputSection = ({
               checked={parallelLLMMode}
               onCheckedChange={setParallelLLMMode}
             />
+          </div>
+        )}
+
+        {/* Unit Test Case Generation Toggle */}
+        {(agentName === "SwiftBuild Frontend" ||
+          agentName === "SwiftBuild Backend") && (
+          <div className="flex items-center space-x-4 p-3  rounded-lg border">
+            <span className="text-sm font-medium text-white">
+              Unit Test Case Generation:
+            </span>
+            <Switch checked={unitTestMode} onCheckedChange={setUnitTestMode} />
           </div>
         )}
 

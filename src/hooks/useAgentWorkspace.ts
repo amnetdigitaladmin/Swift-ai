@@ -46,6 +46,7 @@ export const useAgentWorkspace = (agentName: string) => {
   const [inputMode, setInputMode] = useState<"type" | "upload">("type");
   const [showOutput, setShowOutput] = useState(false);
   const [parallelLLMMode, setParallelLLMMode] = useState(false);
+  const [unitTestMode, setUnitTestMode] = useState(false);
 
   const { toast } = useToast();
   const { user } = useUser();
@@ -170,6 +171,7 @@ export const useAgentWorkspace = (agentName: string) => {
                 dev_type: devtype,
                 pages_per_chunk: 3,
                 enable_parallel_llm: parallelLLMMode,
+                generate_tests:unitTestMode
               };
               const response = await fetch(config.endpoint, {
                 method: "POST",
@@ -635,6 +637,8 @@ export const useAgentWorkspace = (agentName: string) => {
     currentProject,
     parallelLLMMode,
     setParallelLLMMode,
+    unitTestMode,
+    setUnitTestMode,
 
     isAlertOpen,
     setIsAlertOpen,
