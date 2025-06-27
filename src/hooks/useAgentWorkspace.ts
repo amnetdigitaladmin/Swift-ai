@@ -73,7 +73,7 @@ export const useAgentWorkspace = (agentName: string) => {
       endpoint:
         "https://jfvhzql6k7pcrl3vrlmyk26g2a0jqwzy.lambda-url.ap-south-1.on.aws/",
     },
-    "SwiftPlan Technical Engineer": {
+    "SwiftPlan Feature Breakdown": {
       endpoint:
         "https://xnerzmxfx2i4mdklh2b4jzfwsm0arbze.lambda-url.ap-south-1.on.aws/",
     },
@@ -131,7 +131,7 @@ export const useAgentWorkspace = (agentName: string) => {
   const isSwiftCodeFrontend = agentName?.includes("SwiftBuild Frontend");
   const isSwiftCodeBackend = agentName?.includes("SwiftBuild Backend");
   const isSwiftPlanTechnicalEngineer = agentName?.includes(
-    "SwiftPlan Technical Engineer"
+    "SwiftPlan Feature Breakdown"
   );
 
   const handleProcess = async () => {

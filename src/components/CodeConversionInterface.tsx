@@ -209,14 +209,16 @@ const CodeConversionInterface: React.FC<AgentWorkspaceProps> = ({
                       Input Code Explanation
                     </h4>
                   </div>
-                  <div className="max-h-24 overflow-y-auto
+                  <div
+                    className="max-h-24 overflow-y-auto
                     [&::-webkit-scrollbar]:w-1
                     [&::-webkit-scrollbar-track]:bg-neutral-700
                     [&::-webkit-scrollbar-thumb]:bg-neutral-500
                     dark:[&::-webkit-scrollbar-track]:bg-neutral-700
                     dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500
                     [&::-webkit-scrollbar-track]:rounded-full
-                    [&::-webkit-scrollbar-thumb]:rounded-full">
+                    [&::-webkit-scrollbar-thumb]:rounded-full"
+                  >
                     <p className="text-sm text-white leading-relaxed">
                       {inputExplanation}
                     </p>
@@ -269,14 +271,16 @@ const CodeConversionInterface: React.FC<AgentWorkspaceProps> = ({
                       Converted Code Explanation
                     </h4>
                   </div>
-                  <div className="max-h-24 overflow-y-auto
+                  <div
+                    className="max-h-24 overflow-y-auto
                     [&::-webkit-scrollbar]:w-1
                     [&::-webkit-scrollbar-track]:bg-neutral-700
                     [&::-webkit-scrollbar-thumb]:bg-neutral-500
                     dark:[&::-webkit-scrollbar-track]:bg-neutral-700
                     dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500
                     [&::-webkit-scrollbar-track]:rounded-full
-                    [&::-webkit-scrollbar-thumb]:rounded-full">
+                    [&::-webkit-scrollbar-thumb]:rounded-full"
+                  >
                     <p className="text-sm text-white leading-relaxed">
                       {targetExplanation}
                     </p>

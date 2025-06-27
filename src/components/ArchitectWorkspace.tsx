@@ -51,7 +51,7 @@ const ArchitectWorkspace = () => {
       ],
     },
     {
-      title: "SwiftPlan Technical Engineer",
+      title: "SwiftPlan Feature Breakdown",
       description:
         "Defines technical specifications, architecture constraints, and system requirements.",
       icon: Target,
