@@ -191,7 +191,7 @@ export const useAgentWorkspace = (agentName: string) => {
               // console.log(apiResult.result.result)
               // API should return file structure data
 
-              setOutput(isSwiftCodeFrontend ? apiResult.result : apiResult);
+              setOutput(isSwiftCodeFrontend ? apiResult : apiResult);
               setShowOutput(true);
             } catch (error) {
               // Handle errors
