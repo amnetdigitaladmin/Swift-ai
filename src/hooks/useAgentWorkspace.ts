@@ -155,6 +155,7 @@ export const useAgentWorkspace = (agentName: string) => {
           reader.readAsDataURL(selectedFile);
 
           let devtype = isSwiftCodeFrontend ? "frontend" : "backend";
+          let tech_stack = isSwiftCodeFrontend ? "Angular" : "python";
 
           reader.onload = async () => {
             try {
@@ -170,6 +171,7 @@ export const useAgentWorkspace = (agentName: string) => {
                 model_name: "openai",
                 dev_type: devtype,
                 pages_per_chunk: 3,
+                tech_stack:tech_stack,
                 enable_parallel_llm: parallelLLMMode,
                 generate_tests:unitTestMode
               };
