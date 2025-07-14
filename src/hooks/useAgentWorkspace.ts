@@ -48,6 +48,8 @@ export const useAgentWorkspace = (agentName: string) => {
   const [parallelLLMMode, setParallelLLMMode] = useState(false);
   const [unitTestMode, setUnitTestMode] = useState(false);
 
+  const [selectedPythonFramework,setSelectedPythonFramework] = useState('')
+
   const { toast } = useToast();
   const { user } = useUser();
   const {
@@ -641,6 +643,8 @@ export const useAgentWorkspace = (agentName: string) => {
     setParallelLLMMode,
     unitTestMode,
     setUnitTestMode,
+    selectedPythonFramework,
+    setSelectedPythonFramework,
 
     isAlertOpen,
     setIsAlertOpen,

@@ -48,6 +48,8 @@ interface InputSectionProps {
   setParallelLLMMode: (enabled: boolean) => void;
   unitTestMode: boolean;
   setUnitTestMode: (enabled: boolean) => void;
+  selectedPythonFramework: string;
+  setSelectedPythonFramework: (framework: string) => void;
 }
 
 const InputSection = ({
@@ -80,6 +82,8 @@ const InputSection = ({
   setParallelLLMMode,
   unitTestMode,
   setUnitTestMode,
+  selectedPythonFramework,
+  setSelectedPythonFramework,
 }: InputSectionProps) => {
   const { user } = useUser();
   const isBusinessAnalyst = user?.persona === "business-analyst";
@@ -450,6 +454,33 @@ const InputSection = ({
             </SelectContent>
           </Select>
         </div>
+
+        {/* Python Framework Selection */}
+        { agentName === "SwiftBuild Backend" &&         
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Python Framework</label>
+            <Select
+              value={selectedPythonFramework}
+              onValueChange={setSelectedPythonFramework}
+            >
+              <SelectTrigger className="bg-custom-bg">
+                <SelectValue placeholder="Select a Python framework" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="django" className="bg-custom-bg">
+                  Django
+                </SelectItem>
+                <SelectItem value="fastapi" className="bg-custom-bg">
+                  Fast API
+                </SelectItem>
+                <SelectItem value="flask" className="bg-custom-bg">
+                  Flask
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        }
+
 
         {/* Toggles Section */}
         {(agentName === "SwiftBuild Frontend" ||

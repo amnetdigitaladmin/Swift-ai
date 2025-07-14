@@ -69,6 +69,9 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
     unitTestMode,
     setUnitTestMode,
 
+    selectedPythonFramework,
+    setSelectedPythonFramework,
+
     isAlertOpen,
     setIsAlertOpen,
     alertContent,
@@ -222,6 +225,8 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
                   setParallelLLMMode={setParallelLLMMode}
                   unitTestMode={unitTestMode}
                   setUnitTestMode={setUnitTestMode}
+                  selectedPythonFramework={selectedPythonFramework}
+                  setSelectedPythonFramework={setSelectedPythonFramework}
                 />
               )}
 
