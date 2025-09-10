@@ -48,8 +48,8 @@ export const useAgentWorkspace = (agentName: string) => {
   const [parallelLLMMode, setParallelLLMMode] = useState(false);
   const [unitTestMode, setUnitTestMode] = useState(false);
 
-  const [selectedPythonFramework,setSelectedPythonFramework] = useState('')
-  const [frontendFramework,setFrontendFramework] = useState("");
+  const [selectedPythonFramework, setSelectedPythonFramework] = useState("");
+  const [frontendFramework, setFrontendFramework] = useState("");
 
   const { toast } = useToast();
   const { user } = useUser();
@@ -80,6 +80,10 @@ export const useAgentWorkspace = (agentName: string) => {
     "SwiftPlan Feature Breakdown": {
       endpoint:
         "https://xnerzmxfx2i4mdklh2b4jzfwsm0arbze.lambda-url.ap-south-1.on.aws/",
+    },
+    "SwiftBuild Mobile": {
+      endpoint:
+        "https://smi25q3swrw3aprk2h3ccr7tri0mdflr.lambda-url.ap-south-1.on.aws/",
     },
   };
   const isBusinessAnalyst = user?.persona === "business-analyst";
@@ -137,6 +141,7 @@ export const useAgentWorkspace = (agentName: string) => {
   const isSwiftPlanTechnicalEngineer = agentName?.includes(
     "SwiftPlan Feature Breakdown"
   );
+  const isSwiftBuildMobile = agentName?.includes("SwiftBuild Mobile");
 
   const handleProcess = async () => {
     if (!input.trim() && !selectedFile) {
@@ -173,11 +178,11 @@ export const useAgentWorkspace = (agentName: string) => {
                 },
                 model_name: "openai",
                 dev_type: devtype,
-                tech_stack:tech_stack,
-                framework:selectedPythonFramework,
+                tech_stack: tech_stack,
+                framework: selectedPythonFramework,
                 pages_per_chunk: 3,
                 enable_parallel_llm: parallelLLMMode,
-                generate_tests:unitTestMode
+                generate_tests: unitTestMode,
                 // ,frontendFramework:frontendFramework
               };
               const response = await fetch(config.endpoint, {
@@ -197,6 +202,83 @@ export const useAgentWorkspace = (agentName: string) => {
               // API should return file structure data
 
               setOutput(isSwiftCodeFrontend ? apiResult : apiResult);
+              setShowOutput(true);
+            } catch (error) {
+              // Handle errors
+              console.error("API error:", error);
+              toast({
+                title: "Processing Failed",
+                description:
+                  "Failed to process your request. Please try again.",
+                variant: "destructive",
+              });
+            } finally {
+              setIsProcessing(false);
+              setProgress(100);
+            }
+          };
+
+          reader.onerror = () => {
+            // Handle file reading errors
+            console.error("File reading error:", reader.error);
+            toast({
+              title: "File Reading Failed",
+              description: "Failed to read the file. Please try again.",
+              variant: "destructive",
+            });
+            setIsProcessing(false);
+            setProgress(0);
+          };
+        }
+      } catch (error) {
+        // Handle any other errors
+      }
+    } else if (isSwiftBuildMobile) {
+      try {
+        if (selectedFile) {
+          const reader = new FileReader();
+          reader.readAsDataURL(selectedFile);
+
+          let devtype = "frontend";
+          let tech_stack = frontendFramework;
+
+          reader.onload = async () => {
+            try {
+              const fileResult = reader.result as string;
+              const base64Content = fileResult.split(",")[1];
+
+              const payload = {
+                file: {
+                  filename: selectedFile.name.replace(/\.[^/.]+$/, ""),
+                  content: base64Content,
+                  extension: selectedFile.name.split(".").pop(),
+                },
+                model_name: "openai",
+                dev_type: devtype,
+                tech_stack: tech_stack,
+                framework: selectedPythonFramework,
+                pages_per_chunk: 3,
+                enable_parallel_llm: parallelLLMMode,
+                generate_tests: unitTestMode,
+                // ,frontendFramework:frontendFramework
+              };
+              const response = await fetch(config.endpoint, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+              });
+
+              if (!response.ok) {
+                throw new Error("Processing failed");
+              }
+
+              const apiResult = await response.json();
+              // console.log(apiResult.result.result)
+              // API should return file structure data
+
+              setOutput(apiResult);
               setShowOutput(true);
             } catch (error) {
               // Handle errors

@@ -512,7 +512,7 @@ const InputSection = ({
         )}
 
         {/* Framework section */}
-        {agentName === "SwiftBuild Frontend" && (
+        {(agentName === "SwiftBuild Frontend" || agentName === "SwiftBuild Mobile")  && (
           <div className="grid grid-cols-1  gap-4 p-3 rounded-lg border">
             <div className="space-y-2 w-full ">
               <label className="text-sm font-medium">
