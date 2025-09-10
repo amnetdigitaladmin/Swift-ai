@@ -17,6 +17,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Upload, FileText, X, Play, RefreshCw, FileInput } from "lucide-react";
 import { useUser } from "@/contexts/UserContext";
+import { useState } from "react";
 
 interface InputSectionProps {
   agentName: string;
@@ -50,6 +51,8 @@ interface InputSectionProps {
   setUnitTestMode: (enabled: boolean) => void;
   selectedPythonFramework: string;
   setSelectedPythonFramework: (framework: string) => void;
+  frontendFramework: string;
+  setFrontendFramework: (framework: string) => void;
 }
 
 const InputSection = ({
@@ -84,6 +87,8 @@ const InputSection = ({
   setUnitTestMode,
   selectedPythonFramework,
   setSelectedPythonFramework,
+  frontendFramework,
+  setFrontendFramework,
 }: InputSectionProps) => {
   const { user } = useUser();
   const isBusinessAnalyst = user?.persona === "business-analyst";
@@ -456,7 +461,7 @@ const InputSection = ({
         </div>
 
         {/* Python Framework Selection */}
-        { agentName === "SwiftBuild Backend" &&         
+        {agentName === "SwiftBuild Backend" && (
           <div className="space-y-2">
             <label className="text-sm font-medium">Python Framework</label>
             <Select
@@ -479,8 +484,7 @@ const InputSection = ({
               </SelectContent>
             </Select>
           </div>
-        }
-
+        )}
 
         {/* Toggles Section */}
         {(agentName === "SwiftBuild Frontend" ||
@@ -503,6 +507,39 @@ const InputSection = ({
                 checked={unitTestMode}
                 onCheckedChange={setUnitTestMode}
               />
+            </div>
+          </div>
+        )}
+
+        {/* Framework section */}
+        {agentName === "SwiftBuild Frontend" && (
+          <div className="grid grid-cols-1  gap-4 p-3 rounded-lg border">
+            <div className="space-y-2 w-full ">
+              <label className="text-sm font-medium">
+                Framework/Technology
+              </label>
+              <Select
+                value={frontendFramework}
+                onValueChange={setFrontendFramework}
+              >
+                <SelectTrigger className="bg-custom-bg">
+                  <SelectValue placeholder="Select a framework or technology" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="angular" className="bg-custom-bg">
+                    Angular JS
+                  </SelectItem>
+                  <SelectItem value="react" className="bg-custom-bg">
+                    React
+                  </SelectItem>
+                  <SelectItem value="react-native" className="bg-custom-bg">
+                    React Native
+                  </SelectItem>
+                  <SelectItem value="flutter" className="bg-custom-bg">
+                    Flutter
+                  </SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         )}

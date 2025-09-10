@@ -49,6 +49,7 @@ export const useAgentWorkspace = (agentName: string) => {
   const [unitTestMode, setUnitTestMode] = useState(false);
 
   const [selectedPythonFramework,setSelectedPythonFramework] = useState('')
+  const [frontendFramework,setFrontendFramework] = useState("");
 
   const { toast } = useToast();
   const { user } = useUser();
@@ -157,7 +158,7 @@ export const useAgentWorkspace = (agentName: string) => {
           reader.readAsDataURL(selectedFile);
 
           let devtype = isSwiftCodeFrontend ? "frontend" : "backend";
-          let tech_stack = isSwiftCodeFrontend ? "Angular" : "python";
+          let tech_stack = isSwiftCodeFrontend ? frontendFramework : "python";
 
           reader.onload = async () => {
             try {
@@ -176,6 +177,7 @@ export const useAgentWorkspace = (agentName: string) => {
                 tech_stack:tech_stack,
                 enable_parallel_llm: parallelLLMMode,
                 generate_tests:unitTestMode
+                // ,frontendFramework:frontendFramework
               };
               const response = await fetch(config.endpoint, {
                 method: "POST",
@@ -645,6 +647,8 @@ export const useAgentWorkspace = (agentName: string) => {
     setUnitTestMode,
     selectedPythonFramework,
     setSelectedPythonFramework,
+    frontendFramework,
+    setFrontendFramework,
 
     isAlertOpen,
     setIsAlertOpen,

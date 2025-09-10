@@ -72,6 +72,9 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
     selectedPythonFramework,
     setSelectedPythonFramework,
 
+    frontendFramework,
+    setFrontendFramework,
+
     isAlertOpen,
     setIsAlertOpen,
     alertContent,
@@ -227,6 +230,8 @@ const AgentWorkspace = ({ agentName, onBack }: AgentWorkspaceProps) => {
                   setUnitTestMode={setUnitTestMode}
                   selectedPythonFramework={selectedPythonFramework}
                   setSelectedPythonFramework={setSelectedPythonFramework}
+                  frontendFramework={frontendFramework}
+                  setFrontendFramework={setFrontendFramework}
                 />
               )}
 
