@@ -173,8 +173,9 @@ export const useAgentWorkspace = (agentName: string) => {
                 },
                 model_name: "openai",
                 dev_type: devtype,
-                pages_per_chunk: 3,
                 tech_stack:tech_stack,
+                framework:selectedPythonFramework,
+                pages_per_chunk: 3,
                 enable_parallel_llm: parallelLLMMode,
                 generate_tests:unitTestMode
                 // ,frontendFramework:frontendFramework
